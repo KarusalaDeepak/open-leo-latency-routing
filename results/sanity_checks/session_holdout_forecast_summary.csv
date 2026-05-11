@@ -1,0 +1,2 @@
+fold_count,temporal_mae_mean,graph_context_mae_mean,temporal_mae_std,graph_context_mae_std,temporal_rmse_mean,graph_context_rmse_mean,mean_mae_delta_graph_minus_temporal,temporal_better_fold_count,graph_context_better_fold_count
+16,5.406202986515224,5.688872589425843,3.743873101185092,4.0707795766797705,6.958864775086727,7.259947706360361,0.2826696029106195,9,7

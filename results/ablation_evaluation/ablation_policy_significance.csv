@@ -1,0 +1,13 @@
+comparison_name,metric_name,sample_count,mean_delta,median_delta,statistic,p_value,scenario_name
+full_vs_temporal,realized_next_latency_ms,28,-0.9229984647499335,0.0,29.0,0.43276758066778476,base
+full_vs_temporal,regret_ms,28,-0.9229984647499335,0.0,29.0,0.43276758066778476,base
+full_vs_graph_only,realized_next_latency_ms,28,-0.5483166394476023,0.0,16.0,0.24112136827741837,base
+full_vs_graph_only,regret_ms,28,-0.5483166394476023,0.0,16.0,0.24112136827741837,base
+full_vs_temporal,realized_next_latency_ms,28,1.2905889510803177,0.0,34.0,0.6948866023724733,burst
+full_vs_temporal,regret_ms,28,1.2905889510803177,0.0,34.0,0.6948866023724733,burst
+full_vs_graph_only,realized_next_latency_ms,28,3.0455664201040267,0.0,25.0,0.272095182736126,burst
+full_vs_graph_only,regret_ms,28,3.0455664201040267,0.0,25.0,0.272095182736126,burst
+full_vs_temporal,realized_next_latency_ms,28,-0.5885575375290356,0.0,31.0,0.8588630128278887,outage
+full_vs_temporal,regret_ms,28,-0.5885575375290356,0.0,31.0,0.8588630128278887,outage
+full_vs_graph_only,realized_next_latency_ms,28,-1.299830444790101,0.0,13.0,0.13941397332153205,outage
+full_vs_graph_only,regret_ms,28,-1.299830444790101,0.0,13.0,0.13941397332153205,outage

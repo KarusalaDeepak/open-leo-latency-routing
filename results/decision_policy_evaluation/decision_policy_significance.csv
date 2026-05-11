@@ -1,0 +1,15 @@
+comparison_name,metric_name,sample_count,mean_delta,median_delta,statistic,p_value
+graph_vs_reactive,realized_next_latency_ms,28,-1.4605460648113107,0.0,14.0,0.1688069535565081
+graph_vs_reactive,regret_ms,28,-1.4605460648113107,0.0,14.0,0.1688069535565081
+graph_vs_predictive_only,realized_next_latency_ms,28,0.3873465377261224,0.0,24.0,0.4235963177660037
+graph_vs_predictive_only,regret_ms,28,0.3873465377261224,0.0,24.0,0.4235963177660037
+fusion_vs_temporal,realized_next_latency_ms,28,0.19249711858487828,0.0,1.0,0.28504940740261275
+fusion_vs_temporal,regret_ms,28,0.19249711858487828,0.0,1.0,0.28504940740261275
+fusion_vs_graph,realized_next_latency_ms,28,-0.19484941914124412,0.0,19.0,0.6784023758521882
+fusion_vs_graph,regret_ms,28,-0.19484941914124412,0.0,19.0,0.6784023758521882
+consensus_vs_fusion,realized_next_latency_ms,28,0.15565779889107947,0.0,2.0,0.5929800980174267
+consensus_vs_fusion,regret_ms,28,0.15565779889107947,0.0,2.0,0.5929800980174267
+consensus_vs_temporal,realized_next_latency_ms,28,0.3481549174759578,0.0,7.0,0.463071015014588
+consensus_vs_temporal,regret_ms,28,0.3481549174759578,0.0,7.0,0.463071015014588
+consensus_vs_graph,realized_next_latency_ms,28,-0.039191620250164635,0.0,13.0,0.8657723749926214
+consensus_vs_graph,regret_ms,28,-0.039191620250164635,0.0,13.0,0.8657723749926214

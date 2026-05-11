@@ -1,0 +1,2 @@
+model_name,mae,rmse,mape,row_count
+graph_xgboost,4.944911670963766,7.546670015795723,0.11988756983724308,162
