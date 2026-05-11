@@ -1,6 +1,6 @@
 # Baseline Results Summary
 
-This note records the final end-to-end conference baseline built from the extracted LENS 2025-03 dataset.
+This note records the final end-to-end baseline built from the extracted LENS 2025-03 dataset.
 
 ## Processed Dataset Slice
 
@@ -49,7 +49,7 @@ Graph snapshots are normalized by `session_bin_index`, allowing different sessio
 | --- | ---: | ---: | ---: | ---: |
 | Graph XGBoost Regressor | 4.9449 | 7.5467 | 0.1199 | 162 |
 
-The final conference version keeps `graph_xgboost` as the single graph-aware model because it is the strongest graph-based predictor in this repo and is the method used by the downstream graph-aware decision policy.
+The final manuscript version keeps `graph_xgboost` as the single graph-aware model because it is the strongest graph-based predictor in this repo and is the method used by the downstream graph-aware decision policy.
 
 ## Optimization Results
 
@@ -87,9 +87,9 @@ Wilcoxon signed-rank tests were run across the `28` paired decision windows.
 
 ## Current Interpretation
 
-The final cleaned baseline supports the conference direction:
+The final cleaned baseline supports the manuscript direction:
 
 1. Predictive selection outperforms purely reactive selection on realized latency and regret.
 2. `linear_regression` is the strongest pure temporal forecaster on the current working subset, while `graph_xgboost` is the graph-aware predictor used for the proposed graph-based policy.
 3. The stable base split does not justify claiming universal dominance for either graph-only or hybrid decision rules, because `predictive_greedy` remains best in this condition.
-4. The stronger conference claim is therefore robustness: graph-aware decision-making becomes more valuable in shifted conditions such as outage windows, and the disagreement-aware consensus rule should be judged against the simple-fusion ablation rather than against temporal-only forecasting error.
+4. The stronger manuscript claim is therefore robustness: graph-aware decision-making becomes more valuable in shifted conditions such as outage windows, and the disagreement-aware consensus rule should be judged against the simple-fusion ablation rather than against temporal-only forecasting error.

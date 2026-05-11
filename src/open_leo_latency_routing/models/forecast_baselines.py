@@ -1,4 +1,4 @@
-"""Temporal forecasting models for the conference pipeline."""
+"""Temporal forecasting models for the manuscript pipeline."""
 
 from __future__ import annotations
 
@@ -122,7 +122,7 @@ def run_forecast_baselines(
     test_frame: pd.DataFrame,
     feature_columns: list[str],
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Fit the temporal baselines used in the final conference comparison."""
+    """Fit the temporal baselines used in the final manuscript comparison."""
     predictions: list[pd.DataFrame] = []
     metrics: list[ForecastResult] = []
 
@@ -147,7 +147,7 @@ def run_forecast_baselines(
         )
     )
 
-    # The conference version keeps one simple predictive baseline and one
+    # The manuscript version keeps one simple predictive baseline and one
     # non-learning persistence reference so the comparison stays concise.
     for model_name in ("linear_regression",):
         model = fit_forecast_model(

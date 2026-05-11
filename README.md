@@ -82,7 +82,7 @@ After the raw logs are parsed, the repo supports three direct experiment stages:
 3. decision optimization using reactive and predictive policies,
 4. robustness evaluation under burst and outage shifts.
 
-The current conference version also includes three novelty-strengthening
+The current study version also includes three novelty-strengthening
 analyses:
 
 1. disagreement-bin validation to test whether predictor disagreement behaves
@@ -94,7 +94,7 @@ analyses:
 ## Quick Start
 
 ```bash
-cd /Users/dkarusal/Documents/leo-conf2-open-leo
+cd open-leo-latency-routing
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt

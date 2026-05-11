@@ -26,7 +26,7 @@ class GraphResult:
 
 
 def build_graph_xgb_model() -> XGBRegressor:
-    """Create the graph-aware regressor used in the final conference pipeline."""
+    """Create the graph-aware regressor used in the final manuscript pipeline."""
     return XGBRegressor(
         n_estimators=300,
         max_depth=6,

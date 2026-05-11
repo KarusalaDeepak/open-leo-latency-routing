@@ -1,6 +1,6 @@
 # Candidate File Manifest
 
-- `data_root`: `/Users/dkarusal/Documents/leo-conf2-open-leo/data/raw/lens_2025_03/LENS-2025-03`
+- `data_root`: `data/raw/lens_2025_03/LENS-2025-03`
 - `candidate_count`: `7504`
 - `top_k`: `24`
 - `selection_strategy`: `diversity_round_robin`

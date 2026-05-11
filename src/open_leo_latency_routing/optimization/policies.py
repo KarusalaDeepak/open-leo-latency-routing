@@ -1,4 +1,4 @@
-"""Decision policies for the final conference evaluation."""
+"""Decision policies for the final manuscript evaluation."""
 
 from __future__ import annotations
 
