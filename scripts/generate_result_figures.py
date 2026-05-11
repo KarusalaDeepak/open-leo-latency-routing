@@ -135,7 +135,7 @@ def _plot_stress_policy(policy_stress: pd.DataFrame, out_path: Path) -> None:
     latency = latency.loc[ordered]
     regret = regret.loc[ordered]
 
-    latency.plot(kind="line", marker="o", ax=axes[0], linewidth=2.2)
+    latency.plot(kind="line", marker="o", ax=axes[0], linewidth=2.2, legend=False)
     axes[0].set_title("Policy Latency Across Stress Scenarios", pad=14)
     axes[0].set_ylabel("Mean Realized Latency (ms)")
     axes[0].set_xlabel("Scenario")
