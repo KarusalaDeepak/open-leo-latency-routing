@@ -5,11 +5,6 @@ selection on open LEO network measurements.
 
 ## Scope
 
-The project is intentionally independent from:
-
-- Conference 1: satellite visibility prediction
-- Journal 1: OATS RL scheduling
-
 The project scope is:
 
 1. time-series forecasting of short-horizon LEO network state,
