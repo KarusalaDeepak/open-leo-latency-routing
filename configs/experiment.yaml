@@ -1,0 +1,44 @@
+dataset:
+  name: lens_2025_03
+  raw_root: data/raw/lens_2025_03
+  processed_root: data/processed
+  time_bins_path: data/processed/ping_time_bins.csv
+
+forecasting:
+  target_column: latency_mean_ms
+  horizon_seconds: 10
+  lag_steps: [1, 2, 3, 6, 12]
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+
+graph:
+  snapshot_seconds: 60
+  edge_rule: co_observation
+  min_shared_events: 2
+
+optimization:
+  objective: min_predicted_latency
+  latency_budget_ms: 60.0
+  consensus:
+    temporal_weight: 0.65
+    graph_weight: 0.35
+    disagreement_penalty: 0.30
+  policies:
+    - random
+    - reactive_greedy
+    - predictive_greedy
+    - predictive_graph_greedy
+    - predictive_consensus_greedy
+
+stress:
+  burst_fraction: 0.12
+  burst_latency_spike_ms: 18.0
+  burst_reply_drop_fraction: 0.12
+  outage_session_fraction: 0.25
+  outage_latency_spike_ms: 35.0
+  outage_reply_drop_fraction: 0.35
+  structural_location_fraction: 0.35
+  structural_window_count: 2
+  structural_latency_spike_ms: 28.0
+  structural_reply_drop_fraction: 0.20
