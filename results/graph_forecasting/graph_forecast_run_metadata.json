@@ -1,5 +1,5 @@
 {
-  "time_bins_path": "/Users/dkarusal/Documents/leo-conf2-open-leo/data/processed/ping_time_bins.csv",
+  "time_bins_path": "data/processed/ping_time_bins.csv",
   "snapshot_seconds": 60,
   "horizon_seconds": 10,
   "horizon_bins": 1,

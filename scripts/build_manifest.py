@@ -28,6 +28,14 @@ def _resolve_repo_path(path_value: str) -> Path:
     return REPO_ROOT / path
 
 
+def _repo_display_path(path: Path) -> str:
+    """Return repo-relative paths in public result metadata when possible."""
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-root", required=True)
@@ -51,6 +59,7 @@ def main() -> int:
         max_per_location=args.max_per_location,
         max_per_day=args.max_per_day,
     )
+    manifest["data_root"] = _repo_display_path(data_root)
 
     json_out = _resolve_repo_path(args.manifest_json_out)
     csv_out = _resolve_repo_path(args.manifest_csv_out)

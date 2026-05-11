@@ -29,6 +29,14 @@ def _resolve_repo_path(path_value: str) -> Path:
     return REPO_ROOT / path
 
 
+def _repo_display_path(path: Path) -> str:
+    """Return repo-relative paths in public run metadata when possible."""
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/experiment.yaml")
@@ -98,7 +106,7 @@ def main() -> int:
     metadata_out.write_text(
         json.dumps(
             {
-                "time_bins_path": str(time_bins_path),
+                "time_bins_path": _repo_display_path(time_bins_path),
                 "snapshot_seconds": snapshot_seconds,
                 "horizon_seconds": horizon_seconds,
                 "horizon_bins": horizon_bins,
