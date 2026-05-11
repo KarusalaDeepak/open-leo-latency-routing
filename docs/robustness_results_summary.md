@@ -34,30 +34,30 @@ This report evaluates train-on-base, test-on-shift robustness under burst, outag
 
 | Scenario | Policy | Decisions | Mean Realized Latency (ms) | Mean Regret (ms) | Best-Path Match Rate | Success Under 60 ms | Mean Decision Time (us) |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| base | random | 28 | 43.2027 | 4.3333 | 0.4643 | 0.9643 | 269.04 |
-| base | reactive_greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 315.11 |
-| base | predictive_greedy | 28 | 41.5787 | 2.7093 | 0.5000 | 0.9286 | 287.57 |
-| base | predictive_graph_greedy | 28 | 40.6557 | 1.7863 | 0.5714 | 0.9643 | 307.99 |
-| base | predictive_simple_fusion_greedy | 28 | 41.1929 | 2.3235 | 0.5000 | 0.9643 | 266.63 |
-| base | predictive_consensus_greedy | 28 | 40.7455 | 1.8761 | 0.6429 | 0.9643 | 294.96 |
-| burst | random | 28 | 44.5169 | 4.9632 | 0.4643 | 0.9643 | 327.73 |
-| burst | reactive_greedy | 28 | 45.8579 | 6.3042 | 0.4286 | 0.8571 | 298.52 |
-| burst | predictive_greedy | 28 | 44.6901 | 5.1364 | 0.5000 | 0.8929 | 262.16 |
-| burst | predictive_graph_greedy | 28 | 45.9807 | 6.4270 | 0.4643 | 0.8571 | 251.72 |
-| burst | predictive_simple_fusion_greedy | 28 | 45.9389 | 6.3853 | 0.4286 | 0.8571 | 281.98 |
-| burst | predictive_consensus_greedy | 28 | 45.8330 | 6.2793 | 0.4286 | 0.8571 | 298.67 |
-| outage | random | 28 | 45.9272 | 7.0578 | 0.4643 | 0.8929 | 289.07 |
-| outage | reactive_greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 296.94 |
-| outage | predictive_greedy | 28 | 41.5787 | 2.7093 | 0.5000 | 0.9286 | 276.70 |
-| outage | predictive_graph_greedy | 28 | 40.9901 | 2.1208 | 0.5357 | 0.9643 | 289.22 |
-| outage | predictive_simple_fusion_greedy | 28 | 41.1929 | 2.3235 | 0.5000 | 0.9643 | 289.00 |
-| outage | predictive_consensus_greedy | 28 | 40.9088 | 2.0394 | 0.6071 | 0.9643 | 288.00 |
-| structural | random | 28 | 48.8898 | 4.2025 | 0.4286 | 0.7500 | 304.43 |
-| structural | reactive_greedy | 28 | 49.1523 | 4.4650 | 0.2857 | 0.7143 | 262.37 |
-| structural | predictive_greedy | 28 | 47.4615 | 2.7743 | 0.4643 | 0.7500 | 284.42 |
-| structural | predictive_graph_greedy | 28 | 47.3827 | 2.6954 | 0.4286 | 0.7500 | 292.96 |
-| structural | predictive_simple_fusion_greedy | 28 | 47.6447 | 2.9574 | 0.4643 | 0.7500 | 254.60 |
-| structural | predictive_consensus_greedy | 28 | 47.4115 | 2.7243 | 0.5357 | 0.7500 | 288.79 |
+| base | random | 28 | 43.2027 | 4.3333 | 0.4643 | 0.9643 | 229.83 |
+| base | reactive_greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 235.87 |
+| base | predictive_greedy | 28 | 41.5787 | 2.7093 | 0.5000 | 0.9286 | 229.18 |
+| base | predictive_graph_greedy | 28 | 40.6557 | 1.7863 | 0.5714 | 0.9643 | 235.08 |
+| base | predictive_simple_fusion_greedy | 28 | 41.1929 | 2.3235 | 0.5000 | 0.9643 | 230.38 |
+| base | predictive_consensus_greedy | 28 | 40.7455 | 1.8761 | 0.6429 | 0.9643 | 223.99 |
+| burst | random | 28 | 44.5169 | 4.9632 | 0.4643 | 0.9643 | 246.19 |
+| burst | reactive_greedy | 28 | 45.8579 | 6.3042 | 0.4286 | 0.8571 | 241.87 |
+| burst | predictive_greedy | 28 | 44.6901 | 5.1364 | 0.5000 | 0.8929 | 215.21 |
+| burst | predictive_graph_greedy | 28 | 45.9807 | 6.4270 | 0.4643 | 0.8571 | 234.62 |
+| burst | predictive_simple_fusion_greedy | 28 | 45.9389 | 6.3853 | 0.4286 | 0.8571 | 225.90 |
+| burst | predictive_consensus_greedy | 28 | 45.8330 | 6.2793 | 0.4286 | 0.8571 | 247.15 |
+| outage | random | 28 | 45.9272 | 7.0578 | 0.4643 | 0.8929 | 245.48 |
+| outage | reactive_greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 227.60 |
+| outage | predictive_greedy | 28 | 41.5787 | 2.7093 | 0.5000 | 0.9286 | 232.55 |
+| outage | predictive_graph_greedy | 28 | 40.9901 | 2.1208 | 0.5357 | 0.9643 | 235.57 |
+| outage | predictive_simple_fusion_greedy | 28 | 41.1929 | 2.3235 | 0.5000 | 0.9643 | 230.88 |
+| outage | predictive_consensus_greedy | 28 | 40.9088 | 2.0394 | 0.6071 | 0.9643 | 237.49 |
+| structural | random | 28 | 48.8898 | 4.2025 | 0.4286 | 0.7500 | 237.98 |
+| structural | reactive_greedy | 28 | 49.1523 | 4.4650 | 0.2857 | 0.7143 | 230.56 |
+| structural | predictive_greedy | 28 | 47.4615 | 2.7743 | 0.4643 | 0.7500 | 224.94 |
+| structural | predictive_graph_greedy | 28 | 47.3827 | 2.6954 | 0.4286 | 0.7500 | 234.93 |
+| structural | predictive_simple_fusion_greedy | 28 | 47.6447 | 2.9574 | 0.4643 | 0.7500 | 226.97 |
+| structural | predictive_consensus_greedy | 28 | 47.4115 | 2.7243 | 0.5357 | 0.7500 | 225.49 |
 
 Best-path match rate is reported only as a secondary metric because it uses perfect hindsight and cannot be deployed online.
 
@@ -205,23 +205,23 @@ In base evaluation, random selection retains the strongest `Success Under 60 ms`
 
 | Scenario | Disagreement Penalty | Mean Latency (ms) | Mean Regret (ms) | Match Rate | Runtime (us) |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| base | 0.00 | 41.1929 | 2.3235 | 0.5000 | 291.45 |
-| base | 0.10 | 41.1637 | 2.2943 | 0.5357 | 286.22 |
-| base | 0.20 | 40.7455 | 1.8761 | 0.6429 | 277.76 |
-| base | 0.30 | 40.7455 | 1.8761 | 0.6429 | 282.23 |
-| base | 0.50 | 40.6789 | 1.8095 | 0.6429 | 287.31 |
-| burst | 0.00 | 45.9389 | 6.3853 | 0.4286 | 302.74 |
-| burst | 0.10 | 46.0316 | 6.4780 | 0.3929 | 330.16 |
-| burst | 0.20 | 45.8330 | 6.2793 | 0.4286 | 295.19 |
-| burst | 0.30 | 45.8330 | 6.2793 | 0.4286 | 285.28 |
-| burst | 0.50 | 45.6602 | 6.1066 | 0.4643 | 260.39 |
-| outage | 0.00 | 41.1929 | 2.3235 | 0.5000 | 250.79 |
-| outage | 0.10 | 41.1637 | 2.2943 | 0.5357 | 314.54 |
-| outage | 0.20 | 40.9088 | 2.0394 | 0.6071 | 287.21 |
-| outage | 0.30 | 40.9088 | 2.0394 | 0.6071 | 270.59 |
-| outage | 0.50 | 40.7979 | 1.9285 | 0.6429 | 295.92 |
-| structural | 0.00 | 47.6447 | 2.9574 | 0.4643 | 266.05 |
-| structural | 0.10 | 47.6155 | 2.9282 | 0.5000 | 255.17 |
-| structural | 0.20 | 47.4115 | 2.7243 | 0.5357 | 251.41 |
-| structural | 0.30 | 47.4115 | 2.7243 | 0.5357 | 287.73 |
-| structural | 0.50 | 47.4058 | 2.7185 | 0.5000 | 269.52 |
+| base | 0.00 | 41.1929 | 2.3235 | 0.5000 | 230.86 |
+| base | 0.10 | 41.1637 | 2.2943 | 0.5357 | 243.12 |
+| base | 0.20 | 40.7455 | 1.8761 | 0.6429 | 241.97 |
+| base | 0.30 | 40.7455 | 1.8761 | 0.6429 | 236.79 |
+| base | 0.50 | 40.6789 | 1.8095 | 0.6429 | 233.46 |
+| burst | 0.00 | 45.9389 | 6.3853 | 0.4286 | 235.23 |
+| burst | 0.10 | 46.0316 | 6.4780 | 0.3929 | 229.46 |
+| burst | 0.20 | 45.8330 | 6.2793 | 0.4286 | 233.19 |
+| burst | 0.30 | 45.8330 | 6.2793 | 0.4286 | 238.88 |
+| burst | 0.50 | 45.6602 | 6.1066 | 0.4643 | 227.51 |
+| outage | 0.00 | 41.1929 | 2.3235 | 0.5000 | 232.26 |
+| outage | 0.10 | 41.1637 | 2.2943 | 0.5357 | 236.53 |
+| outage | 0.20 | 40.9088 | 2.0394 | 0.6071 | 234.00 |
+| outage | 0.30 | 40.9088 | 2.0394 | 0.6071 | 243.08 |
+| outage | 0.50 | 40.7979 | 1.9285 | 0.6429 | 227.63 |
+| structural | 0.00 | 47.6447 | 2.9574 | 0.4643 | 222.46 |
+| structural | 0.10 | 47.6155 | 2.9282 | 0.5000 | 235.10 |
+| structural | 0.20 | 47.4115 | 2.7243 | 0.5357 | 219.61 |
+| structural | 0.30 | 47.4115 | 2.7243 | 0.5357 | 239.84 |
+| structural | 0.50 | 47.4058 | 2.7185 | 0.5000 | 233.13 |
