@@ -123,7 +123,7 @@ def main() -> int:
             ("consensus_vs_temporal", "predictive_consensus_greedy", "predictive_greedy"),
             ("consensus_vs_graph", "predictive_consensus_greedy", "predictive_graph_greedy"),
         ],
-        metric_columns=["realized_next_latency_ms", "regret_ms"],
+        metric_columns=["realized_next_latency_ms", "decision_gap_ms"],
     )
     summary.to_csv(summary_out, index=False)
     decisions.to_csv(decisions_out, index=False)

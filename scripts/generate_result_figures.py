@@ -21,6 +21,22 @@ if str(SRC_ROOT) not in sys.path:
 
 from open_leo_latency_routing.data.loaders import ensure_parent
 
+plt.rcParams.update(
+    {
+        "font.size": 8.5,
+        "axes.titlesize": 9.5,
+        "axes.labelsize": 8.5,
+        "xtick.labelsize": 8,
+        "ytick.labelsize": 8,
+        "legend.fontsize": 7.5,
+        "legend.title_fontsize": 8,
+        "lines.linewidth": 2.0,
+        "lines.markersize": 5.0,
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42,
+    }
+)
+
 
 def _resolve_repo_path(path_value: str) -> Path:
     path = Path(path_value)
@@ -31,7 +47,8 @@ def _resolve_repo_path(path_value: str) -> Path:
 
 def _save_plot(path: Path) -> None:
     plt.tight_layout(rect=(0, 0, 1, 0.97))
-    plt.savefig(path, dpi=220, bbox_inches="tight")
+    plt.savefig(path, dpi=600, bbox_inches="tight")
+    plt.savefig(path.with_suffix(".pdf"), bbox_inches="tight")
     plt.close()
 
 
@@ -80,9 +97,9 @@ def _plot_policy_comparison(policy_summary: pd.DataFrame, out_path: Path) -> Non
     axes[0].tick_params(axis="x", rotation=20)
     axes[0].grid(axis="y", linestyle="--", alpha=0.35)
 
-    axes[1].bar(base["policy_name"], base["mean_regret_ms"], color="#805ad5")
-    axes[1].set_title("Decision Regret on Base Data", pad=14)
-    axes[1].set_ylabel("Mean Regret (ms)")
+    axes[1].bar(base["policy_name"], base["mean_decision_gap_ms"], color="#805ad5")
+    axes[1].set_title("Decision Gap on Base Data", pad=14)
+    axes[1].set_ylabel("Mean Decision Gap (ms)")
     axes[1].tick_params(axis="x", rotation=20)
     axes[1].grid(axis="y", linestyle="--", alpha=0.35)
     _save_plot(out_path)
@@ -128,25 +145,46 @@ def _plot_stress_forecasting(stress_forecast: pd.DataFrame, out_path: Path) -> N
 
 
 def _plot_stress_policy(policy_stress: pd.DataFrame, out_path: Path) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+    policy_label_map = {
+        "random": "Random",
+        "reactive_greedy": "Reactive",
+        "predictive_greedy": "Temporal",
+        "predictive_graph_greedy": "Graph",
+        "predictive_simple_fusion_greedy": "Fusion",
+        "predictive_consensus_greedy": "Consensus",
+    }
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.0), sharex=True)
     latency = policy_stress.pivot(index="scenario_name", columns="policy_name", values="mean_realized_latency_ms")
-    regret = policy_stress.pivot(index="scenario_name", columns="policy_name", values="mean_regret_ms")
+    decision_gap = policy_stress.pivot(index="scenario_name", columns="policy_name", values="mean_decision_gap_ms")
     ordered = _ordered_scenarios(policy_stress)
-    latency = latency.loc[ordered]
-    regret = regret.loc[ordered]
+    column_order = [name for name in policy_label_map if name in latency.columns]
+    latency = latency.loc[ordered, column_order].rename(columns=policy_label_map)
+    decision_gap = decision_gap.loc[ordered, column_order].rename(columns=policy_label_map)
+    display_index = [name.title() for name in ordered]
+    latency.index = display_index
+    decision_gap.index = display_index
 
-    latency.plot(kind="line", marker="o", ax=axes[0], linewidth=2.2, legend=False)
-    axes[0].set_title("Policy Latency Across Stress Scenarios", pad=14)
-    axes[0].set_ylabel("Mean Realized Latency (ms)")
-    axes[0].set_xlabel("Scenario")
-    axes[0].grid(True, linestyle="--", alpha=0.35)
+    latency.plot(kind="line", marker="o", ax=axes[0], legend=False)
+    axes[0].set_title("Latency Across Stress Scenarios", pad=6)
+    axes[0].set_ylabel("Latency (ms)")
+    axes[0].set_xlabel("")
+    axes[0].grid(True, linestyle="--", alpha=0.35, linewidth=0.6)
+    axes[0].set_ylim(39, 51)
 
-    regret.plot(kind="line", marker="o", ax=axes[1], linewidth=2.2)
-    axes[1].set_title("Policy Regret Across Stress Scenarios", pad=14)
-    axes[1].set_ylabel("Mean Regret (ms)")
-    axes[1].set_xlabel("Scenario")
-    axes[1].grid(True, linestyle="--", alpha=0.35)
-    axes[1].legend(loc="upper left", bbox_to_anchor=(1.01, 1.0), frameon=True, title="Policy")
+    decision_gap.plot(kind="line", marker="o", ax=axes[1])
+    axes[1].set_title("Decision Gap Across Stress Scenarios", pad=6)
+    axes[1].set_ylabel("Decision Gap (ms)")
+    axes[1].set_xlabel("")
+    axes[1].grid(True, linestyle="--", alpha=0.35, linewidth=0.6)
+    axes[1].legend(
+        loc="center left",
+        bbox_to_anchor=(1.01, 0.5),
+        ncol=1,
+        frameon=True,
+        title="Policy",
+        columnspacing=0.8,
+        handlelength=1.4,
+    )
     _save_plot(out_path)
 
 
@@ -171,20 +209,19 @@ def _plot_disagreement_uncertainty(disagreement_summary: pd.DataFrame, out_path:
         "predictive_simple_fusion_greedy": "Fusion",
         "predictive_consensus_greedy": "Consensus",
     }
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.0))
     for scenario_name, group in plot_frame.groupby("scenario_name", sort=False):
         consensus = group[group["policy_name"] == "predictive_consensus_greedy"]
         axes[0].plot(
             consensus["disagreement_bin"],
-            consensus["mean_regret_ms"],
+            consensus["mean_decision_gap_ms"],
             marker="o",
-            linewidth=2.2,
-            label=f"{scenario_name} / Consensus",
+            label=scenario_name.title(),
         )
-    axes[0].set_title("Consensus Regret Across Disagreement Bins", pad=14)
-    axes[0].set_xlabel("Window disagreement bin")
-    axes[0].set_ylabel("Mean regret (ms)")
-    axes[0].grid(True, linestyle="--", alpha=0.35)
+    axes[0].set_title("Consensus Decision Gap by Disagreement", pad=6)
+    axes[0].set_xlabel("")
+    axes[0].set_ylabel("Decision Gap (ms)")
+    axes[0].grid(True, linestyle="--", alpha=0.35, linewidth=0.6)
 
     structural = plot_frame[plot_frame["scenario_name"] == "structural"].copy()
     if not structural.empty:
@@ -192,12 +229,21 @@ def _plot_disagreement_uncertainty(disagreement_summary: pd.DataFrame, out_path:
         pivot = pivot.rename(columns=label_map)
         pivot = pivot[[col for col in ["Temporal", "Graph-aware", "Fusion", "Consensus"] if col in pivot.columns]]
         pivot.plot(kind="bar", ax=axes[1], width=0.78)
-    axes[1].set_title("Structural Shift Latency by Disagreement Bin", pad=14)
-    axes[1].set_xlabel("Window disagreement bin")
-    axes[1].set_ylabel("Mean realized latency (ms)")
-    axes[1].grid(axis="y", linestyle="--", alpha=0.35)
-    axes[1].legend(loc="upper left", bbox_to_anchor=(1.01, 1.0), frameon=True, title="Policy")
-    axes[0].legend(loc="upper left", frameon=True)
+    axes[1].set_title("Structural Latency by Disagreement", pad=6)
+    axes[1].set_xlabel("")
+    axes[1].set_ylabel("Latency (ms)")
+    axes[1].tick_params(axis="x", rotation=0)
+    axes[1].grid(axis="y", linestyle="--", alpha=0.35, linewidth=0.6)
+    axes[1].legend(
+        loc="upper right",
+        bbox_to_anchor=(1.0, 1.07),
+        ncol=2,
+        frameon=True,
+        title="Policy",
+        columnspacing=0.8,
+        handlelength=1.2,
+    )
+    axes[0].legend(loc="upper left", frameon=True, title="Scenario")
     _save_plot(out_path)
 
 
@@ -217,7 +263,7 @@ def _plot_penalty_sweep(penalty_sweep: pd.DataFrame, out_path: Path) -> None:
         )
         axes[1].plot(
             group["disagreement_penalty"],
-            group["mean_regret_ms"],
+            group["mean_decision_gap_ms"],
             marker="o",
             linewidth=2.2,
             label=scenario_name,
@@ -226,9 +272,9 @@ def _plot_penalty_sweep(penalty_sweep: pd.DataFrame, out_path: Path) -> None:
     axes[0].set_xlabel("Disagreement penalty $\\lambda$")
     axes[0].set_ylabel("Mean realized latency (ms)")
     axes[0].grid(True, linestyle="--", alpha=0.35)
-    axes[1].set_title("Consensus Penalty Sweep: Regret", pad=14)
+    axes[1].set_title("Consensus Penalty Sweep: Decision Gap", pad=14)
     axes[1].set_xlabel("Disagreement penalty $\\lambda$")
-    axes[1].set_ylabel("Mean regret (ms)")
+    axes[1].set_ylabel("Mean decision gap (ms)")
     axes[1].grid(True, linestyle="--", alpha=0.35)
     axes[1].legend(loc="upper left", bbox_to_anchor=(1.01, 1.0), frameon=True, title="Scenario")
     _save_plot(out_path)

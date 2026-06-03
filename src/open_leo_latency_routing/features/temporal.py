@@ -92,7 +92,35 @@ def build_forecast_table(
     frame["target_next"] = frame.groupby("relative_path")[target_column].shift(-horizon_bins)
     frame["target_next_bin_epoch"] = frame.groupby("relative_path")["bin_epoch"].shift(-horizon_bins)
     frame["target_available"] = frame["target_next"].notna().astype(int)
-    numeric_columns = frame.select_dtypes(include=["number"]).columns
+
+    # Journal-facing analyses also inspect short multi-bin service outcomes.
+    # These future-window targets remain NaN when insufficient future bins are
+    # available so downstream evaluation can track the effective sample size.
+    grouped_target = frame.groupby("relative_path")[target_column]
+    future_target_columns: list[str] = []
+    for horizon in (3, 5):
+        shifted_terms = [grouped_target.shift(-step) for step in range(1, horizon + 1)]
+        future_sum = shifted_terms[0].copy()
+        for term in shifted_terms[1:]:
+            future_sum = future_sum + term
+        available = pd.Series(True, index=frame.index)
+        for term in shifted_terms:
+            available &= term.notna()
+        frame[f"target_cumulative_{horizon}"] = future_sum.where(available)
+        frame[f"target_mean_{horizon}"] = (future_sum / horizon).where(available)
+        frame[f"target_available_{horizon}"] = available.astype(int)
+        future_target_columns.extend(
+            [
+                f"target_cumulative_{horizon}",
+                f"target_mean_{horizon}",
+            ]
+        )
+
+    numeric_columns = [
+        column
+        for column in frame.select_dtypes(include=["number"]).columns
+        if column not in {"target_next", "target_next_bin_epoch", *future_target_columns}
+    ]
     frame[numeric_columns] = frame[numeric_columns].fillna(0.0)
     frame = frame[frame["target_available"] == 1].copy()
     return frame.reset_index(drop=True)

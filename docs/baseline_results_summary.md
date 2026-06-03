@@ -55,7 +55,7 @@ The final manuscript version keeps `graph_xgboost` as the single graph-aware mod
 
 Decision windows are defined by normalized `session_bin_index`. For each window, the policy selects one candidate path and is evaluated on the realized next-bin latency.
 
-| Policy | Decisions | Mean Realized Latency (ms) | Mean Regret (ms) | Best-Path Match Rate | Success Under 60 ms | Mean Decision Time (us) |
+| Policy | Decisions | Mean Realized Latency (ms) | Mean Decision Gap (ms) | Retrospective Best-Path Match Rate | Success Under 60 ms | Mean Decision Time (us) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Random | 28 | 43.2027 | 4.3333 | 0.4643 | 0.9643 | 194.15 |
 | Reactive Greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 203.53 |
@@ -64,11 +64,11 @@ Decision windows are defined by normalized `session_bin_index`. For each window,
 | Predictive Simple Fusion Greedy | 28 | 41.7712 | 2.9018 | 0.5000 | 0.9286 | 191.92 |
 | Predictive Consensus Greedy | 28 | 41.9269 | 3.0575 | 0.4643 | 0.9286 | 186.10 |
 
-On the base split, `predictive_greedy` is the strongest decision rule by mean realized latency and regret. `predictive_simple_fusion_greedy` remains intermediate, while `predictive_consensus_greedy` is slightly behind in the stable condition. This is a useful negative result: the disagreement penalty is not meant to dominate in every nominal case.
+On the base split, `predictive_greedy` is the strongest decision rule by mean realized latency and decision gap. `predictive_simple_fusion_greedy` remains intermediate, while `predictive_consensus_greedy` is slightly behind in the stable condition. This is a useful negative result: the disagreement penalty is not meant to dominate in every nominal case.
 
-Best-path match rate should be interpreted only as a secondary metric. It uses perfect hindsight and is not deployable; the value of this column is simply to show how often a practical policy happens to match the true best path that can only be identified after observing the future.
+Retrospective best-path match rate should be interpreted only as a secondary metric. It uses post-hoc observed outcomes and is not deployable; the value of this column is simply to show how often a practical policy happens to match the best observed path in each evaluation window.
 
-Random achieves the highest `Success Under 60 ms` in the base setting, while `predictive_greedy` wins on mean latency and regret. This highlights the classic latency-vs.-tail tradeoff in LEO scheduling: a policy can improve average decision quality without always dominating the tail threshold metric.
+Random achieves the highest `Success Under 60 ms` in the base setting, while `predictive_greedy` wins on mean latency and decision gap. This highlights the classic latency-vs.-tail tradeoff in LEO scheduling: a policy can improve average decision quality without always dominating the tail threshold metric.
 
 ## Statistical Significance
 
@@ -77,19 +77,19 @@ Wilcoxon signed-rank tests were run across the `28` paired decision windows.
 | Comparison | Metric | Mean Delta (ms) | p-value | Interpretation |
 | --- | --- | ---: | ---: | --- |
 | Graph vs Reactive | Realized Latency | -1.4605 | 0.1688 | Improvement trend, not significant on the base split |
-| Graph vs Reactive | Regret | -1.4605 | 0.1688 | Improvement trend, not significant on the base split |
+| Graph vs Reactive | Decision Gap | -1.4605 | 0.1688 | Improvement trend, not significant on the base split |
 | Graph vs Predictive-only | Realized Latency | 0.3873 | 0.4236 | No significant difference |
-| Graph vs Predictive-only | Regret | 0.3873 | 0.4236 | No significant difference |
+| Graph vs Predictive-only | Decision Gap | 0.3873 | 0.4236 | No significant difference |
 | Fusion vs Temporal | Realized Latency | 0.1925 | 0.2850 | Naive blending does not significantly beat temporal-only prediction |
-| Fusion vs Temporal | Regret | 0.1925 | 0.2850 | Same conclusion for regret |
+| Fusion vs Temporal | Decision Gap | 0.1925 | 0.2850 | Same conclusion for decision gap |
 | Consensus vs Fusion | Realized Latency | 0.1557 | 0.5930 | No significant difference on the stable base split |
-| Consensus vs Fusion | Regret | 0.1557 | 0.5930 | Same conclusion for regret |
+| Consensus vs Fusion | Decision Gap | 0.1557 | 0.5930 | Same conclusion for decision gap |
 
 ## Current Interpretation
 
 The final cleaned baseline supports the manuscript direction:
 
-1. Predictive selection outperforms purely reactive selection on realized latency and regret.
+1. Predictive selection outperforms purely reactive selection on realized latency and decision gap.
 2. `linear_regression` is the strongest pure temporal forecaster on the current working subset, while `graph_xgboost` is the graph-aware predictor used for the proposed graph-based policy.
 3. The stable base split does not justify claiming universal dominance for either graph-only or hybrid decision rules, because `predictive_greedy` remains best in this condition.
 4. The stronger manuscript claim is therefore robustness: graph-aware decision-making becomes more valuable in shifted conditions such as outage windows, and the disagreement-aware consensus rule should be judged against the simple-fusion ablation rather than against temporal-only forecasting error.

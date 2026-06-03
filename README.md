@@ -15,7 +15,7 @@ The paper-facing comparison keeps only the methods used in the manuscript:
 
 - temporal baselines: `persistence`, `linear_regression`
 - graph-aware predictor: `graph_xgboost`
-- decision policies: `random`, `reactive_greedy`, `predictive_greedy`, `predictive_graph_greedy`, `predictive_consensus_greedy`
+- decision policies: `random`, `reactive_greedy`, `predictive_greedy`, `predictive_graph_greedy`, `predictive_consensus_greedy`, `ensemble_uncertainty_selector`, `disagreement_aware_selector`
 
 The consensus policy is a lightweight hybrid score:
 
@@ -25,11 +25,15 @@ This keeps the temporal model as the anchor, borrows graph context when it helps
 and penalizes strong disagreement between the two predictors as a simple
 uncertainty signal.
 
+The ensemble uncertainty selector is an additional uncertainty-aware comparator.
+It trains small bootstrapped temporal models, then scores each path using the
+ensemble mean, ensemble spread, and observed service-risk features.
+
 Key decision metrics reported by the repo include:
 
 - mean realized latency,
-- mean regret,
-- `best_path_match_rate`, which measures how often a policy chooses the same path as the hindsight-best path,
+- mean decision gap against a retrospective best-path benchmark,
+- `retrospective_best_path_match_rate`, which measures how often a policy chooses the same path as the post-hoc reference path,
 - success rate under the configured latency budget,
 - mean per-decision runtime in microseconds.
 
@@ -89,7 +93,10 @@ analyses:
    like an uncertainty signal,
 2. a correlated structural-shift stress that degrades multiple location groups
    across aligned decision windows,
-3. a consensus-penalty sweep over the disagreement regularization coefficient.
+3. an ensemble uncertainty baseline for comparison against the proposed
+   disagreement-aware selector,
+4. a larger-subset runner that rebuilds the time-bin table from more LENS ping
+   files when raw logs are available locally.
 
 ## Quick Start
 
@@ -108,4 +115,6 @@ python scripts/run_graph_forecasting.py
 python scripts/run_decision_policy_evaluation.py
 python scripts/run_robustness_evaluation.py
 python scripts/generate_result_figures.py
+python scripts/run_service_path_experiments.py
+python scripts/run_larger_lens_subset.py --max-files 64
 ```

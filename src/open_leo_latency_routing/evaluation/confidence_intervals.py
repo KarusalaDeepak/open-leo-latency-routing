@@ -47,15 +47,19 @@ def build_bootstrap_policy_intervals(
             continue
 
         for metric_name in metric_columns:
-            values = policy_frame[metric_name].to_numpy(dtype=float)
+            if metric_name not in policy_frame.columns:
+                continue
+            values = policy_frame[metric_name].dropna().to_numpy(dtype=float)
+            if len(values) == 0:
+                continue
             mean_value = float(values.mean())
-            if sample_count == 1:
+            if len(values) == 1:
                 ci_lower = mean_value
                 ci_upper = mean_value
             else:
                 bootstrap_means = []
                 for _ in range(n_bootstrap):
-                    sample = rng.choice(values, size=sample_count, replace=True)
+                    sample = rng.choice(values, size=len(values), replace=True)
                     bootstrap_means.append(sample.mean())
                 ci_lower = float(np.percentile(bootstrap_means, lower_q))
                 ci_upper = float(np.percentile(bootstrap_means, upper_q))
@@ -67,7 +71,7 @@ def build_bootstrap_policy_intervals(
                     mean_value=mean_value,
                     ci_lower=ci_lower,
                     ci_upper=ci_upper,
-                    sample_count=sample_count,
+                    sample_count=len(values),
                 )
             )
 

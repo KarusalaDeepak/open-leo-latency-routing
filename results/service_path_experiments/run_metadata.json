@@ -1,0 +1,27 @@
+{
+  "latency_budget_ms": 60.0,
+  "holdout_locations": [
+    "ulukhaktok",
+    "kanazawa",
+    "lincoln",
+    "victoria_hp1_proto2"
+  ],
+  "policy_columns": {
+    "random": "random_score",
+    "best_historical_path": "historical_mean_latency_ms",
+    "highest_reply_availability": "reply_availability_score",
+    "reactive_greedy": "latency_mean_ms",
+    "predictive_greedy": "pred_forecast",
+    "predictive_graph_greedy": "pred_graph",
+    "predictive_simple_fusion_greedy": "pred_simple_fusion",
+    "predictive_consensus_greedy": "pred_consensus",
+    "ensemble_uncertainty_selector": "pred_ensemble_uncertainty",
+    "disagreement_aware_selector": "pred_disagreement_aware"
+  },
+  "consensus_config": {
+    "temporal_weight": 0.65,
+    "graph_weight": 0.35,
+    "disagreement_penalty": 0.3,
+    "output_column": "pred_consensus"
+  }
+}

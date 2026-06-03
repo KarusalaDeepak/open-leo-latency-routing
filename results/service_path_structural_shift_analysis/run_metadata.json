@@ -1,0 +1,68 @@
+{
+  "latency_budget_ms": 60.0,
+  "holdout_locations": [
+    "ulukhaktok",
+    "kanazawa",
+    "lincoln",
+    "victoria_hp1_proto2"
+  ],
+  "policy_columns": {
+    "random": "random_score",
+    "best_historical_path": "historical_mean_latency_ms",
+    "highest_reply_availability": "reply_availability_score",
+    "reactive_greedy": "latency_mean_ms",
+    "predictive_greedy": "pred_forecast",
+    "predictive_graph_greedy": "pred_graph",
+    "predictive_simple_fusion_greedy": "pred_simple_fusion",
+    "predictive_consensus_greedy": "pred_consensus",
+    "ensemble_uncertainty_selector": "pred_ensemble_uncertainty",
+    "conformal_uncertainty_selector": "pred_conformal_uncertainty",
+    "disagreement_aware_selector": "pred_disagreement_aware"
+  },
+  "consensus_config": {
+    "temporal_weight": 0.65,
+    "graph_weight": 0.35,
+    "disagreement_penalty": 0.3,
+    "output_column": "pred_consensus"
+  },
+  "disagreement_aware_config": {
+    "temporal_weight": 0.85,
+    "graph_weight": 0.15,
+    "disagreement_penalty": 0.6
+  },
+  "ensemble_uncertainty_config": {
+    "lambda_ens": 0.75,
+    "ensemble_members": 9,
+    "row_fraction": 0.82,
+    "feature_fraction": 0.78
+  },
+  "service_risk_config": {
+    "reply_pressure_penalty": 2.5,
+    "volatility_penalty": 1.5
+  },
+  "switching_penalties_ms": [
+    5.0,
+    10.0,
+    20.0
+  ],
+  "stochastic_switching": {
+    "base_penalty_ms": 10.0,
+    "spike_penalty_ms": 75.0,
+    "spike_probability": 0.1,
+    "n_trials": 256,
+    "random_state": 42
+  },
+  "multi_bin_horizons": [
+    3,
+    5
+  ],
+  "config_path": "configs/experiment.yaml",
+  "time_bins_path": "data/processed/ping_time_bins.csv",
+  "split_random_seeds": {
+    "in_distribution_split": 42,
+    "operational_mild": 101,
+    "operational_moderate": 102,
+    "operational_severe": 103,
+    "bootstrap_confidence_intervals": 42
+  }
+}

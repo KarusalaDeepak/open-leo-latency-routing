@@ -5,7 +5,11 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 
 import pandas as pd
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.neural_network import MLPRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeRegressor
 
 from open_leo_latency_routing.evaluation.metrics import (
     mean_absolute_error,
@@ -29,6 +33,28 @@ def build_forecast_model(model_name: str):
     """Create one configured temporal forecasting model by name."""
     if model_name == "linear_regression":
         return LinearRegression()
+    if model_name == "ridge_regression":
+        return Ridge(alpha=1.0, random_state=42)
+    if model_name == "decision_tree_regressor":
+        return DecisionTreeRegressor(max_depth=5, min_samples_leaf=8, random_state=42)
+    if model_name == "small_mlp_regressor":
+        return Pipeline(
+            steps=[
+                ("scale", StandardScaler()),
+                (
+                    "mlp",
+                    MLPRegressor(
+                        hidden_layer_sizes=(24,),
+                        activation="relu",
+                        alpha=1e-3,
+                        learning_rate_init=5e-3,
+                        early_stopping=True,
+                        max_iter=500,
+                        random_state=42,
+                    ),
+                ),
+            ]
+        )
     raise ValueError(f"unsupported forecast model: {model_name}")
 
 
@@ -149,7 +175,12 @@ def run_forecast_baselines(
 
     # The manuscript version keeps one simple predictive baseline and one
     # non-learning persistence reference so the comparison stays concise.
-    for model_name in ("linear_regression",):
+    for model_name in (
+        "linear_regression",
+        "ridge_regression",
+        "decision_tree_regressor",
+        "small_mlp_regressor",
+    ):
         model = fit_forecast_model(
             model_name=model_name,
             train_frame=train_frame,

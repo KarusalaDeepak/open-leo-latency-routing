@@ -1,0 +1,2 @@
+measurement_rows,forecast_rows,locations,paths,date_start,date_end,held_out_locations
+3867,3803,2,64,2025-03-01,2025-03-31,bruhl

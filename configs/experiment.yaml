@@ -24,12 +24,34 @@ optimization:
     temporal_weight: 0.65
     graph_weight: 0.35
     disagreement_penalty: 0.30
+  disagreement_aware:
+    temporal_weight: 0.85
+    graph_weight: 0.15
+    disagreement_penalty: 0.60
+  ensemble_uncertainty:
+    lambda_ens: 0.75
+    ensemble_members: 9
+    row_fraction: 0.82
+    feature_fraction: 0.78
+  service_risk:
+    reply_pressure_penalty: 2.5
+    volatility_penalty: 1.5
+  switching_penalties_ms: [5.0, 10.0, 20.0]
+  stochastic_switching:
+    base_penalty_ms: 10.0
+    spike_penalty_ms: 75.0
+    spike_probability: 0.10
+    n_trials: 256
+  multi_bin_horizons: [3, 5]
   policies:
     - random
     - reactive_greedy
     - predictive_greedy
     - predictive_graph_greedy
     - predictive_consensus_greedy
+    - ensemble_uncertainty_selector
+    - conformal_uncertainty_selector
+    - disagreement_aware_selector
 
 stress:
   burst_fraction: 0.12

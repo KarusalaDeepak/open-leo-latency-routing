@@ -1,0 +1,2 @@
+measurement_rows,forecast_rows,locations,paths,date_start,date_end,held_out_locations
+1087,1071,15,16,2025-03-04,2025-03-29,"ulukhaktok, kanazawa, lincoln, victoria_hp1_proto2"

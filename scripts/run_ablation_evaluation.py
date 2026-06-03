@@ -187,7 +187,7 @@ def main() -> int:
                 ("full_vs_temporal", "predictive_graph_greedy", "predictive_temporal_only"),
                 ("full_vs_graph_only", "predictive_graph_greedy", "predictive_graph_only"),
             ],
-            metric_columns=["realized_next_latency_ms", "regret_ms"],
+            metric_columns=["realized_next_latency_ms", "decision_gap_ms"],
         )
         significance["scenario_name"] = scenario_name
         significance_rows.append(significance)
@@ -196,8 +196,8 @@ def main() -> int:
             decisions=decisions,
             metric_columns=[
                 "realized_next_latency_ms",
-                "regret_ms",
-                "best_path_match",
+                "decision_gap_ms",
+                "retrospective_best_path_match",
                 "success_under_budget",
             ],
             n_bootstrap=3000,

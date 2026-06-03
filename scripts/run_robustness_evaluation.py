@@ -118,21 +118,21 @@ def _write_summary_markdown(
             "",
             "## Policy Summary",
             "",
-            "| Scenario | Policy | Decisions | Mean Realized Latency (ms) | Mean Regret (ms) | Best-Path Match Rate | Success Under 60 ms | Mean Decision Time (us) |",
+            "| Scenario | Policy | Decisions | Mean Realized Latency (ms) | Mean Decision Gap (ms) | Retrospective Best-Path Match Rate | Success Under 60 ms | Mean Decision Time (us) |",
             "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
         ]
     )
     for row in policy_summary.itertuples():
         lines.append(
             f"| {row.scenario_name} | {row.policy_name} | {row.decision_count} | {row.mean_realized_latency_ms:.4f} | "
-            f"{row.mean_regret_ms:.4f} | {row.best_path_match_rate:.4f} | {row.success_rate_under_60ms:.4f} | "
+            f"{row.mean_decision_gap_ms:.4f} | {row.retrospective_best_path_match_rate:.4f} | {row.success_rate_under_60ms:.4f} | "
             f"{row.mean_decision_time_us:.2f} |"
         )
 
     lines.extend(
         [
             "",
-            "Best-path match rate is reported only as a secondary metric because it uses perfect hindsight and cannot be deployed online.",
+            "Retrospective best-path match rate is reported only as a secondary reference metric because it uses post-hoc observed outcomes and cannot be deployed online.",
             "",
             "## Policy Significance",
             "",
@@ -148,18 +148,18 @@ def _write_summary_markdown(
     lines.extend(
         [
             "",
-            "In base evaluation, random selection retains the strongest `Success Under 60 ms` tail score while the graph-aware policy improves mean latency and regret. This is a classic latency-vs.-tail tradeoff rather than a contradiction.",
+            "In base evaluation, random selection retains the strongest `Success Under 60 ms` tail score while the graph-aware policy improves mean latency and decision gap. This is a classic latency-vs.-tail tradeoff rather than a contradiction.",
             "",
             "## Disagreement as an Uncertainty Signal",
             "",
-            "| Scenario | Disagreement Bin | Policy | Mean Latency (ms) | Mean Regret (ms) | Match Rate | Success Under 60 ms | Decisions |",
+            "| Scenario | Disagreement Bin | Policy | Mean Latency (ms) | Mean Decision Gap (ms) | Match Rate | Success Under 60 ms | Decisions |",
             "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: |",
         ]
     )
     for row in disagreement_summary.itertuples():
         lines.append(
             f"| {row.scenario_name} | {row.disagreement_bin} | {row.policy_name} | {row.mean_realized_latency_ms:.4f} | "
-            f"{row.mean_regret_ms:.4f} | {row.best_path_match_rate:.4f} | {row.success_rate_under_60ms:.4f} | "
+            f"{row.mean_decision_gap_ms:.4f} | {row.retrospective_best_path_match_rate:.4f} | {row.success_rate_under_60ms:.4f} | "
             f"{row.decision_count} |"
         )
 
@@ -168,14 +168,14 @@ def _write_summary_markdown(
             "",
             "## Consensus Penalty Sweep",
             "",
-            "| Scenario | Disagreement Penalty | Mean Latency (ms) | Mean Regret (ms) | Match Rate | Runtime (us) |",
+            "| Scenario | Disagreement Penalty | Mean Latency (ms) | Mean Decision Gap (ms) | Match Rate | Runtime (us) |",
             "| --- | ---: | ---: | ---: | ---: | ---: |",
         ]
     )
     for row in penalty_sweep.itertuples():
         lines.append(
             f"| {row.scenario_name} | {row.disagreement_penalty:.2f} | {row.mean_realized_latency_ms:.4f} | "
-            f"{row.mean_regret_ms:.4f} | {row.best_path_match_rate:.4f} | {row.mean_decision_time_us:.2f} |"
+            f"{row.mean_decision_gap_ms:.4f} | {row.retrospective_best_path_match_rate:.4f} | {row.mean_decision_time_us:.2f} |"
         )
 
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -236,8 +236,8 @@ def _build_disagreement_summary(policy_decisions: pd.DataFrame) -> pd.DataFrame:
         .agg(
             decision_count=("session_bin_index", "size"),
             mean_realized_latency_ms=("realized_next_latency_ms", "mean"),
-            mean_regret_ms=("regret_ms", "mean"),
-            best_path_match_rate=("best_path_match", "mean"),
+            mean_decision_gap_ms=("decision_gap_ms", "mean"),
+            retrospective_best_path_match_rate=("retrospective_best_path_match", "mean"),
             success_rate_under_60ms=("success_under_budget", "mean"),
             mean_chosen_disagreement=("chosen_disagreement", "mean"),
         )
@@ -633,7 +633,7 @@ def main() -> int:
                 ("consensus_vs_temporal", "predictive_consensus_greedy", "predictive_greedy"),
                 ("consensus_vs_graph", "predictive_consensus_greedy", "predictive_graph_greedy"),
             ],
-            metric_columns=["realized_next_latency_ms", "regret_ms"],
+            metric_columns=["realized_next_latency_ms", "decision_gap_ms"],
         )
         policy_significance["scenario_name"] = scenario_name
         policy_significance_rows.append(policy_significance)

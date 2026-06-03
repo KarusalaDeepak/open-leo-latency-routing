@@ -1,0 +1,20 @@
+{
+  "time_bins_path": "/Users/dkarusal/Documents/leo-conf2-open-leo/data/processed/ping_time_bins.csv",
+  "config_path": "/Users/dkarusal/Documents/leo-conf2-open-leo/configs/experiment.yaml",
+  "holdout_locations": [
+    "ulukhaktok",
+    "kanazawa",
+    "lincoln",
+    "victoria_hp1_proto2"
+  ],
+  "scenarios": [
+    "operational_moderate",
+    "operational_severe",
+    "site_holdout",
+    "temporal_shift"
+  ],
+  "random_seeds": {
+    "operational_moderate": 201,
+    "operational_severe": 202
+  }
+}

@@ -32,101 +32,101 @@ This report evaluates train-on-base, test-on-shift robustness under burst, outag
 
 ## Policy Summary
 
-| Scenario | Policy | Decisions | Mean Realized Latency (ms) | Mean Regret (ms) | Best-Path Match Rate | Success Under 60 ms | Mean Decision Time (us) |
+| Scenario | Policy | Decisions | Mean Realized Latency (ms) | Mean Decision Gap (ms) | Retrospective Best-Path Match Rate | Success Under 60 ms | Mean Decision Time (us) |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| base | random | 28 | 43.2027 | 4.3333 | 0.4643 | 0.9643 | 229.83 |
-| base | reactive_greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 235.87 |
-| base | predictive_greedy | 28 | 41.5787 | 2.7093 | 0.5000 | 0.9286 | 229.18 |
-| base | predictive_graph_greedy | 28 | 40.6557 | 1.7863 | 0.5714 | 0.9643 | 235.08 |
-| base | predictive_simple_fusion_greedy | 28 | 41.1929 | 2.3235 | 0.5000 | 0.9643 | 230.38 |
-| base | predictive_consensus_greedy | 28 | 40.7455 | 1.8761 | 0.6429 | 0.9643 | 223.99 |
-| burst | random | 28 | 44.5169 | 4.9632 | 0.4643 | 0.9643 | 246.19 |
-| burst | reactive_greedy | 28 | 45.8579 | 6.3042 | 0.4286 | 0.8571 | 241.87 |
-| burst | predictive_greedy | 28 | 44.6901 | 5.1364 | 0.5000 | 0.8929 | 215.21 |
-| burst | predictive_graph_greedy | 28 | 45.9807 | 6.4270 | 0.4643 | 0.8571 | 234.62 |
-| burst | predictive_simple_fusion_greedy | 28 | 45.9389 | 6.3853 | 0.4286 | 0.8571 | 225.90 |
-| burst | predictive_consensus_greedy | 28 | 45.8330 | 6.2793 | 0.4286 | 0.8571 | 247.15 |
-| outage | random | 28 | 45.9272 | 7.0578 | 0.4643 | 0.8929 | 245.48 |
-| outage | reactive_greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 227.60 |
-| outage | predictive_greedy | 28 | 41.5787 | 2.7093 | 0.5000 | 0.9286 | 232.55 |
-| outage | predictive_graph_greedy | 28 | 40.9901 | 2.1208 | 0.5357 | 0.9643 | 235.57 |
-| outage | predictive_simple_fusion_greedy | 28 | 41.1929 | 2.3235 | 0.5000 | 0.9643 | 230.88 |
-| outage | predictive_consensus_greedy | 28 | 40.9088 | 2.0394 | 0.6071 | 0.9643 | 237.49 |
-| structural | random | 28 | 48.8898 | 4.2025 | 0.4286 | 0.7500 | 237.98 |
-| structural | reactive_greedy | 28 | 49.1523 | 4.4650 | 0.2857 | 0.7143 | 230.56 |
-| structural | predictive_greedy | 28 | 47.4615 | 2.7743 | 0.4643 | 0.7500 | 224.94 |
-| structural | predictive_graph_greedy | 28 | 47.3827 | 2.6954 | 0.4286 | 0.7500 | 234.93 |
-| structural | predictive_simple_fusion_greedy | 28 | 47.6447 | 2.9574 | 0.4643 | 0.7500 | 226.97 |
-| structural | predictive_consensus_greedy | 28 | 47.4115 | 2.7243 | 0.5357 | 0.7500 | 225.49 |
+| base | random | 28 | 43.2027 | 4.3333 | 0.4643 | 0.9643 | 246.47 |
+| base | reactive_greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 232.83 |
+| base | predictive_greedy | 28 | 41.5787 | 2.7093 | 0.5000 | 0.9286 | 230.45 |
+| base | predictive_graph_greedy | 28 | 40.6557 | 1.7863 | 0.5714 | 0.9643 | 237.85 |
+| base | predictive_simple_fusion_greedy | 28 | 41.1929 | 2.3235 | 0.5000 | 0.9643 | 234.33 |
+| base | predictive_consensus_greedy | 28 | 40.7455 | 1.8761 | 0.6429 | 0.9643 | 227.31 |
+| burst | random | 28 | 44.5169 | 4.9632 | 0.4643 | 0.9643 | 254.29 |
+| burst | reactive_greedy | 28 | 45.8579 | 6.3042 | 0.4286 | 0.8571 | 235.83 |
+| burst | predictive_greedy | 28 | 44.6901 | 5.1364 | 0.5000 | 0.8929 | 227.17 |
+| burst | predictive_graph_greedy | 28 | 45.9807 | 6.4270 | 0.4643 | 0.8571 | 238.87 |
+| burst | predictive_simple_fusion_greedy | 28 | 45.9389 | 6.3853 | 0.4286 | 0.8571 | 231.55 |
+| burst | predictive_consensus_greedy | 28 | 45.8330 | 6.2793 | 0.4286 | 0.8571 | 234.98 |
+| outage | random | 28 | 45.9272 | 7.0578 | 0.4643 | 0.8929 | 251.22 |
+| outage | reactive_greedy | 28 | 43.4266 | 4.5572 | 0.3214 | 0.8929 | 235.71 |
+| outage | predictive_greedy | 28 | 41.5787 | 2.7093 | 0.5000 | 0.9286 | 220.81 |
+| outage | predictive_graph_greedy | 28 | 40.9901 | 2.1208 | 0.5357 | 0.9643 | 257.24 |
+| outage | predictive_simple_fusion_greedy | 28 | 41.1929 | 2.3235 | 0.5000 | 0.9643 | 238.84 |
+| outage | predictive_consensus_greedy | 28 | 40.9088 | 2.0394 | 0.6071 | 0.9643 | 231.93 |
+| structural | random | 28 | 48.8898 | 4.2025 | 0.4286 | 0.7500 | 255.59 |
+| structural | reactive_greedy | 28 | 49.1523 | 4.4650 | 0.2857 | 0.7143 | 217.29 |
+| structural | predictive_greedy | 28 | 47.4615 | 2.7743 | 0.4643 | 0.7500 | 223.95 |
+| structural | predictive_graph_greedy | 28 | 47.3827 | 2.6954 | 0.4286 | 0.7500 | 229.07 |
+| structural | predictive_simple_fusion_greedy | 28 | 47.6447 | 2.9574 | 0.4643 | 0.7500 | 226.02 |
+| structural | predictive_consensus_greedy | 28 | 47.4115 | 2.7243 | 0.5357 | 0.7500 | 226.68 |
 
-Best-path match rate is reported only as a secondary metric because it uses perfect hindsight and cannot be deployed online.
+Retrospective best-path match rate is reported only as a secondary reference metric because it uses post-hoc observed outcomes and cannot be deployed online.
 
 ## Policy Significance
 
 | Scenario | Comparison | Metric | Mean Delta (ms) | p-value |
 | --- | --- | --- | ---: | ---: |
 | base | graph_vs_reactive | realized_next_latency_ms | -2.7709 | 0.0044 |
-| base | graph_vs_reactive | regret_ms | -2.7709 | 0.0044 |
+| base | graph_vs_reactive | decision_gap_ms | -2.7709 | 0.0044 |
 | base | graph_vs_predictive_only | realized_next_latency_ms | -0.9230 | 0.4328 |
-| base | graph_vs_predictive_only | regret_ms | -0.9230 | 0.4328 |
+| base | graph_vs_predictive_only | decision_gap_ms | -0.9230 | 0.4328 |
 | base | fusion_vs_temporal | realized_next_latency_ms | -0.3858 | 1.0000 |
-| base | fusion_vs_temporal | regret_ms | -0.3858 | 1.0000 |
+| base | fusion_vs_temporal | decision_gap_ms | -0.3858 | 1.0000 |
 | base | fusion_vs_graph | realized_next_latency_ms | 0.5372 | 0.1394 |
-| base | fusion_vs_graph | regret_ms | 0.5372 | 0.1394 |
+| base | fusion_vs_graph | decision_gap_ms | 0.5372 | 0.1394 |
 | base | consensus_vs_fusion | realized_next_latency_ms | -0.4474 | 0.0679 |
-| base | consensus_vs_fusion | regret_ms | -0.4474 | 0.0679 |
+| base | consensus_vs_fusion | decision_gap_ms | -0.4474 | 0.0679 |
 | base | consensus_vs_temporal | realized_next_latency_ms | -0.8332 | 0.3980 |
-| base | consensus_vs_temporal | regret_ms | -0.8332 | 0.3980 |
+| base | consensus_vs_temporal | decision_gap_ms | -0.8332 | 0.3980 |
 | base | consensus_vs_graph | realized_next_latency_ms | 0.0898 | 0.9165 |
-| base | consensus_vs_graph | regret_ms | 0.0898 | 0.9165 |
+| base | consensus_vs_graph | decision_gap_ms | 0.0898 | 0.9165 |
 | burst | graph_vs_reactive | realized_next_latency_ms | 0.1228 | 0.7532 |
-| burst | graph_vs_reactive | regret_ms | 0.1228 | 0.7532 |
+| burst | graph_vs_reactive | decision_gap_ms | 0.1228 | 0.7532 |
 | burst | graph_vs_predictive_only | realized_next_latency_ms | 1.2906 | 0.6949 |
-| burst | graph_vs_predictive_only | regret_ms | 1.2906 | 0.6949 |
+| burst | graph_vs_predictive_only | decision_gap_ms | 1.2906 | 0.6949 |
 | burst | fusion_vs_temporal | realized_next_latency_ms | 1.2488 | 0.2489 |
-| burst | fusion_vs_temporal | regret_ms | 1.2488 | 0.2489 |
+| burst | fusion_vs_temporal | decision_gap_ms | 1.2488 | 0.2489 |
 | burst | fusion_vs_graph | realized_next_latency_ms | -0.0418 | 0.4990 |
-| burst | fusion_vs_graph | regret_ms | -0.0418 | 0.4990 |
+| burst | fusion_vs_graph | decision_gap_ms | -0.0418 | 0.4990 |
 | burst | consensus_vs_fusion | realized_next_latency_ms | -0.1060 | 0.6547 |
-| burst | consensus_vs_fusion | regret_ms | -0.1060 | 0.6547 |
+| burst | consensus_vs_fusion | decision_gap_ms | -0.1060 | 0.6547 |
 | burst | consensus_vs_temporal | realized_next_latency_ms | 1.1429 | 0.4008 |
-| burst | consensus_vs_temporal | regret_ms | 1.1429 | 0.4008 |
+| burst | consensus_vs_temporal | decision_gap_ms | 1.1429 | 0.4008 |
 | burst | consensus_vs_graph | realized_next_latency_ms | -0.1477 | 0.6858 |
-| burst | consensus_vs_graph | regret_ms | -0.1477 | 0.6858 |
+| burst | consensus_vs_graph | decision_gap_ms | -0.1477 | 0.6858 |
 | outage | graph_vs_reactive | realized_next_latency_ms | -2.4365 | 0.0208 |
-| outage | graph_vs_reactive | regret_ms | -2.4365 | 0.0208 |
+| outage | graph_vs_reactive | decision_gap_ms | -2.4365 | 0.0208 |
 | outage | graph_vs_predictive_only | realized_next_latency_ms | -0.5886 | 0.8589 |
-| outage | graph_vs_predictive_only | regret_ms | -0.5886 | 0.8589 |
+| outage | graph_vs_predictive_only | decision_gap_ms | -0.5886 | 0.8589 |
 | outage | fusion_vs_temporal | realized_next_latency_ms | -0.3858 | 1.0000 |
-| outage | fusion_vs_temporal | regret_ms | -0.3858 | 1.0000 |
+| outage | fusion_vs_temporal | decision_gap_ms | -0.3858 | 1.0000 |
 | outage | fusion_vs_graph | realized_next_latency_ms | 0.2027 | 0.5147 |
-| outage | fusion_vs_graph | regret_ms | 0.2027 | 0.5147 |
+| outage | fusion_vs_graph | decision_gap_ms | 0.2027 | 0.5147 |
 | outage | consensus_vs_fusion | realized_next_latency_ms | -0.2841 | 0.1088 |
-| outage | consensus_vs_fusion | regret_ms | -0.2841 | 0.1088 |
+| outage | consensus_vs_fusion | decision_gap_ms | -0.2841 | 0.1088 |
 | outage | consensus_vs_temporal | realized_next_latency_ms | -0.6699 | 0.4631 |
-| outage | consensus_vs_temporal | regret_ms | -0.6699 | 0.4631 |
+| outage | consensus_vs_temporal | decision_gap_ms | -0.6699 | 0.4631 |
 | outage | consensus_vs_graph | realized_next_latency_ms | -0.0813 | 0.7532 |
-| outage | consensus_vs_graph | regret_ms | -0.0813 | 0.7532 |
+| outage | consensus_vs_graph | decision_gap_ms | -0.0813 | 0.7532 |
 | structural | graph_vs_reactive | realized_next_latency_ms | -1.7697 | 0.0284 |
-| structural | graph_vs_reactive | regret_ms | -1.7697 | 0.0284 |
+| structural | graph_vs_reactive | decision_gap_ms | -1.7697 | 0.0284 |
 | structural | graph_vs_predictive_only | realized_next_latency_ms | -0.0789 | 0.9292 |
-| structural | graph_vs_predictive_only | regret_ms | -0.0789 | 0.9292 |
+| structural | graph_vs_predictive_only | decision_gap_ms | -0.0789 | 0.9292 |
 | structural | fusion_vs_temporal | realized_next_latency_ms | 0.1831 | 0.3173 |
-| structural | fusion_vs_temporal | regret_ms | 0.1831 | 0.3173 |
+| structural | fusion_vs_temporal | decision_gap_ms | 0.1831 | 0.3173 |
 | structural | fusion_vs_graph | realized_next_latency_ms | 0.2620 | 0.5337 |
-| structural | fusion_vs_graph | regret_ms | 0.2620 | 0.5337 |
+| structural | fusion_vs_graph | decision_gap_ms | 0.2620 | 0.5337 |
 | structural | consensus_vs_fusion | realized_next_latency_ms | -0.2332 | 0.1441 |
-| structural | consensus_vs_fusion | regret_ms | -0.2332 | 0.1441 |
+| structural | consensus_vs_fusion | decision_gap_ms | -0.2332 | 0.1441 |
 | structural | consensus_vs_temporal | realized_next_latency_ms | -0.0500 | 0.6858 |
-| structural | consensus_vs_temporal | regret_ms | -0.0500 | 0.6858 |
+| structural | consensus_vs_temporal | decision_gap_ms | -0.0500 | 0.6858 |
 | structural | consensus_vs_graph | realized_next_latency_ms | 0.0289 | 0.8658 |
-| structural | consensus_vs_graph | regret_ms | 0.0289 | 0.8658 |
+| structural | consensus_vs_graph | decision_gap_ms | 0.0289 | 0.8658 |
 
-In base evaluation, random selection retains the strongest `Success Under 60 ms` tail score while the graph-aware policy improves mean latency and regret. This is a classic latency-vs.-tail tradeoff rather than a contradiction.
+In base evaluation, random selection retains the strongest `Success Under 60 ms` tail score while the graph-aware policy improves mean latency and decision gap. This is a classic latency-vs.-tail tradeoff rather than a contradiction.
 
 ## Disagreement as an Uncertainty Signal
 
-| Scenario | Disagreement Bin | Policy | Mean Latency (ms) | Mean Regret (ms) | Match Rate | Success Under 60 ms | Decisions |
+| Scenario | Disagreement Bin | Policy | Mean Latency (ms) | Mean Decision Gap (ms) | Match Rate | Success Under 60 ms | Decisions |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | base | Low | predictive_consensus_greedy | 43.6684 | 2.2452 | 0.7000 | 1.0000 | 10 |
 | base | Low | predictive_graph_greedy | 43.3109 | 1.8877 | 0.7000 | 1.0000 | 10 |
@@ -203,25 +203,25 @@ In base evaluation, random selection retains the strongest `Success Under 60 ms`
 
 ## Consensus Penalty Sweep
 
-| Scenario | Disagreement Penalty | Mean Latency (ms) | Mean Regret (ms) | Match Rate | Runtime (us) |
+| Scenario | Disagreement Penalty | Mean Latency (ms) | Mean Decision Gap (ms) | Match Rate | Runtime (us) |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| base | 0.00 | 41.1929 | 2.3235 | 0.5000 | 230.86 |
-| base | 0.10 | 41.1637 | 2.2943 | 0.5357 | 243.12 |
-| base | 0.20 | 40.7455 | 1.8761 | 0.6429 | 241.97 |
-| base | 0.30 | 40.7455 | 1.8761 | 0.6429 | 236.79 |
-| base | 0.50 | 40.6789 | 1.8095 | 0.6429 | 233.46 |
-| burst | 0.00 | 45.9389 | 6.3853 | 0.4286 | 235.23 |
-| burst | 0.10 | 46.0316 | 6.4780 | 0.3929 | 229.46 |
-| burst | 0.20 | 45.8330 | 6.2793 | 0.4286 | 233.19 |
-| burst | 0.30 | 45.8330 | 6.2793 | 0.4286 | 238.88 |
-| burst | 0.50 | 45.6602 | 6.1066 | 0.4643 | 227.51 |
-| outage | 0.00 | 41.1929 | 2.3235 | 0.5000 | 232.26 |
-| outage | 0.10 | 41.1637 | 2.2943 | 0.5357 | 236.53 |
-| outage | 0.20 | 40.9088 | 2.0394 | 0.6071 | 234.00 |
-| outage | 0.30 | 40.9088 | 2.0394 | 0.6071 | 243.08 |
-| outage | 0.50 | 40.7979 | 1.9285 | 0.6429 | 227.63 |
-| structural | 0.00 | 47.6447 | 2.9574 | 0.4643 | 222.46 |
-| structural | 0.10 | 47.6155 | 2.9282 | 0.5000 | 235.10 |
-| structural | 0.20 | 47.4115 | 2.7243 | 0.5357 | 219.61 |
-| structural | 0.30 | 47.4115 | 2.7243 | 0.5357 | 239.84 |
-| structural | 0.50 | 47.4058 | 2.7185 | 0.5000 | 233.13 |
+| base | 0.00 | 41.1929 | 2.3235 | 0.5000 | 229.14 |
+| base | 0.10 | 41.1637 | 2.2943 | 0.5357 | 233.58 |
+| base | 0.20 | 40.7455 | 1.8761 | 0.6429 | 234.70 |
+| base | 0.30 | 40.7455 | 1.8761 | 0.6429 | 243.51 |
+| base | 0.50 | 40.6789 | 1.8095 | 0.6429 | 238.34 |
+| burst | 0.00 | 45.9389 | 6.3853 | 0.4286 | 234.76 |
+| burst | 0.10 | 46.0316 | 6.4780 | 0.3929 | 222.50 |
+| burst | 0.20 | 45.8330 | 6.2793 | 0.4286 | 232.48 |
+| burst | 0.30 | 45.8330 | 6.2793 | 0.4286 | 250.79 |
+| burst | 0.50 | 45.6602 | 6.1066 | 0.4643 | 263.48 |
+| outage | 0.00 | 41.1929 | 2.3235 | 0.5000 | 235.36 |
+| outage | 0.10 | 41.1637 | 2.2943 | 0.5357 | 228.09 |
+| outage | 0.20 | 40.9088 | 2.0394 | 0.6071 | 248.30 |
+| outage | 0.30 | 40.9088 | 2.0394 | 0.6071 | 241.80 |
+| outage | 0.50 | 40.7979 | 1.9285 | 0.6429 | 244.58 |
+| structural | 0.00 | 47.6447 | 2.9574 | 0.4643 | 232.90 |
+| structural | 0.10 | 47.6155 | 2.9282 | 0.5000 | 235.20 |
+| structural | 0.20 | 47.4115 | 2.7243 | 0.5357 | 240.99 |
+| structural | 0.30 | 47.4115 | 2.7243 | 0.5357 | 237.29 |
+| structural | 0.50 | 47.4058 | 2.7185 | 0.5000 | 230.38 |

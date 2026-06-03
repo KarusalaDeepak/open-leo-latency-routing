@@ -51,7 +51,7 @@ def main() -> int:
     args = parser.parse_args()
 
     data_root = _resolve_repo_path(args.data_root)
-    manifest_csv = _resolve_repo_path(args.manifest_csv)
+    manifest_csv = _resolve_repo_path(args.manifest_csv) if args.manifest_csv else None
     session_out = _resolve_repo_path(args.session_out)
     observations_out = _resolve_repo_path(args.observations_out)
     aggregates_out = _resolve_repo_path(args.aggregates_out)

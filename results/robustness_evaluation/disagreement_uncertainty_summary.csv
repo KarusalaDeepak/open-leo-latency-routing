@@ -1,4 +1,4 @@
-scenario_name,disagreement_bin,policy_name,decision_count,mean_realized_latency_ms,mean_regret_ms,best_path_match_rate,success_rate_under_60ms,mean_chosen_disagreement
+scenario_name,disagreement_bin,policy_name,decision_count,mean_realized_latency_ms,mean_decision_gap_ms,retrospective_best_path_match_rate,success_rate_under_60ms,mean_chosen_disagreement
 base,Low,predictive_consensus_greedy,10,43.66836144913376,2.245178521072968,0.7,1.0,1.6517627120090765
 base,Low,predictive_graph_greedy,10,43.31090957436382,1.8877266463030264,0.7,1.0,1.9237313790566986
 base,Low,predictive_greedy,10,43.1293695170961,1.706186589035309,0.7,1.0,2.5565447171989946
