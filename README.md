@@ -11,13 +11,15 @@ The project scope is:
 2. graph-based learning on temporal network snapshots,
 3. decision optimization on predicted network state.
 
-The paper-facing comparison keeps only the methods used in the manuscript:
+The paper-facing comparison keeps the methods used in the manuscript:
 
 - temporal baselines: `persistence`, `linear_regression`
 - graph-aware predictor: `graph_xgboost`
-- decision policies: `random`, `reactive_greedy`, `predictive_greedy`, `predictive_graph_greedy`, `predictive_consensus_greedy`, `ensemble_uncertainty_selector`, `disagreement_aware_selector`
+- decision policies: `random`, `best_historical_path`, `highest_reply_availability`, `reactive_greedy`, `predictive_greedy`, `predictive_graph_greedy`, `predictive_simple_fusion_greedy`, `predictive_consensus_greedy`, `ensemble_uncertainty_selector`, `conformal_uncertainty_selector`, `disagreement_aware_selector`
 
-The consensus policy is a lightweight hybrid score:
+The simple-fusion policy blends temporal and graph-context predictions without
+an explicit disagreement penalty. The consensus policy is a lightweight hybrid
+score:
 
 - `pred_consensus = 0.65 * pred_forecast + 0.35 * pred_graph + 0.30 * |pred_graph - pred_forecast|`
 
@@ -28,6 +30,10 @@ uncertainty signal.
 The ensemble uncertainty selector is an additional uncertainty-aware comparator.
 It trains small bootstrapped temporal models, then scores each path using the
 ensemble mean, ensemble spread, and observed service-risk features.
+
+The structural-shift service-path experiments also include a split-conformal
+uncertainty comparator and a stronger risk-adjusted disagreement-aware selector
+with weights configured in `configs/experiment.yaml`.
 
 Key decision metrics reported by the repo include:
 
@@ -57,10 +63,10 @@ Expected local dataset path after download and extraction:
 - `data/processed/`: cleaned intermediate artifacts
 - `results/`: outputs, figures, metrics, and logs
 
-Generated raw data extracts, processed data tables, and result files are ignored
-by Git by default. This keeps the public repository lightweight while preserving
-the exact commands needed to regenerate the reported artifacts from the LENS
-release.
+Raw LENS downloads and processed intermediate data tables are ignored by Git.
+The repository intentionally tracks compact result CSV/JSON files and generated
+figures that support the manuscript tables and plots. This keeps the public
+repository reproducible without storing the raw LENS release.
 
 ## Actual Ingestion Outputs
 
@@ -70,16 +76,14 @@ The LENS release is primarily a large collection of line-oriented `ping` logs ra
 2. `ping_observations_sample.csv`: sparse observation-level samples for inspection,
 3. `ping_time_bins.csv`: fixed-width time-bin aggregates for forecasting and graph snapshots.
 
-## First Milestones
+## Reproducibility Guide
 
-1. inspect extracted dataset files and create a data card,
-2. build a diverse candidate manifest instead of overfitting to one location,
-3. build reactive and predictive optimization baselines,
-4. compare temporal-only and graph-aware decision policies.
+For the manuscript-level commands and expected outputs, see
+`docs/reproducibility_guide.md`.
 
 ## Modeling Pipeline
 
-After the raw logs are parsed, the repo supports three direct experiment stages:
+After the raw logs are parsed, the repo supports four direct experiment stages:
 
 1. forecasting on minute-level latency bins,
 2. graph-aware learning on normalized session snapshots,
@@ -95,7 +99,9 @@ analyses:
    across aligned decision windows,
 3. an ensemble uncertainty baseline for comparison against the proposed
    disagreement-aware selector,
-4. a larger-subset runner that rebuilds the time-bin table from more LENS ping
+4. conformal uncertainty, switching-cost, stochastic handover, multi-bin, and
+   sensitivity analyses,
+5. a larger-subset runner that rebuilds the time-bin table from more LENS ping
    files when raw logs are available locally.
 
 ## Quick Start
@@ -115,6 +121,7 @@ python scripts/run_graph_forecasting.py
 python scripts/run_decision_policy_evaluation.py
 python scripts/run_robustness_evaluation.py
 python scripts/generate_result_figures.py
-python scripts/run_service_path_experiments.py
+python scripts/run_service_path_experiments.py --config configs/experiment.yaml --output-dir results/service_path_structural_shift_analysis
+python scripts/run_path_selection_sensitivity.py --config configs/experiment.yaml --output-dir results/path_selection_sensitivity_analysis
 python scripts/run_larger_lens_subset.py --max-files 64
 ```
