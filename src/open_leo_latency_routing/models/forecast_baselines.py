@@ -34,7 +34,12 @@ def build_forecast_model(model_name: str):
     if model_name == "linear_regression":
         return LinearRegression()
     if model_name == "ridge_regression":
-        return Ridge(alpha=1.0, random_state=42)
+        return Pipeline(
+            steps=[
+                ("scale", StandardScaler()),
+                ("ridge", Ridge(alpha=1.0, random_state=42)),
+            ]
+        )
     if model_name == "decision_tree_regressor":
         return DecisionTreeRegressor(max_depth=5, min_samples_leaf=8, random_state=42)
     if model_name == "small_mlp_regressor":
@@ -59,31 +64,55 @@ def build_forecast_model(model_name: str):
 
 
 def default_feature_columns(frame: pd.DataFrame) -> list[str]:
-    """Return the numeric feature columns used by the forecasting baselines."""
-    excluded = {
-        "target_next",
-        "target_next_bin_epoch",
-        "target_available",
-        "split",
-        "relative_path",
-        "measurement_family",
-        "path_state",
-        "location",
-        "session_date",
-        "target_hint",
-        "probe_interval",
-        "window_duration",
-        "window_start",
-        "header_target",
-        "header_target_ip",
-        "header_source_ip",
-        "interface",
-        "bin_start_utc",
+    """Return the portable temporal feature view used by all datasets.
+
+    Raw dataset-specific fields such as TTL, absolute epoch, and ICMP sequence
+    are deliberately excluded. This keeps transfer tests from silently relying
+    on columns that exist only in LENS.
+    """
+
+    exact_features = {
+        "latency_mean_ms",
+        "latency_std_ms",
+        "latency_max_ms",
+        "observed_replies",
+        "path_state_flag",
+        "window_duration_hours",
+        "probe_interval_ms",
+        "session_day_of_month",
+        "observed_replies_roll_mean_3",
+        "observed_replies_roll_std_3",
+        "observed_replies_roll_observed_count_3",
+        "observed_replies_roll_coverage_3",
+        "observed_replies_roll_complete_3",
+        "observed_replies_lag_1",
+        "observed_replies_lag_1_available",
+        "history_lag_coverage_ratio",
+        "latency_delta_1",
+        "latency_delta_roll3",
+        "latency_jump_ratio",
+        "latency_volatility_ratio",
+        "reply_delta_1",
+        "reply_gap_roll3",
+        "reply_pressure_score",
+        "burst_indicator",
     }
+    allowed_prefixes = (
+        "latency_mean_ms_lag_",
+        "latency_mean_ms_roll_mean_",
+        "latency_mean_ms_roll_std_",
+        "latency_mean_ms_roll_observed_count_",
+        "latency_mean_ms_roll_coverage_",
+        "latency_mean_ms_roll_complete_",
+    )
     return [
         column
         for column in frame.columns
-        if column not in excluded and pd.api.types.is_numeric_dtype(frame[column])
+        if (
+            (column in exact_features or column.startswith(allowed_prefixes))
+            and not column.startswith("target_")
+            and pd.api.types.is_numeric_dtype(frame[column])
+        )
     ]
 
 

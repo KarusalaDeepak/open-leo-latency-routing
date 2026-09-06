@@ -1,16 +1,25 @@
-"""Bootstrap confidence intervals for per-window policy metrics."""
+"""Segment-safe bootstrap confidence intervals for policy metrics."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from collections.abc import Sequence
+from dataclasses import asdict, dataclass
 
 import numpy as np
 import pandas as pd
 
+from open_leo_latency_routing.evaluation.significance import (
+    SEGMENTED_CIRCULAR_BLOCK_METHOD,
+    _moving_block_means,
+    _normalize_segment_columns,
+    _validate_bootstrap_parameters,
+    build_bootstrap_segment_ids,
+)
+
 
 @dataclass
 class BootstrapMetricInterval:
-    """Stores one bootstrap confidence interval."""
+    """Stores one bootstrap confidence interval and its segment audit."""
 
     policy_name: str
     metric_name: str
@@ -18,6 +27,9 @@ class BootstrapMetricInterval:
     ci_lower: float
     ci_upper: float
     sample_count: int
+    bootstrap_method: str
+    bootstrap_segment_columns: str
+    bootstrap_segment_count: int
 
 
 def build_bootstrap_policy_intervals(
@@ -27,40 +39,79 @@ def build_bootstrap_policy_intervals(
     n_bootstrap: int = 2000,
     ci: float = 0.95,
     random_state: int = 42,
+    block_length: int | None = None,
+    segment_columns: str | Sequence[str] | None = None,
 ) -> pd.DataFrame:
-    """Estimate percentile bootstrap confidence intervals per policy.
+    """Estimate segment-safe percentile bootstrap intervals per policy.
 
-    The bootstrap is run across aligned decision windows for each policy. This
-    keeps the uncertainty estimate tied to the unit of operational interest:
-    one path-selection opportunity.
+    Callers must explicitly pass columns that identify every uninterrupted
+    sequence. Fixed evaluations use ``continuity_segment_id``, which already
+    resets at telemetry gaps and session/campaign changes; pooled rolling
+    evaluations must additionally include ``rolling_fold``. Circular moving
+    blocks are drawn separately within each segment while preserving its row
+    count, so neither a block nor its wrap can cross a declared boundary.
+
+    Missing/nonfinite metric rows split a segment rather than reconnecting the
+    observations on either side. Passing no segment columns is rejected.
+    Legacy single-series behavior is available only by passing an explicit
+    constant segment column after independently validating that the rows form
+    one uninterrupted sequence.
     """
 
-    rng = np.random.default_rng(random_state)
+    columns = _normalize_segment_columns(segment_columns)
+    if policy_column not in decisions.columns:
+        raise KeyError(f"policy column is missing: {policy_column}")
+    missing = [column for column in columns if column not in decisions.columns]
+    if missing:
+        raise KeyError(f"bootstrap segment columns are missing: {missing}")
+    if not 0.0 < float(ci) < 1.0:
+        raise ValueError("ci must be strictly between zero and one")
+    _validate_bootstrap_parameters(
+        n_bootstrap=n_bootstrap,
+        block_length=block_length,
+    )
+
     alpha = 1.0 - ci
     lower_q = 100.0 * (alpha / 2.0)
     upper_q = 100.0 * (1.0 - alpha / 2.0)
+    segment_label = "|".join(columns)
 
     rows: list[BootstrapMetricInterval] = []
-    for policy_name, policy_frame in decisions.groupby(policy_column, sort=True):
-        sample_count = len(policy_frame)
-        if sample_count == 0:
+    for policy_name, policy_frame in decisions.groupby(
+        policy_column,
+        sort=True,
+    ):
+        if policy_frame.empty:
             continue
+        # Validate the unfiltered segmentation even if a requested metric is
+        # absent or entirely missing.
+        build_bootstrap_segment_ids(policy_frame, columns)
 
         for metric_name in metric_columns:
             if metric_name not in policy_frame.columns:
                 continue
-            values = policy_frame[metric_name].dropna().to_numpy(dtype=float)
-            if len(values) == 0:
+            numeric = pd.to_numeric(policy_frame[metric_name], errors="coerce")
+            valid_mask = np.isfinite(numeric.to_numpy(dtype=float))
+            if not valid_mask.any():
                 continue
+            values = numeric.to_numpy(dtype=float)[valid_mask]
+            segment_ids = build_bootstrap_segment_ids(
+                policy_frame,
+                columns,
+                valid_mask=valid_mask,
+            )
             mean_value = float(values.mean())
             if len(values) == 1:
                 ci_lower = mean_value
                 ci_upper = mean_value
             else:
-                bootstrap_means = []
-                for _ in range(n_bootstrap):
-                    sample = rng.choice(values, size=len(values), replace=True)
-                    bootstrap_means.append(sample.mean())
+                bootstrap_means = _moving_block_means(
+                    values,
+                    segment_ids=segment_ids,
+                    n_bootstrap=n_bootstrap,
+                    random_state=random_state,
+                    block_length=block_length,
+                )
                 ci_lower = float(np.percentile(bootstrap_means, lower_q))
                 ci_upper = float(np.percentile(bootstrap_means, upper_q))
 
@@ -72,7 +123,10 @@ def build_bootstrap_policy_intervals(
                     ci_lower=ci_lower,
                     ci_upper=ci_upper,
                     sample_count=len(values),
+                    bootstrap_method=SEGMENTED_CIRCULAR_BLOCK_METHOD,
+                    bootstrap_segment_columns=segment_label,
+                    bootstrap_segment_count=int(len(np.unique(segment_ids))),
                 )
             )
 
-    return pd.DataFrame(rows)
+    return pd.DataFrame([asdict(item) for item in rows])

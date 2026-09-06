@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this artifact, cite the accompanying manuscript and the immutable release record once published."
+type: software
+title: "Open LEO Latency Routing: Opportunity-Aware Evidence Gating Artifact"
+version: 0.1.0
+authors:
+  - family-names: Chowdary
+    given-names: "K Deepak"
+  - family-names: Hazra
+    given-names: Suvadip
+  - family-names: Hegadi
+    given-names: Rajendra
+repository-code: "https://github.com/KarusalaDeepak/open-leo-latency-routing"
+abstract: >-
+  Reproducible code, tests, and generated evidence for an opportunity-aware,
+  fail-closed evidence gate for latency-QoS multi-access selection in
+  LEO--terrestrial networks.

@@ -124,6 +124,7 @@ def main() -> int:
             ("consensus_vs_graph", "predictive_consensus_greedy", "predictive_graph_greedy"),
         ],
         metric_columns=["realized_next_latency_ms", "decision_gap_ms"],
+        segment_columns=("continuity_segment_id",),
     )
     summary.to_csv(summary_out, index=False)
     decisions.to_csv(decisions_out, index=False)

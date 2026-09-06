@@ -1,0 +1,32 @@
+To: araar@es.aau.dk
+Subject: Request for synchronized Starlink-OneWeb measurement traces (IEEE OJ-COMS 2026)
+
+Dear Dr. Ramirez-Arroyo,
+
+I am K Deepak Chowdary, a PhD researcher at IIIT Dharwad, India. I am evaluating a lightweight, evidence-gated QoS-shielded service-path selector using synchronized commercial LEO measurements. Your article, "Toward Reliable Connectivity: Measurement-Driven Assessment of Starlink and OneWeb Non-Terrestrial and 5G Terrestrial Networks" (IEEE OJ-COMS, 2026), is uniquely suitable because the reported campaign measures Starlink and OneWeb simultaneously.
+
+Would it be possible to obtain the anonymized, time-aligned raw or processed per-interface traces used in the study, subject to your preferred licence and acknowledgement conditions? For reproducible chronological train/calibration/test evaluation, the useful fields would be:
+
+- timestamp and operator/interface identifier;
+- one-way delay or RTT and packet-received/lost outcome;
+- throughput and availability;
+- scenario, direction, and GPS fields where release is permitted.
+
+Could you also confirm:
+
+1. the campaign dates and total duration;
+2. the packet timeout/failure convention;
+3. whether every interface was probed continuously, including paths not selected by an online policy;
+4. timestamp synchronization accuracy between Starlink and OneWeb; and
+5. whether the data may be deposited publicly or shared under a research-only agreement.
+
+We will cite the article (DOI 10.1109/OJCOMS.2026.3682548), preserve the original provenance, publish only permitted derived or aggregate results, and share our evaluation code.
+
+Thank you for considering this request.
+
+Kind regards,
+
+K Deepak Chowdary
+PhD Researcher, Department of Computer Science and Engineering
+Indian Institute of Information Technology Dharwad, India
+deepak.24phdcs02@iiitdwd.ac.in

@@ -76,6 +76,8 @@ def main() -> int:
         target_column=config["forecasting"]["target_column"],
         lags=list(config["forecasting"]["lag_steps"]),
         horizon_bins=horizon_bins,
+        decision_cadence_seconds=snapshot_seconds,
+        require_complete_decision_epochs=True,
     )
     base_graph_table = add_graph_snapshot_features(base_forecast_table)
     base_train, base_val, _ = split_train_val_test(
@@ -112,6 +114,8 @@ def main() -> int:
             target_column=config["forecasting"]["target_column"],
             lags=list(config["forecasting"]["lag_steps"]),
             horizon_bins=horizon_bins,
+            decision_cadence_seconds=snapshot_seconds,
+            require_complete_decision_epochs=True,
         )
         graph_table = add_graph_snapshot_features(forecast_table)
         _, _, test_frame = split_train_val_test(
@@ -188,6 +192,7 @@ def main() -> int:
                 ("full_vs_graph_only", "predictive_graph_greedy", "predictive_graph_only"),
             ],
             metric_columns=["realized_next_latency_ms", "decision_gap_ms"],
+            segment_columns=("continuity_segment_id",),
         )
         significance["scenario_name"] = scenario_name
         significance_rows.append(significance)
@@ -203,6 +208,7 @@ def main() -> int:
             n_bootstrap=3000,
             ci=0.95,
             random_state=42,
+            segment_columns=("continuity_segment_id",),
         )
         ci_frame["scenario_name"] = scenario_name
         ci_rows.append(ci_frame)

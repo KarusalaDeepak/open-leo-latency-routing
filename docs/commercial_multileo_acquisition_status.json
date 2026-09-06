@@ -1,0 +1,33 @@
+{
+  "candidate_dataset": "Aalborg synchronized Starlink-OneWeb-5G measurement campaign",
+  "article_title": "Toward Reliable Connectivity: Measurement-Driven Assessment of Starlink and OneWeb Non-Terrestrial and 5G Terrestrial Networks",
+  "article_doi": "10.1109/OJCOMS.2026.3682548",
+  "publication_record": "https://vbn.aau.dk/en/publications/toward-reliable-connectivity-measurement-driven-assessment-of-sta/",
+  "corresponding_author": "Alejandro Ramirez-Arroyo",
+  "corresponding_author_email": "araar@es.aau.dk",
+  "checked_on": "2026-08-21",
+  "public_raw_archive_found": false,
+  "public_alternative_audit": {
+    "lens_oneweb_archive": "public OneWeb measurements from Ames, Iowa",
+    "lens_starlink_iowa_location": "Iowa City, Iowa",
+    "usable_as_same_controller_multileo_choices": false,
+    "reason": "The public Starlink and OneWeb installations are not co-located alternatives at one controller, so timestamp overlap would not establish selectable multi-LEO access paths."
+  },
+  "raw_data_received": false,
+  "required_topology_audit": {
+    "complete_paired_gps_required": true,
+    "hard_maximum_inter_operator_distance_meters": 100.0,
+    "shared_controller_provenance_required": true,
+    "timestamp_overlap_alone_is_selectable_path_evidence": false,
+    "independent_campaign_ids_required_for_multi_group_gate_inference": true,
+    "default_gate_inference_groups_without_audited_campaign_ids": 1
+  },
+  "request_status": "sent_user_confirmed",
+  "request_sent_on": "2026-08-19",
+  "request_file": "docs/commercial_multileo_data_request_email.txt",
+  "unsent_email_draft": "docs/commercial_multileo_data_request.eml",
+  "claim_gate_status": "closed",
+  "claim_gate_reason": "No authorized raw synchronized Starlink-OneWeb trace has been received and audited.",
+  "allowed_claim": "The campaign is an identified candidate for future independent commercial multi-LEO validation.",
+  "prohibited_claim": "The present work has completed independent longitudinal commercial multi-LEO policy validation, or that time-aligned but spatially separated measurements are selectable paths under one controller."
+}

@@ -1,0 +1,12 @@
+{
+  "timestamp": "timestamp_utc",
+  "operator": "network_operator",
+  "latency_ms": "one_way_delay_ms",
+  "packet_received": "packet_received",
+  "scenario": "environment",
+  "direction": "direction",
+  "latitude": "latitude",
+  "longitude": "longitude",
+  "controller_id": "controller_id",
+  "campaign_id": "campaign_id"
+}

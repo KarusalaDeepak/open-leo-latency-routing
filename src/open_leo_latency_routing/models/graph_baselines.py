@@ -12,6 +12,7 @@ from open_leo_latency_routing.evaluation.metrics import (
     mean_absolute_percentage_error,
     root_mean_squared_error,
 )
+from open_leo_latency_routing.models.forecast_baselines import build_forecast_model
 
 
 @dataclass
@@ -49,6 +50,26 @@ def fit_graph_xgb_model(
     train_x = train_frame[feature_columns].fillna(0.0)
     train_y = train_frame["target_next"]
     model.fit(train_x, train_y)
+    return model
+
+
+def fit_graph_context_model(
+    model_name: str,
+    train_frame: pd.DataFrame,
+    feature_columns: list[str],
+):
+    """Fit a graph-context expert with a selectable regression family.
+
+    The temporal and graph-context experts use the same standardized estimator
+    family and fixed regularization coefficient.  Their input dimensions and
+    information sets still differ, so this is not an equal-capacity claim. The
+    legacy XGBoost expert remains available for the model-pair ablation.
+    """
+
+    if model_name == "graph_xgboost":
+        return fit_graph_xgb_model(train_frame, feature_columns)
+    model = build_forecast_model(model_name)
+    model.fit(train_frame[feature_columns].fillna(0.0), train_frame["target_next"])
     return model
 
 

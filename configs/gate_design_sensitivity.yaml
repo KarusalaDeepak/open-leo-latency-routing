@@ -1,0 +1,35 @@
+schema_version: 1
+artifact_kind: prospective_gate_design_sensitivity
+
+statistical_contract:
+  familywise_alpha: 0.05
+  cvar_quantile: 0.95
+  learned_candidate_count: 2
+  endpoint_family_count_per_candidate_use: 4
+  planned_gate_uses: [1, 5]
+  cvar_grid_spacing_ms: 0.05
+
+requested_grid:
+  minimum_opportunity_bearing_groups: [5, 10, 20, 50]
+  success_noninferiority_margins: [0.01, 0.02, 0.05]
+  practical_cvar_gain_ms: [1.0, 5.0, 10.0]
+  latency_cap_ms: [60.0, 200.0, 1000.0]
+
+canonical_reference:
+  latency_cap_ms: 60000.0
+  minimum_opportunity_bearing_groups: 5
+  success_noninferiority_margin: 0.02
+
+measured_reference:
+  independent_collection_groups: 1
+  opportunity_bearing_collection_groups: 1
+  fixed_raw_opportunity_epochs: 69
+  rolling_raw_opportunity_epochs_min: 41
+  rolling_raw_opportunity_epochs_max: 54
+  admitted: false
+  reason: >-
+    COMMECT is one continuous drive, so every requested n_min is at least five
+    times the available opportunity-bearing independent-group count.
+
+output_dir: results/gate_design_sensitivity
+

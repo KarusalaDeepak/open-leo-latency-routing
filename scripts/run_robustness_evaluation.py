@@ -178,6 +178,23 @@ def _write_summary_markdown(
             f"{row.mean_decision_gap_ms:.4f} | {row.retrospective_best_path_match_rate:.4f} | {row.mean_decision_time_us:.2f} |"
         )
 
+    lines.extend(
+        [
+            "",
+            "## Interpretation Notes",
+            "",
+            "The structural-shift scenario is injected only into the evaluation split. It is a controlled stress test, not a claim that the raw release contains a separate outage trace.",
+            "",
+            "The disagreement-aware consensus rule is a lightweight operational decision score. It is not presented as a new predictor family; it is a risk-adjusted way to combine the temporal and graph-context predictors.",
+            "",
+            "The ensemble uncertainty selector often performs better under moderate and severe degradation because it aggregates several bootstrapped temporal models and therefore reacts to both mean error and forecast spread. When the network state becomes unstable, the ensemble spread acts as a conservative hedge and reduces brittle overcommitment to one point estimate.",
+            "",
+            "The method is schema-driven. It can be rerun on other LEO measurement tables with the same processed columns by updating `time_bins_path` in the configuration. That makes the pipeline portable across compatible datasets without changing the decision logic.",
+            "",
+            "The default evaluation horizon is one 60-second decision window. That windowing is a design choice of the current processed release; the code supports different bin sizes if a compatible preprocessed table is supplied.",
+        ]
+    )
+
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -393,6 +410,8 @@ def main() -> int:
         target_column=config["forecasting"]["target_column"],
         lags=list(config["forecasting"]["lag_steps"]),
         horizon_bins=horizon_bins,
+        decision_cadence_seconds=snapshot_seconds,
+        require_complete_decision_epochs=True,
     )
     base_graph_table = add_graph_snapshot_features(base_forecast_table)
     base_train, base_val, base_test = split_train_val_test(
@@ -429,6 +448,8 @@ def main() -> int:
             target_column=config["forecasting"]["target_column"],
             lags=list(config["forecasting"]["lag_steps"]),
             horizon_bins=horizon_bins,
+            decision_cadence_seconds=snapshot_seconds,
+            require_complete_decision_epochs=True,
         )
         if scenario_name == "structural":
             scenario_forecast_table = _apply_structural_shift_to_forecast_table(
@@ -503,6 +524,8 @@ def main() -> int:
             target_column=config["forecasting"]["target_column"],
             lags=list(config["forecasting"]["lag_steps"]),
             horizon_bins=horizon_bins,
+            decision_cadence_seconds=snapshot_seconds,
+            require_complete_decision_epochs=True,
         )
         if scenario_name == "structural":
             scenario_forecast_table = _apply_structural_shift_to_forecast_table(
@@ -634,6 +657,7 @@ def main() -> int:
                 ("consensus_vs_graph", "predictive_consensus_greedy", "predictive_graph_greedy"),
             ],
             metric_columns=["realized_next_latency_ms", "decision_gap_ms"],
+            segment_columns=("continuity_segment_id",),
         )
         policy_significance["scenario_name"] = scenario_name
         policy_significance_rows.append(policy_significance)

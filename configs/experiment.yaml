@@ -6,11 +6,18 @@ dataset:
 
 forecasting:
   target_column: latency_mean_ms
-  horizon_seconds: 10
+  horizon_seconds: 60
   lag_steps: [1, 2, 3, 6, 12]
   train_ratio: 0.70
   val_ratio: 0.15
   test_ratio: 0.15
+  policy_evaluation_ratios:
+    train: 0.55
+    calibration: 0.15
+    selection: 0.15
+    test: 0.15
+  temporal_model: ridge_regression
+  graph_context_model: ridge_regression
 
 graph:
   snapshot_seconds: 60
@@ -20,14 +27,45 @@ graph:
 optimization:
   objective: min_predicted_latency
   latency_budget_ms: 60.0
+  risk_control:
+    familywise_alpha: 0.05
+    noninferiority_margin: 0.02
+    # Separate non-inferiority tolerance for the success difference after
+    # conditioning on post-hoc decision opportunities within each
+    # opportunity-bearing independent group.
+    opportunity_noninferiority_margin: 0.02
+    minimum_effective_opportunities: 5.0
+    practical_cvar_gain_ms: 1.0
+    cvar_quantile: 0.95
+    # Retained for archived configuration compatibility. A non-null value is
+    # rejected: inferential groups must come from acquisition provenance via
+    # explicit collection/session identifiers.
+    block_length: null
+    # Pre-declared administrative latency bound for the clipped-CVaR endpoint.
+    latency_cap_ms: 60000.0
+    # 0.05-ms spacing; at q=.95 the half-cell Lipschitz correction is
+    # 0.475 ms, below the 1-ms practical-gain margin.
+    cvar_grid_points: 1200001
+    planned_gate_uses: 1
+    gate_use_index: 1
+    bootstrap_samples: 4000
+    random_seed: 2026
+  timestamp_age:
+    maximum_skew_seconds: [0.5, 1.0, 2.0, 5.0]
+    unrestricted_label: full
   consensus:
     temporal_weight: 0.65
     graph_weight: 0.35
     disagreement_penalty: 0.30
   disagreement_aware:
-    temporal_weight: 0.85
-    graph_weight: 0.15
-    disagreement_penalty: 0.60
+    uncertainty_multiplier: 0.75
+    gate_validation_quantile: 0.90
+    calibration_coverage: 0.90
+    residual_risk_features:
+      - normalized_disagreement
+      - temporal_ensemble_spread
+      - reply_pressure_and_volatility
+    residual_risk_fit: nonnegative_linear_regression
   ensemble_uncertainty:
     lambda_ens: 0.75
     ensemble_members: 9
@@ -37,12 +75,15 @@ optimization:
     reply_pressure_penalty: 2.5
     volatility_penalty: 1.5
   switching_penalties_ms: [5.0, 10.0, 20.0]
+  online_switch_penalty_ms: 10.0
   stochastic_switching:
     base_penalty_ms: 10.0
     spike_penalty_ms: 75.0
     spike_probability: 0.10
     n_trials: 256
   multi_bin_horizons: [3, 5]
+  control_loop_latency_ms: [0.0, 10.0, 50.0, 100.0, 500.0, 1000.0]
+  temporal_resolutions_seconds: [5, 10, 30, 60]
   policies:
     - random
     - reactive_greedy

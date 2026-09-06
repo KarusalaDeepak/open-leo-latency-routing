@@ -61,6 +61,7 @@ def main() -> int:
         target_column=config["forecasting"]["target_column"],
         lags=list(config["forecasting"]["lag_steps"]),
         horizon_bins=horizon_bins,
+        decision_cadence_seconds=snapshot_seconds,
     )
     train_frame, val_frame, test_frame = split_train_val_test(
         forecast_table,

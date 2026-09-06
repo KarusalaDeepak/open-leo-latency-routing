@@ -1,5 +1,18 @@
 {
   "latency_budget_ms": 60.0,
+  "concurrency_audit": {
+    "epoch_count": 1087,
+    "concurrent_epoch_count": 0,
+    "max_concurrent_paths": 1,
+    "median_concurrent_paths": 1.0,
+    "concurrent_row_fraction": 0.0,
+    "supports_online_path_selection": false,
+    "decision_alignment": "normalized_stage_counterfactual",
+    "deployable_online_policy_evaluation": false
+  },
+  "decision_window_seconds": 60,
+  "forecast_horizon_seconds": 60,
+  "forecast_horizon_bins": 1,
   "holdout_locations": [
     "ulukhaktok",
     "kanazawa",
@@ -15,13 +28,119 @@
     "predictive_graph_greedy": "pred_graph",
     "predictive_simple_fusion_greedy": "pred_simple_fusion",
     "predictive_consensus_greedy": "pred_consensus",
+    "calibrated_fusion_selector": "pred_calibrated_fusion",
+    "disagreement_only_selector": "pred_disagreement_only",
     "ensemble_uncertainty_selector": "pred_ensemble_uncertainty",
-    "disagreement_aware_selector": "pred_disagreement_aware"
+    "conformal_uncertainty_selector": "pred_conformal_uncertainty",
+    "calibrated_operational_selector": "pred_calibrated_operational",
+    "switch_aware_operational_selector": "pred_calibrated_operational"
+  },
+  "proposed_method_name": "calibrated_operational_selector",
+  "compatibility_aliases": {
+    "pred_disagreement_aware": "pred_calibrated_operational"
   },
   "consensus_config": {
     "temporal_weight": 0.65,
     "graph_weight": 0.35,
     "disagreement_penalty": 0.3,
     "output_column": "pred_consensus"
+  },
+  "disagreement_aware_config": {
+    "expert_pair": "matched_ridge",
+    "uncertainty_multiplier": 0.75,
+    "gate_selection": "90th percentile of validation-window normalized disagreement",
+    "fallback_selection": "validation-only lexicographic objective: maximize success under latency budget, then minimize realized latency",
+    "temporal_calibration": {
+      "residual_bias_ms": -1.4079682264888387,
+      "residual_scale_ms": 5.432723459857111,
+      "upper_residual_quantile_ms": 7.9582566975253854,
+      "mae_ms": 5.432723459857111,
+      "sample_count": 162,
+      "normalized_disagreement_gate": 1.087767746745344,
+      "residual_risk_intercept_ms": -1.0858284723236835,
+      "residual_risk_disagreement_weight": 0.5131079897877198,
+      "residual_risk_ensemble_weight": 4.940058445404654,
+      "residual_risk_service_weight": 0.0,
+      "residual_risk_gate_ms": 11.020052869103143,
+      "fallback_policy": "graph"
+    },
+    "graph_calibration": {
+      "residual_bias_ms": -4.517570648352962,
+      "residual_scale_ms": 7.1797349138206625,
+      "upper_residual_quantile_ms": 7.864673094070314,
+      "mae_ms": 7.1797349138206625,
+      "sample_count": 162,
+      "normalized_disagreement_gate": 1.087767746745344,
+      "residual_risk_intercept_ms": -1.0858284723236835,
+      "residual_risk_disagreement_weight": 0.5131079897877198,
+      "residual_risk_ensemble_weight": 4.940058445404654,
+      "residual_risk_service_weight": 0.0,
+      "residual_risk_gate_ms": 11.020052869103143,
+      "fallback_policy": "graph"
+    }
+  },
+  "ensemble_uncertainty_config": {
+    "member_model": "ridge_regression",
+    "lambda_ens": 0.75,
+    "ensemble_members": 9,
+    "row_fraction": 0.82,
+    "feature_fraction": 0.78
+  },
+  "service_risk_config": {
+    "reply_pressure_penalty": 2.5,
+    "volatility_penalty": 1.5
+  },
+  "switching_penalties_ms": [
+    5.0,
+    10.0,
+    20.0
+  ],
+  "online_switch_penalty_ms": 10.0,
+  "stochastic_switching": {
+    "base_penalty_ms": 10.0,
+    "spike_penalty_ms": 75.0,
+    "spike_probability": 0.1,
+    "n_trials": 256,
+    "random_state": 42
+  },
+  "multi_bin_horizons": [
+    3,
+    5
+  ],
+  "xai_outputs": {
+    "decision_level_columns": [
+      "xai_latency_component_ms",
+      "xai_disagreement_component_ms",
+      "xai_uncertainty_component_ms",
+      "xai_service_risk_component_ms",
+      "xai_switch_component_ms",
+      "xai_residual_score_component_ms",
+      "xai_dominant_component",
+      "xai_runner_up_relative_path",
+      "xai_score_margin_ms",
+      "xai_counterfactual_reason"
+    ],
+    "aggregate_file": "xai_attribution_summary.csv",
+    "explanation_type": "faithful additive score attribution plus nearest-rejected-path counterfactual"
+  },
+  "config_path": "configs/experiment.yaml",
+  "time_bins_path": "data/processed/ping_time_bins.csv",
+  "split_random_seeds": {
+    "session_holdout_split": 42,
+    "operational_mild": 101,
+    "operational_moderate": 102,
+    "operational_severe": 103,
+    "bootstrap_confidence_intervals": 42
+  },
+  "statistical_dependence_control": {
+    "confidence_intervals": "moving circular block bootstrap",
+    "paired_delta_intervals": "moving circular block bootstrap",
+    "block_length_rule": "cube root of decision-window count",
+    "additional_test": "centered block-bootstrap p-value"
+  },
+  "data_partition_protocol": {
+    "session_holdout": "complete relative_path measurement sessions are assigned to disjoint train, validation, and test partitions",
+    "temporal_holdout": "each session is split chronologically into early training, middle validation, and late test windows",
+    "graph_context_isolation": "graph snapshot features are constructed separately inside each partition after splitting"
   }
 }

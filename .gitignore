@@ -12,8 +12,12 @@ __pycache__/
 
 data/raw/*
 !data/raw/.gitkeep
+data/external/*
+!data/external/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+external/*
+!external/.gitkeep
 results/*
 !results/.gitkeep
 !results/*/

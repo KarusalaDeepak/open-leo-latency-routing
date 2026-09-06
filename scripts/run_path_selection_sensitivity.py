@@ -192,7 +192,11 @@ def _evaluate_single_score(candidate: pd.DataFrame, score_column: str, latency_b
 def _run_weight_sensitivity(scenario_candidates: dict[str, pd.DataFrame], latency_budget_ms: float) -> pd.DataFrame:
     rows = []
     for scenario_name, candidate in scenario_candidates.items():
-        service_risk = service_exp._service_risk_ms(candidate)
+        service_risk = (
+            candidate["service_risk_ms"]
+            if "service_risk_ms" in candidate
+            else service_exp._service_risk_ms(candidate)
+        )
         for beta in [0.60, 0.70, 0.80, 0.85, 0.90]:
             score = (
                 beta * candidate["pred_forecast"]
@@ -285,6 +289,8 @@ def _run_horizon_sensitivity(time_bins: pd.DataFrame, config: dict, holdout_coun
             target_column=config["forecasting"]["target_column"],
             lags=list(config["forecasting"]["lag_steps"]),
             horizon_bins=horizon_bins,
+            decision_cadence_seconds=float(time_bins["bin_seconds"].iloc[0]),
+            require_complete_decision_epochs=True,
         )
         scenario_candidates, _ = _prepare_base_scenarios(
             forecast_table,
@@ -364,6 +370,8 @@ def main() -> int:
         target_column=config["forecasting"]["target_column"],
         lags=list(config["forecasting"]["lag_steps"]),
         horizon_bins=horizon_bins,
+        decision_cadence_seconds=snapshot_seconds,
+        require_complete_decision_epochs=True,
     )
 
     ensemble_cfg = config["optimization"].get("ensemble_uncertainty", {})
