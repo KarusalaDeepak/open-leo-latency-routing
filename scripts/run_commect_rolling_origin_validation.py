@@ -29,6 +29,9 @@ from open_leo_latency_routing.evaluation.decision_opportunity import (
     build_opportunity_conditioned_results,
     build_pairwise_success_gap_bounds,
 )
+from open_leo_latency_routing.evaluation.service_success import (
+    build_scheduled_epoch_success,
+)
 from open_leo_latency_routing.evaluation.delayed_execution import replay_delayed_execution
 from open_leo_latency_routing.evaluation.risk_metrics import empirical_upper_cvar
 from open_leo_latency_routing.evaluation.significance import (
@@ -562,6 +565,14 @@ def main() -> int:
     candidates = pd.concat(all_candidates, ignore_index=True)
     decisions = pd.concat(all_decisions, ignore_index=True)
     summary = _aggregate_decisions(decisions)
+    scheduled_test_epoch_count = int(
+        sum(item["scheduled_test_decision_epochs"] for item in manifests)
+    )
+    scheduled_success = build_scheduled_epoch_success(
+        decisions,
+        scheduled_epoch_count=scheduled_test_epoch_count,
+        latency_budget_ms=latency_budget_ms,
+    )
     opportunity_audit, opportunity_labels = build_candidate_opportunity_audit(candidates)
     opportunity_results = build_opportunity_conditioned_results(
         decisions,
@@ -604,6 +615,10 @@ def main() -> int:
     candidates.to_csv(output / "rolling_candidate_predictions.csv", index=False)
     decisions.to_csv(output / "rolling_policy_decisions.csv", index=False)
     summary.to_csv(output / "rolling_policy_summary.csv", index=False)
+    scheduled_success.to_csv(
+        output / "rolling_scheduled_epoch_service_success.csv",
+        index=False,
+    )
     pd.DataFrame(manifests).to_csv(output / "rolling_fold_manifest.csv", index=False)
     pd.concat(all_gate_evidence, ignore_index=True).to_csv(
         output / "rolling_gate_selection_evidence.csv", index=False
@@ -624,6 +639,10 @@ def main() -> int:
             "before target availability filtering"
         ),
         "fold_count": folds,
+        "scheduled_test_epoch_count": scheduled_test_epoch_count,
+        "scheduled_epoch_service_success_file": (
+            "rolling_scheduled_epoch_service_success.csv"
+        ),
         "primary_measured_protocol": True,
         "within_fold_intervals_disjoint": True,
         "test_epoch_overlap": False,

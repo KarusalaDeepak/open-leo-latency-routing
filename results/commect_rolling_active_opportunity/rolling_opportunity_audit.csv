@@ -1,0 +1,5 @@
+threshold_ms,decision_epoch_count,decision_opportunity_count,decision_opportunity_rate,binary_outcome_discriminative_count,binary_outcome_discriminative_rate,best_available_success_with_runtime_fallback,median_runtime_candidate_count,median_candidate_latency_spread_ms,all_candidates_succeed_count,all_candidates_succeed_rate,mixed_outcome_opportunity_count,mixed_outcome_opportunity_rate,all_candidates_fail_count,all_candidates_fail_rate,single_candidate_count,single_candidate_rate,emergency_no_current_feasible_count,emergency_no_current_feasible_rate
+40.0,289,153,0.5294117647058824,153,0.5294117647058824,0.5294117647058824,3.0,97.475,0,0.0,153,0.5294117647058824,136,0.47058823529411764,0,0.0,0,0.0
+60.0,289,236,0.8166089965397924,236,0.8166089965397924,0.8166089965397924,3.0,97.475,0,0.0,236,0.8166089965397924,53,0.18339100346020762,0,0.0,0,0.0
+100.0,289,173,0.5986159169550173,173,0.5986159169550173,0.9619377162629758,3.0,97.475,105,0.3633217993079585,173,0.5986159169550173,11,0.03806228373702422,0,0.0,0,0.0
+200.0,289,130,0.44982698961937717,130,0.44982698961937717,1.0,3.0,97.475,159,0.5501730103806228,130,0.44982698961937717,0,0.0,0,0.0,0,0.0

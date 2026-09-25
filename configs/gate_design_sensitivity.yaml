@@ -5,7 +5,7 @@ statistical_contract:
   familywise_alpha: 0.05
   cvar_quantile: 0.95
   learned_candidate_count: 2
-  endpoint_family_count_per_candidate_use: 4
+  endpoint_family_count_per_candidate_use: 5
   planned_gate_uses: [1, 5]
   cvar_grid_spacing_ms: 0.05
 
@@ -31,5 +31,4 @@ measured_reference:
     COMMECT is one continuous drive, so every requested n_min is at least five
     times the available opportunity-bearing independent-group count.
 
-output_dir: results/gate_design_sensitivity
-
+output_dir: results/gate_design_sensitivity_active_opportunity

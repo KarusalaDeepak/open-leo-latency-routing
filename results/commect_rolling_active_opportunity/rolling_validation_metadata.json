@@ -1,0 +1,286 @@
+{
+  "dataset": "COMMECT",
+  "protocol": "primary measured prequential expanding-window evaluation with within-fold disjoint train, calibration, policy-selection, and test intervals frozen on the unfiltered raw exact-cadence grid before target availability filtering",
+  "fold_count": 5,
+  "scheduled_test_epoch_count": 315,
+  "scheduled_epoch_service_success_file": "rolling_scheduled_epoch_service_success.csv",
+  "primary_measured_protocol": true,
+  "within_fold_intervals_disjoint": true,
+  "test_epoch_overlap": false,
+  "same_fold_test_outcomes_used_for_admission": false,
+  "boundaries_declared_before_target_filtering": true,
+  "target_availability_used_for_boundary_derivation": false,
+  "maximum_inter_path_skew_ms": null,
+  "skew_filter_semantics": "the maximum cross-path median-time skew is evaluated per forecast epoch after split boundaries are frozen on the unfiltered wall-clock schedule; retained epochs keep every concurrently observed candidate row",
+  "rolling_split_boundary_plan": {
+    "boundary_basis": "pre_target_wall_clock_schedule",
+    "boundaries_declared_before_target_filtering": true,
+    "target_availability_used_for_boundary_derivation": false,
+    "schedule": {
+      "boundary_schedule_source": "raw_min_max_exact_cadence_grid",
+      "target_availability_used_for_schedule": false,
+      "first_scheduled_bin_epoch": 1697029860.0,
+      "last_scheduled_bin_epoch": 1697036180.0,
+      "scheduled_decision_epoch_count": 633,
+      "decision_cadence_seconds": 10.0,
+      "observed_raw_decision_epoch_count": 603,
+      "missing_raw_decision_epoch_count": 30,
+      "off_phase_raw_decision_epoch_count": 0
+    },
+    "fold_count": 5,
+    "minimum_block_size_scheduled_epochs": 10,
+    "block_size_scheduled_epochs": 63,
+    "first_test_schedule_index": 318,
+    "folds": [
+      {
+        "rolling_fold": 1,
+        "partitions": {
+          "train": {
+            "first_schedule_index": 0,
+            "last_schedule_index": 191,
+            "first_bin_epoch": 1697029860.0,
+            "last_bin_epoch": 1697031770.0,
+            "scheduled_decision_epoch_count": 192
+          },
+          "calibration": {
+            "first_schedule_index": 192,
+            "last_schedule_index": 254,
+            "first_bin_epoch": 1697031780.0,
+            "last_bin_epoch": 1697032400.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "selection": {
+            "first_schedule_index": 255,
+            "last_schedule_index": 317,
+            "first_bin_epoch": 1697032410.0,
+            "last_bin_epoch": 1697033030.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "test": {
+            "first_schedule_index": 318,
+            "last_schedule_index": 380,
+            "first_bin_epoch": 1697033040.0,
+            "last_bin_epoch": 1697033660.0,
+            "scheduled_decision_epoch_count": 63
+          }
+        }
+      },
+      {
+        "rolling_fold": 2,
+        "partitions": {
+          "train": {
+            "first_schedule_index": 0,
+            "last_schedule_index": 254,
+            "first_bin_epoch": 1697029860.0,
+            "last_bin_epoch": 1697032400.0,
+            "scheduled_decision_epoch_count": 255
+          },
+          "calibration": {
+            "first_schedule_index": 255,
+            "last_schedule_index": 317,
+            "first_bin_epoch": 1697032410.0,
+            "last_bin_epoch": 1697033030.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "selection": {
+            "first_schedule_index": 318,
+            "last_schedule_index": 380,
+            "first_bin_epoch": 1697033040.0,
+            "last_bin_epoch": 1697033660.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "test": {
+            "first_schedule_index": 381,
+            "last_schedule_index": 443,
+            "first_bin_epoch": 1697033670.0,
+            "last_bin_epoch": 1697034290.0,
+            "scheduled_decision_epoch_count": 63
+          }
+        }
+      },
+      {
+        "rolling_fold": 3,
+        "partitions": {
+          "train": {
+            "first_schedule_index": 0,
+            "last_schedule_index": 317,
+            "first_bin_epoch": 1697029860.0,
+            "last_bin_epoch": 1697033030.0,
+            "scheduled_decision_epoch_count": 318
+          },
+          "calibration": {
+            "first_schedule_index": 318,
+            "last_schedule_index": 380,
+            "first_bin_epoch": 1697033040.0,
+            "last_bin_epoch": 1697033660.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "selection": {
+            "first_schedule_index": 381,
+            "last_schedule_index": 443,
+            "first_bin_epoch": 1697033670.0,
+            "last_bin_epoch": 1697034290.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "test": {
+            "first_schedule_index": 444,
+            "last_schedule_index": 506,
+            "first_bin_epoch": 1697034300.0,
+            "last_bin_epoch": 1697034920.0,
+            "scheduled_decision_epoch_count": 63
+          }
+        }
+      },
+      {
+        "rolling_fold": 4,
+        "partitions": {
+          "train": {
+            "first_schedule_index": 0,
+            "last_schedule_index": 380,
+            "first_bin_epoch": 1697029860.0,
+            "last_bin_epoch": 1697033660.0,
+            "scheduled_decision_epoch_count": 381
+          },
+          "calibration": {
+            "first_schedule_index": 381,
+            "last_schedule_index": 443,
+            "first_bin_epoch": 1697033670.0,
+            "last_bin_epoch": 1697034290.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "selection": {
+            "first_schedule_index": 444,
+            "last_schedule_index": 506,
+            "first_bin_epoch": 1697034300.0,
+            "last_bin_epoch": 1697034920.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "test": {
+            "first_schedule_index": 507,
+            "last_schedule_index": 569,
+            "first_bin_epoch": 1697034930.0,
+            "last_bin_epoch": 1697035550.0,
+            "scheduled_decision_epoch_count": 63
+          }
+        }
+      },
+      {
+        "rolling_fold": 5,
+        "partitions": {
+          "train": {
+            "first_schedule_index": 0,
+            "last_schedule_index": 443,
+            "first_bin_epoch": 1697029860.0,
+            "last_bin_epoch": 1697034290.0,
+            "scheduled_decision_epoch_count": 444
+          },
+          "calibration": {
+            "first_schedule_index": 444,
+            "last_schedule_index": 506,
+            "first_bin_epoch": 1697034300.0,
+            "last_bin_epoch": 1697034920.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "selection": {
+            "first_schedule_index": 507,
+            "last_schedule_index": 569,
+            "first_bin_epoch": 1697034930.0,
+            "last_bin_epoch": 1697035550.0,
+            "scheduled_decision_epoch_count": 63
+          },
+          "test": {
+            "first_schedule_index": 570,
+            "last_schedule_index": 632,
+            "first_bin_epoch": 1697035560.0,
+            "last_bin_epoch": 1697036180.0,
+            "scheduled_decision_epoch_count": 63
+          }
+        }
+      }
+    ]
+  },
+  "cross_fold_history_reuse": "after a test block is scored, its outcomes may enter the history of later folds; no current or future test outcome is used before that fold is scored",
+  "future_target_boundary_guard": true,
+  "future_target_boundary_guard_horizons_bins": [
+    1,
+    3,
+    5
+  ],
+  "descriptive_bootstrap_protocol": {
+    "method": "segment_stratified_circular_moving_block",
+    "segment_columns": [
+      "rolling_fold",
+      "continuity_segment_id"
+    ],
+    "fixed_segment_sample_sizes": true,
+    "within_segment_circular_wrap_only": true,
+    "metric_missingness_starts_new_segment": true,
+    "boundary_semantics": "blocks cannot cross rolling-fold, telemetry-gap, or session/campaign continuity boundaries"
+  },
+  "exact_horizon_audit": {
+    "endpoint_semantics": "exact_target_bin_start_with_complete_intermediate_sequence",
+    "decision_cadence_seconds": 10.0,
+    "one_step_horizon_bins": 1,
+    "one_step_expected_horizon_seconds": 10.0,
+    "input_row_count": 1800,
+    "scheduled_history_semantics": "exact_wall_clock_slots",
+    "scheduled_history_lags": [
+      1,
+      2,
+      3,
+      6,
+      12
+    ],
+    "scheduled_grid_expected_row_count": 1899,
+    "scheduled_grid_observed_row_count": 1800,
+    "scheduled_grid_missing_row_count": 99,
+    "scheduled_grid_off_phase_row_count": 0,
+    "history_gap_row_count": 353,
+    "full_lag_history_row_count": 1447,
+    "positional_target_row_count": 1797,
+    "exact_target_row_count_before_decision_completeness": 1736,
+    "excluded_nonexact_gap_row_count": 61,
+    "require_complete_decision_epochs": true,
+    "excluded_incomplete_decision_epoch_count": 25,
+    "asymmetric_missing_candidate_epoch_count": 5,
+    "incomplete_required_candidate_row_count": 64,
+    "retained_exact_target_row_count": 1726,
+    "retained_full_lag_history_row_count": 1389,
+    "retained_decision_epoch_count": 578,
+    "multi_bin_horizons": {
+      "3": {
+        "horizon_bins": 3,
+        "expected_horizon_seconds": 30.0,
+        "positional_complete_row_count": 1791,
+        "retained_exact_row_count": 1628,
+        "excluded_nonexact_gap_row_count": 163
+      },
+      "5": {
+        "horizon_bins": 5,
+        "expected_horizon_seconds": 50.0,
+        "positional_complete_row_count": 1785,
+        "retained_exact_row_count": 1521,
+        "excluded_nonexact_gap_row_count": 264
+      }
+    }
+  },
+  "total_out_of_sample_decision_epochs": 289,
+  "concurrency_audit": {
+    "epoch_count": 603,
+    "concurrent_epoch_count": 603,
+    "max_concurrent_paths": 3,
+    "median_concurrent_paths": 3.0,
+    "concurrent_row_fraction": 1.0,
+    "has_temporally_concurrent_candidates": true,
+    "decision_alignment": "actual_timestamp",
+    "supports_candidate_outcome_shadow_replay": true,
+    "supports_shadow_policy_replay": true,
+    "supports_literal_single_controller_steering": true,
+    "supports_closed_loop_deployment_evidence": false,
+    "controller_topology_scope": "source-specific adapter declares one steering controller; offline shadow replay only"
+  },
+  "claim_boundary": "primary measured protocol; pooled estimates aggregate disjoint out-of-sample test blocks without claiming independent folds",
+  "validation_gated_fallback_counts": {
+    "reactive": 5
+  }
+}

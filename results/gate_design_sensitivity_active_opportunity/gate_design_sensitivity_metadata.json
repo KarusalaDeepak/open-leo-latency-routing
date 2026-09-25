@@ -1,0 +1,78 @@
+{
+  "artifact_kind": "prospective_gate_design_sensitivity",
+  "assumptions": [
+    "K=2 frozen learned candidates and U in {1,5} are declared before data.",
+    "Collection groups are mutually independent and exchangeable after conditioning on every frozen artifact.",
+    "Both exact success floors assume zero harmful groups.",
+    "Every group is opportunity-bearing for the joint best-case floor.",
+    "The tail floor uses the maximally favorable cap-to-zero sample and is a non-vacuity floor, not statistical power for a practical effect.",
+    "The latency cap is an estimand-defining engineering bound, not a parameter to choose after inspecting outcomes.",
+    "The measured COMMECT campaign remains one group and is never reinterpreted as admission evidence."
+  ],
+  "canonical_reference": {
+    "latency_cap_ms": 60000.0,
+    "minimum_opportunity_bearing_groups": 5,
+    "success_noninferiority_margin": 0.02
+  },
+  "canonical_reference_row_count": 3,
+  "configuration_selection_allowed": false,
+  "formulas": {
+    "endpoint_alpha": "alpha/(5*K*U)",
+    "grid_correction_ms": "0.5*grid_spacing_ms*max(1,q/(1-q))",
+    "grid_points": "latency_cap_ms/grid_spacing_ms + 1",
+    "joint_best_case_group_floor": "max(n_min, success_zero_harm_group_floor, tail_best_case_group_floor) when every group bears an opportunity",
+    "tail_best_case_group_floor": "smallest G whose production bounded-CVaR gain LCB reaches delta for reactive=latency_cap and candidate=0",
+    "zero_harm_success_group_floor": "ceil(log(alpha_endpoint)/log(1-epsilon)), adjusted to the smallest integer satisfying 1-alpha_endpoint^(1/G)<=epsilon"
+  },
+  "measured_efficacy_evidence": false,
+  "measured_reference": {
+    "admitted": false,
+    "fixed_raw_opportunity_epochs": 69,
+    "independent_collection_groups": 1,
+    "opportunity_bearing_collection_groups": 1,
+    "reason": "COMMECT is one continuous drive, so every requested n_min is at least five times the available opportunity-bearing independent-group count.",
+    "rolling_raw_opportunity_epochs_max": 54,
+    "rolling_raw_opportunity_epochs_min": 41
+  },
+  "output_sha256": {
+    "gate_design_sensitivity.csv": "159098e1c78e8f896354499cc1e267829340f60681c134d6fd72103359f3580c",
+    "gate_design_sensitivity_canonical_reference.csv": "b9126fcf58594349b9fe44cf9cef674cf7a8388355abc547d49e3eba60bf2a7a"
+  },
+  "requested_cartesian_row_count": 108,
+  "requested_grid": {
+    "latency_cap_ms": [
+      60.0,
+      200.0,
+      1000.0
+    ],
+    "minimum_opportunity_bearing_groups": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "practical_cvar_gain_ms": [
+      1.0,
+      5.0,
+      10.0
+    ],
+    "success_noninferiority_margins": [
+      0.01,
+      0.02,
+      0.05
+    ]
+  },
+  "schema_version": 1,
+  "statistical_contract": {
+    "cvar_grid_spacing_ms": 0.05,
+    "cvar_quantile": 0.95,
+    "endpoint_family_count_per_candidate_use": 5,
+    "familywise_alpha": 0.05,
+    "learned_candidate_count": 2,
+    "planned_gate_uses": [
+      1,
+      5
+    ]
+  },
+  "warning": "Prospective design sensitivity only: do not choose a gate configuration after inspecting policy-selection or test outcomes. If configurations are outcome-selected, they must be added to the protected multiplicity family before data are observed."
+}

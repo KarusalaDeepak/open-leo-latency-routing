@@ -1,0 +1,798 @@
+{
+  "schema_version": 1,
+  "csv_file": "predictor_information_audit.csv",
+  "audit_scope": "information-view/data-quality balance plus fixed calibration diagnostics; not evaluation-performance evidence",
+  "interpretation": "This artifact audits matched information views, raw feature availability, and diagnostics fixed on calibration data. It does not establish held-out predictive or policy superiority.",
+  "evaluation_performance_metrics_included": false,
+  "evaluation_outcomes_used": false,
+  "row_identity_columns": [
+    "session_date",
+    "session_bin_index",
+    "relative_path",
+    "bin_epoch"
+  ],
+  "all_partitions_same_rows_across_views": true,
+  "all_partitions_same_row_order_across_views": true,
+  "views": {
+    "temporal": {
+      "feature_count": 44,
+      "feature_columns": [
+        "observed_replies",
+        "latency_mean_ms",
+        "latency_std_ms",
+        "latency_max_ms",
+        "path_state_flag",
+        "window_duration_hours",
+        "probe_interval_ms",
+        "session_day_of_month",
+        "latency_mean_ms_lag_1",
+        "latency_mean_ms_lag_1_available",
+        "latency_mean_ms_lag_2",
+        "latency_mean_ms_lag_2_available",
+        "latency_mean_ms_lag_3",
+        "latency_mean_ms_lag_3_available",
+        "latency_mean_ms_lag_6",
+        "latency_mean_ms_lag_6_available",
+        "latency_mean_ms_lag_12",
+        "latency_mean_ms_lag_12_available",
+        "latency_mean_ms_roll_mean_3",
+        "latency_mean_ms_roll_std_3",
+        "latency_mean_ms_roll_observed_count_3",
+        "latency_mean_ms_roll_coverage_3",
+        "latency_mean_ms_roll_complete_3",
+        "latency_mean_ms_roll_mean_5",
+        "latency_mean_ms_roll_std_5",
+        "latency_mean_ms_roll_observed_count_5",
+        "latency_mean_ms_roll_coverage_5",
+        "latency_mean_ms_roll_complete_5",
+        "observed_replies_lag_1",
+        "observed_replies_lag_1_available",
+        "observed_replies_roll_mean_3",
+        "observed_replies_roll_std_3",
+        "observed_replies_roll_observed_count_3",
+        "observed_replies_roll_coverage_3",
+        "observed_replies_roll_complete_3",
+        "history_lag_coverage_ratio",
+        "latency_delta_1",
+        "latency_delta_roll3",
+        "latency_jump_ratio",
+        "latency_volatility_ratio",
+        "reply_delta_1",
+        "reply_gap_roll3",
+        "reply_pressure_score",
+        "burst_indicator"
+      ]
+    },
+    "context": {
+      "feature_count": 24,
+      "feature_columns": [
+        "peer_latency_mean",
+        "peer_latency_std",
+        "peer_latency_observed_count",
+        "peer_latency_available",
+        "state_peer_latency_mean",
+        "state_peer_latency_std",
+        "state_peer_latency_observed_count",
+        "state_peer_latency_available",
+        "target_peer_latency_mean",
+        "target_peer_latency_std",
+        "target_peer_latency_observed_count",
+        "target_peer_latency_available",
+        "peer_reply_mean",
+        "peer_reply_std",
+        "peer_reply_observed_count",
+        "peer_reply_available",
+        "peer_burst_indicator_mean",
+        "peer_burst_indicator_std",
+        "peer_burst_indicator_observed_count",
+        "peer_burst_indicator_available",
+        "peer_latency_gap",
+        "location_degree",
+        "target_degree",
+        "snapshot_candidate_count"
+      ]
+    }
+  },
+  "partitions": {
+    "train": {
+      "row_count": 6144,
+      "decision_epoch_count": 2208,
+      "row_identity_unique": true,
+      "same_rows_across_views": true,
+      "same_row_order_across_views": true,
+      "views": {
+        "temporal": {
+          "raw_feature_value_count": 270336,
+          "raw_feature_missing_count": 0,
+          "raw_feature_missing_fraction": 0.0,
+          "raw_feature_missing_by_column": {
+            "observed_replies": 0,
+            "latency_mean_ms": 0,
+            "latency_std_ms": 0,
+            "latency_max_ms": 0,
+            "path_state_flag": 0,
+            "window_duration_hours": 0,
+            "probe_interval_ms": 0,
+            "session_day_of_month": 0,
+            "latency_mean_ms_lag_1": 0,
+            "latency_mean_ms_lag_1_available": 0,
+            "latency_mean_ms_lag_2": 0,
+            "latency_mean_ms_lag_2_available": 0,
+            "latency_mean_ms_lag_3": 0,
+            "latency_mean_ms_lag_3_available": 0,
+            "latency_mean_ms_lag_6": 0,
+            "latency_mean_ms_lag_6_available": 0,
+            "latency_mean_ms_lag_12": 0,
+            "latency_mean_ms_lag_12_available": 0,
+            "latency_mean_ms_roll_mean_3": 0,
+            "latency_mean_ms_roll_std_3": 0,
+            "latency_mean_ms_roll_observed_count_3": 0,
+            "latency_mean_ms_roll_coverage_3": 0,
+            "latency_mean_ms_roll_complete_3": 0,
+            "latency_mean_ms_roll_mean_5": 0,
+            "latency_mean_ms_roll_std_5": 0,
+            "latency_mean_ms_roll_observed_count_5": 0,
+            "latency_mean_ms_roll_coverage_5": 0,
+            "latency_mean_ms_roll_complete_5": 0,
+            "observed_replies_lag_1": 0,
+            "observed_replies_lag_1_available": 0,
+            "observed_replies_roll_mean_3": 0,
+            "observed_replies_roll_std_3": 0,
+            "observed_replies_roll_observed_count_3": 0,
+            "observed_replies_roll_coverage_3": 0,
+            "observed_replies_roll_complete_3": 0,
+            "history_lag_coverage_ratio": 0,
+            "latency_delta_1": 0,
+            "latency_delta_roll3": 0,
+            "latency_jump_ratio": 0,
+            "latency_volatility_ratio": 0,
+            "reply_delta_1": 0,
+            "reply_gap_roll3": 0,
+            "reply_pressure_score": 0,
+            "burst_indicator": 0
+          },
+          "rows_with_any_feature_missing_count": 0,
+          "rows_with_any_feature_missing_fraction": 0.0,
+          "wholly_missing_feature_columns": []
+        },
+        "context": {
+          "raw_feature_value_count": 147456,
+          "raw_feature_missing_count": 12333,
+          "raw_feature_missing_fraction": 0.08363850911458333,
+          "raw_feature_missing_by_column": {
+            "peer_latency_mean": 5,
+            "peer_latency_std": 5,
+            "peer_latency_observed_count": 0,
+            "peer_latency_available": 0,
+            "state_peer_latency_mean": 5,
+            "state_peer_latency_std": 5,
+            "state_peer_latency_observed_count": 0,
+            "state_peer_latency_available": 0,
+            "target_peer_latency_mean": 6144,
+            "target_peer_latency_std": 6144,
+            "target_peer_latency_observed_count": 0,
+            "target_peer_latency_available": 0,
+            "peer_reply_mean": 5,
+            "peer_reply_std": 5,
+            "peer_reply_observed_count": 0,
+            "peer_reply_available": 0,
+            "peer_burst_indicator_mean": 5,
+            "peer_burst_indicator_std": 5,
+            "peer_burst_indicator_observed_count": 0,
+            "peer_burst_indicator_available": 0,
+            "peer_latency_gap": 5,
+            "location_degree": 0,
+            "target_degree": 0,
+            "snapshot_candidate_count": 0
+          },
+          "rows_with_any_feature_missing_count": 6144,
+          "rows_with_any_feature_missing_fraction": 1.0,
+          "wholly_missing_feature_columns": [
+            "target_peer_latency_mean",
+            "target_peer_latency_std"
+          ],
+          "peer_summary_availability": {
+            "fields": [
+              "peer_latency_available",
+              "state_peer_latency_available",
+              "target_peer_latency_available",
+              "peer_reply_available",
+              "peer_burst_indicator_available"
+            ],
+            "by_field": {
+              "peer_latency_available": {
+                "available_count": 6139,
+                "row_count": 6144,
+                "available_fraction": 0.9991861979166666
+              },
+              "state_peer_latency_available": {
+                "available_count": 6139,
+                "row_count": 6144,
+                "available_fraction": 0.9991861979166666
+              },
+              "target_peer_latency_available": {
+                "available_count": 0,
+                "row_count": 6144,
+                "available_fraction": 0.0
+              },
+              "peer_reply_available": {
+                "available_count": 6139,
+                "row_count": 6144,
+                "available_fraction": 0.9991861979166666
+              },
+              "peer_burst_indicator_available": {
+                "available_count": 6139,
+                "row_count": 6144,
+                "available_fraction": 0.9991861979166666
+              }
+            },
+            "availability_value_count": 30720,
+            "available_value_count": 24556,
+            "available_fraction": 0.7993489583333333,
+            "rows_with_any_available_count": 6139,
+            "rows_with_any_available_fraction": 0.9991861979166666,
+            "rows_with_all_available_count": 0,
+            "rows_with_all_available_fraction": 0.0
+          },
+          "target_peer_semantics": {
+            "target_hint_path_identity_match_count": 6144,
+            "target_hint_path_identity_comparable_count": 6144,
+            "target_hint_path_identity_match_fraction": 1.0,
+            "target_hint_is_path_identity": true,
+            "target_peer_signal_available_row_count": 0,
+            "target_peer_signal_available_fraction": 0.0,
+            "target_peer_moment_columns": [
+              "target_peer_latency_mean",
+              "target_peer_latency_std"
+            ],
+            "target_peer_moment_value_count": 12288,
+            "target_peer_moment_missing_count": 12288,
+            "target_peer_moment_missing_fraction": 1.0,
+            "target_peer_semantic_status": "structurally_unavailable: target_hint equals the relative-path identity, so leave-one-out target peers do not exist"
+          }
+        }
+      }
+    },
+    "calibration": {
+      "row_count": 1945,
+      "decision_epoch_count": 710,
+      "row_identity_unique": true,
+      "same_rows_across_views": true,
+      "same_row_order_across_views": true,
+      "views": {
+        "temporal": {
+          "raw_feature_value_count": 85580,
+          "raw_feature_missing_count": 0,
+          "raw_feature_missing_fraction": 0.0,
+          "raw_feature_missing_by_column": {
+            "observed_replies": 0,
+            "latency_mean_ms": 0,
+            "latency_std_ms": 0,
+            "latency_max_ms": 0,
+            "path_state_flag": 0,
+            "window_duration_hours": 0,
+            "probe_interval_ms": 0,
+            "session_day_of_month": 0,
+            "latency_mean_ms_lag_1": 0,
+            "latency_mean_ms_lag_1_available": 0,
+            "latency_mean_ms_lag_2": 0,
+            "latency_mean_ms_lag_2_available": 0,
+            "latency_mean_ms_lag_3": 0,
+            "latency_mean_ms_lag_3_available": 0,
+            "latency_mean_ms_lag_6": 0,
+            "latency_mean_ms_lag_6_available": 0,
+            "latency_mean_ms_lag_12": 0,
+            "latency_mean_ms_lag_12_available": 0,
+            "latency_mean_ms_roll_mean_3": 0,
+            "latency_mean_ms_roll_std_3": 0,
+            "latency_mean_ms_roll_observed_count_3": 0,
+            "latency_mean_ms_roll_coverage_3": 0,
+            "latency_mean_ms_roll_complete_3": 0,
+            "latency_mean_ms_roll_mean_5": 0,
+            "latency_mean_ms_roll_std_5": 0,
+            "latency_mean_ms_roll_observed_count_5": 0,
+            "latency_mean_ms_roll_coverage_5": 0,
+            "latency_mean_ms_roll_complete_5": 0,
+            "observed_replies_lag_1": 0,
+            "observed_replies_lag_1_available": 0,
+            "observed_replies_roll_mean_3": 0,
+            "observed_replies_roll_std_3": 0,
+            "observed_replies_roll_observed_count_3": 0,
+            "observed_replies_roll_coverage_3": 0,
+            "observed_replies_roll_complete_3": 0,
+            "history_lag_coverage_ratio": 0,
+            "latency_delta_1": 0,
+            "latency_delta_roll3": 0,
+            "latency_jump_ratio": 0,
+            "latency_volatility_ratio": 0,
+            "reply_delta_1": 0,
+            "reply_gap_roll3": 0,
+            "reply_pressure_score": 0,
+            "burst_indicator": 0
+          },
+          "rows_with_any_feature_missing_count": 0,
+          "rows_with_any_feature_missing_fraction": 0.0,
+          "wholly_missing_feature_columns": []
+        },
+        "context": {
+          "raw_feature_value_count": 46680,
+          "raw_feature_missing_count": 3944,
+          "raw_feature_missing_fraction": 0.08449014567266495,
+          "raw_feature_missing_by_column": {
+            "peer_latency_mean": 6,
+            "peer_latency_std": 6,
+            "peer_latency_observed_count": 0,
+            "peer_latency_available": 0,
+            "state_peer_latency_mean": 6,
+            "state_peer_latency_std": 6,
+            "state_peer_latency_observed_count": 0,
+            "state_peer_latency_available": 0,
+            "target_peer_latency_mean": 1945,
+            "target_peer_latency_std": 1945,
+            "target_peer_latency_observed_count": 0,
+            "target_peer_latency_available": 0,
+            "peer_reply_mean": 6,
+            "peer_reply_std": 6,
+            "peer_reply_observed_count": 0,
+            "peer_reply_available": 0,
+            "peer_burst_indicator_mean": 6,
+            "peer_burst_indicator_std": 6,
+            "peer_burst_indicator_observed_count": 0,
+            "peer_burst_indicator_available": 0,
+            "peer_latency_gap": 6,
+            "location_degree": 0,
+            "target_degree": 0,
+            "snapshot_candidate_count": 0
+          },
+          "rows_with_any_feature_missing_count": 1945,
+          "rows_with_any_feature_missing_fraction": 1.0,
+          "wholly_missing_feature_columns": [
+            "target_peer_latency_mean",
+            "target_peer_latency_std"
+          ],
+          "peer_summary_availability": {
+            "fields": [
+              "peer_latency_available",
+              "state_peer_latency_available",
+              "target_peer_latency_available",
+              "peer_reply_available",
+              "peer_burst_indicator_available"
+            ],
+            "by_field": {
+              "peer_latency_available": {
+                "available_count": 1939,
+                "row_count": 1945,
+                "available_fraction": 0.9969151670951156
+              },
+              "state_peer_latency_available": {
+                "available_count": 1939,
+                "row_count": 1945,
+                "available_fraction": 0.9969151670951156
+              },
+              "target_peer_latency_available": {
+                "available_count": 0,
+                "row_count": 1945,
+                "available_fraction": 0.0
+              },
+              "peer_reply_available": {
+                "available_count": 1939,
+                "row_count": 1945,
+                "available_fraction": 0.9969151670951156
+              },
+              "peer_burst_indicator_available": {
+                "available_count": 1939,
+                "row_count": 1945,
+                "available_fraction": 0.9969151670951156
+              }
+            },
+            "availability_value_count": 9725,
+            "available_value_count": 7756,
+            "available_fraction": 0.7975321336760925,
+            "rows_with_any_available_count": 1939,
+            "rows_with_any_available_fraction": 0.9969151670951156,
+            "rows_with_all_available_count": 0,
+            "rows_with_all_available_fraction": 0.0
+          },
+          "target_peer_semantics": {
+            "target_hint_path_identity_match_count": 1945,
+            "target_hint_path_identity_comparable_count": 1945,
+            "target_hint_path_identity_match_fraction": 1.0,
+            "target_hint_is_path_identity": true,
+            "target_peer_signal_available_row_count": 0,
+            "target_peer_signal_available_fraction": 0.0,
+            "target_peer_moment_columns": [
+              "target_peer_latency_mean",
+              "target_peer_latency_std"
+            ],
+            "target_peer_moment_value_count": 3890,
+            "target_peer_moment_missing_count": 3890,
+            "target_peer_moment_missing_fraction": 1.0,
+            "target_peer_semantic_status": "structurally_unavailable: target_hint equals the relative-path identity, so leave-one-out target peers do not exist"
+          }
+        }
+      }
+    },
+    "selection": {
+      "row_count": 1579,
+      "decision_epoch_count": 585,
+      "row_identity_unique": true,
+      "same_rows_across_views": true,
+      "same_row_order_across_views": true,
+      "views": {
+        "temporal": {
+          "raw_feature_value_count": 69476,
+          "raw_feature_missing_count": 0,
+          "raw_feature_missing_fraction": 0.0,
+          "raw_feature_missing_by_column": {
+            "observed_replies": 0,
+            "latency_mean_ms": 0,
+            "latency_std_ms": 0,
+            "latency_max_ms": 0,
+            "path_state_flag": 0,
+            "window_duration_hours": 0,
+            "probe_interval_ms": 0,
+            "session_day_of_month": 0,
+            "latency_mean_ms_lag_1": 0,
+            "latency_mean_ms_lag_1_available": 0,
+            "latency_mean_ms_lag_2": 0,
+            "latency_mean_ms_lag_2_available": 0,
+            "latency_mean_ms_lag_3": 0,
+            "latency_mean_ms_lag_3_available": 0,
+            "latency_mean_ms_lag_6": 0,
+            "latency_mean_ms_lag_6_available": 0,
+            "latency_mean_ms_lag_12": 0,
+            "latency_mean_ms_lag_12_available": 0,
+            "latency_mean_ms_roll_mean_3": 0,
+            "latency_mean_ms_roll_std_3": 0,
+            "latency_mean_ms_roll_observed_count_3": 0,
+            "latency_mean_ms_roll_coverage_3": 0,
+            "latency_mean_ms_roll_complete_3": 0,
+            "latency_mean_ms_roll_mean_5": 0,
+            "latency_mean_ms_roll_std_5": 0,
+            "latency_mean_ms_roll_observed_count_5": 0,
+            "latency_mean_ms_roll_coverage_5": 0,
+            "latency_mean_ms_roll_complete_5": 0,
+            "observed_replies_lag_1": 0,
+            "observed_replies_lag_1_available": 0,
+            "observed_replies_roll_mean_3": 0,
+            "observed_replies_roll_std_3": 0,
+            "observed_replies_roll_observed_count_3": 0,
+            "observed_replies_roll_coverage_3": 0,
+            "observed_replies_roll_complete_3": 0,
+            "history_lag_coverage_ratio": 0,
+            "latency_delta_1": 0,
+            "latency_delta_roll3": 0,
+            "latency_jump_ratio": 0,
+            "latency_volatility_ratio": 0,
+            "reply_delta_1": 0,
+            "reply_gap_roll3": 0,
+            "reply_pressure_score": 0,
+            "burst_indicator": 0
+          },
+          "rows_with_any_feature_missing_count": 0,
+          "rows_with_any_feature_missing_fraction": 0.0,
+          "wholly_missing_feature_columns": []
+        },
+        "context": {
+          "raw_feature_value_count": 37896,
+          "raw_feature_missing_count": 3176,
+          "raw_feature_missing_fraction": 0.08380831750052777,
+          "raw_feature_missing_by_column": {
+            "peer_latency_mean": 2,
+            "peer_latency_std": 2,
+            "peer_latency_observed_count": 0,
+            "peer_latency_available": 0,
+            "state_peer_latency_mean": 2,
+            "state_peer_latency_std": 2,
+            "state_peer_latency_observed_count": 0,
+            "state_peer_latency_available": 0,
+            "target_peer_latency_mean": 1579,
+            "target_peer_latency_std": 1579,
+            "target_peer_latency_observed_count": 0,
+            "target_peer_latency_available": 0,
+            "peer_reply_mean": 2,
+            "peer_reply_std": 2,
+            "peer_reply_observed_count": 0,
+            "peer_reply_available": 0,
+            "peer_burst_indicator_mean": 2,
+            "peer_burst_indicator_std": 2,
+            "peer_burst_indicator_observed_count": 0,
+            "peer_burst_indicator_available": 0,
+            "peer_latency_gap": 2,
+            "location_degree": 0,
+            "target_degree": 0,
+            "snapshot_candidate_count": 0
+          },
+          "rows_with_any_feature_missing_count": 1579,
+          "rows_with_any_feature_missing_fraction": 1.0,
+          "wholly_missing_feature_columns": [
+            "target_peer_latency_mean",
+            "target_peer_latency_std"
+          ],
+          "peer_summary_availability": {
+            "fields": [
+              "peer_latency_available",
+              "state_peer_latency_available",
+              "target_peer_latency_available",
+              "peer_reply_available",
+              "peer_burst_indicator_available"
+            ],
+            "by_field": {
+              "peer_latency_available": {
+                "available_count": 1577,
+                "row_count": 1579,
+                "available_fraction": 0.9987333755541482
+              },
+              "state_peer_latency_available": {
+                "available_count": 1577,
+                "row_count": 1579,
+                "available_fraction": 0.9987333755541482
+              },
+              "target_peer_latency_available": {
+                "available_count": 0,
+                "row_count": 1579,
+                "available_fraction": 0.0
+              },
+              "peer_reply_available": {
+                "available_count": 1577,
+                "row_count": 1579,
+                "available_fraction": 0.9987333755541482
+              },
+              "peer_burst_indicator_available": {
+                "available_count": 1577,
+                "row_count": 1579,
+                "available_fraction": 0.9987333755541482
+              }
+            },
+            "availability_value_count": 7895,
+            "available_value_count": 6308,
+            "available_fraction": 0.7989867004433185,
+            "rows_with_any_available_count": 1577,
+            "rows_with_any_available_fraction": 0.9987333755541482,
+            "rows_with_all_available_count": 0,
+            "rows_with_all_available_fraction": 0.0
+          },
+          "target_peer_semantics": {
+            "target_hint_path_identity_match_count": 1579,
+            "target_hint_path_identity_comparable_count": 1579,
+            "target_hint_path_identity_match_fraction": 1.0,
+            "target_hint_is_path_identity": true,
+            "target_peer_signal_available_row_count": 0,
+            "target_peer_signal_available_fraction": 0.0,
+            "target_peer_moment_columns": [
+              "target_peer_latency_mean",
+              "target_peer_latency_std"
+            ],
+            "target_peer_moment_value_count": 3158,
+            "target_peer_moment_missing_count": 3158,
+            "target_peer_moment_missing_fraction": 1.0,
+            "target_peer_semantic_status": "structurally_unavailable: target_hint equals the relative-path identity, so leave-one-out target peers do not exist"
+          }
+        }
+      }
+    },
+    "test": {
+      "row_count": 1767,
+      "decision_epoch_count": 623,
+      "row_identity_unique": true,
+      "same_rows_across_views": true,
+      "same_row_order_across_views": true,
+      "views": {
+        "temporal": {
+          "raw_feature_value_count": 77748,
+          "raw_feature_missing_count": 0,
+          "raw_feature_missing_fraction": 0.0,
+          "raw_feature_missing_by_column": {
+            "observed_replies": 0,
+            "latency_mean_ms": 0,
+            "latency_std_ms": 0,
+            "latency_max_ms": 0,
+            "path_state_flag": 0,
+            "window_duration_hours": 0,
+            "probe_interval_ms": 0,
+            "session_day_of_month": 0,
+            "latency_mean_ms_lag_1": 0,
+            "latency_mean_ms_lag_1_available": 0,
+            "latency_mean_ms_lag_2": 0,
+            "latency_mean_ms_lag_2_available": 0,
+            "latency_mean_ms_lag_3": 0,
+            "latency_mean_ms_lag_3_available": 0,
+            "latency_mean_ms_lag_6": 0,
+            "latency_mean_ms_lag_6_available": 0,
+            "latency_mean_ms_lag_12": 0,
+            "latency_mean_ms_lag_12_available": 0,
+            "latency_mean_ms_roll_mean_3": 0,
+            "latency_mean_ms_roll_std_3": 0,
+            "latency_mean_ms_roll_observed_count_3": 0,
+            "latency_mean_ms_roll_coverage_3": 0,
+            "latency_mean_ms_roll_complete_3": 0,
+            "latency_mean_ms_roll_mean_5": 0,
+            "latency_mean_ms_roll_std_5": 0,
+            "latency_mean_ms_roll_observed_count_5": 0,
+            "latency_mean_ms_roll_coverage_5": 0,
+            "latency_mean_ms_roll_complete_5": 0,
+            "observed_replies_lag_1": 0,
+            "observed_replies_lag_1_available": 0,
+            "observed_replies_roll_mean_3": 0,
+            "observed_replies_roll_std_3": 0,
+            "observed_replies_roll_observed_count_3": 0,
+            "observed_replies_roll_coverage_3": 0,
+            "observed_replies_roll_complete_3": 0,
+            "history_lag_coverage_ratio": 0,
+            "latency_delta_1": 0,
+            "latency_delta_roll3": 0,
+            "latency_jump_ratio": 0,
+            "latency_volatility_ratio": 0,
+            "reply_delta_1": 0,
+            "reply_gap_roll3": 0,
+            "reply_pressure_score": 0,
+            "burst_indicator": 0
+          },
+          "rows_with_any_feature_missing_count": 0,
+          "rows_with_any_feature_missing_fraction": 0.0,
+          "wholly_missing_feature_columns": []
+        },
+        "context": {
+          "raw_feature_value_count": 42408,
+          "raw_feature_missing_count": 3543,
+          "raw_feature_missing_fraction": 0.08354555744199207,
+          "raw_feature_missing_by_column": {
+            "peer_latency_mean": 1,
+            "peer_latency_std": 1,
+            "peer_latency_observed_count": 0,
+            "peer_latency_available": 0,
+            "state_peer_latency_mean": 1,
+            "state_peer_latency_std": 1,
+            "state_peer_latency_observed_count": 0,
+            "state_peer_latency_available": 0,
+            "target_peer_latency_mean": 1767,
+            "target_peer_latency_std": 1767,
+            "target_peer_latency_observed_count": 0,
+            "target_peer_latency_available": 0,
+            "peer_reply_mean": 1,
+            "peer_reply_std": 1,
+            "peer_reply_observed_count": 0,
+            "peer_reply_available": 0,
+            "peer_burst_indicator_mean": 1,
+            "peer_burst_indicator_std": 1,
+            "peer_burst_indicator_observed_count": 0,
+            "peer_burst_indicator_available": 0,
+            "peer_latency_gap": 1,
+            "location_degree": 0,
+            "target_degree": 0,
+            "snapshot_candidate_count": 0
+          },
+          "rows_with_any_feature_missing_count": 1767,
+          "rows_with_any_feature_missing_fraction": 1.0,
+          "wholly_missing_feature_columns": [
+            "target_peer_latency_mean",
+            "target_peer_latency_std"
+          ],
+          "peer_summary_availability": {
+            "fields": [
+              "peer_latency_available",
+              "state_peer_latency_available",
+              "target_peer_latency_available",
+              "peer_reply_available",
+              "peer_burst_indicator_available"
+            ],
+            "by_field": {
+              "peer_latency_available": {
+                "available_count": 1766,
+                "row_count": 1767,
+                "available_fraction": 0.9994340690435767
+              },
+              "state_peer_latency_available": {
+                "available_count": 1766,
+                "row_count": 1767,
+                "available_fraction": 0.9994340690435767
+              },
+              "target_peer_latency_available": {
+                "available_count": 0,
+                "row_count": 1767,
+                "available_fraction": 0.0
+              },
+              "peer_reply_available": {
+                "available_count": 1766,
+                "row_count": 1767,
+                "available_fraction": 0.9994340690435767
+              },
+              "peer_burst_indicator_available": {
+                "available_count": 1766,
+                "row_count": 1767,
+                "available_fraction": 0.9994340690435767
+              }
+            },
+            "availability_value_count": 8835,
+            "available_value_count": 7064,
+            "available_fraction": 0.7995472552348614,
+            "rows_with_any_available_count": 1766,
+            "rows_with_any_available_fraction": 0.9994340690435767,
+            "rows_with_all_available_count": 0,
+            "rows_with_all_available_fraction": 0.0
+          },
+          "target_peer_semantics": {
+            "target_hint_path_identity_match_count": 1767,
+            "target_hint_path_identity_comparable_count": 1767,
+            "target_hint_path_identity_match_fraction": 1.0,
+            "target_hint_is_path_identity": true,
+            "target_peer_signal_available_row_count": 0,
+            "target_peer_signal_available_fraction": 0.0,
+            "target_peer_moment_columns": [
+              "target_peer_latency_mean",
+              "target_peer_latency_std"
+            ],
+            "target_peer_moment_value_count": 3534,
+            "target_peer_moment_missing_count": 3534,
+            "target_peer_moment_missing_fraction": 1.0,
+            "target_peer_semantic_status": "structurally_unavailable: target_hint equals the relative-path identity, so leave-one-out target peers do not exist"
+          }
+        }
+      }
+    }
+  },
+  "calibration": {
+    "partition": "calibration",
+    "row_count": 1945,
+    "decision_epoch_count": 710,
+    "same_rows_across_views": true,
+    "residual_definition": "target_next minus raw prediction",
+    "diagnostics": {
+      "temporal": {
+        "sample_count": 1945,
+        "residual_bias_ms": -4.14754085929134,
+        "residual_scale_ms": 13.649174077488782,
+        "mae_ms": 13.649174077488782,
+        "residual_variance_ms2": 2056.5374976061926,
+        "paired_residual_covariance_ms2": 2321.953482126282
+      },
+      "context": {
+        "sample_count": 1945,
+        "residual_bias_ms": -21.808037691934576,
+        "residual_scale_ms": 25.15212735541109,
+        "mae_ms": 25.15212735541109,
+        "residual_variance_ms2": 4036.7028160204454,
+        "paired_residual_covariance_ms2": 2321.953482126282
+      }
+    }
+  },
+  "executed_fusion": {
+    "source": "executed candidate rows; weights are fixed by calibration",
+    "row_count": 1767,
+    "temporal_weight_min": 1.0,
+    "temporal_weight_max": 1.0,
+    "context_weight_min": 0.0,
+    "context_weight_max": 0.0,
+    "weight_sum_min": 1.0,
+    "weight_sum_max": 1.0,
+    "constant_across_rows": true
+  },
+  "residual_risk_fit": {
+    "fit_partition": "calibration",
+    "nonnegative_linear_fit": true,
+    "activity_threshold_absolute_coefficient": 1e-12,
+    "intercept_ms": 6.32783304768168,
+    "terms": {
+      "disagreement": {
+        "coefficient": 5.3605745416081065,
+        "active": true
+      },
+      "ensemble_spread": {
+        "coefficient": 0.026891427160498794,
+        "active": true
+      },
+      "service_risk": {
+        "coefficient": 0.7142405542440833,
+        "active": true
+      }
+    },
+    "active_terms": [
+      "disagreement",
+      "ensemble_spread",
+      "service_risk"
+    ],
+    "gate_ms": 15.42702290968544,
+    "shared_between_views": true
+  },
+  "semantic_availability_note": "target_peer_latency availability is reported separately from generic missingness because COMMECT target_hint may encode the relative-path identity, leaving no distinct target peer after leave-one-out construction"
+}

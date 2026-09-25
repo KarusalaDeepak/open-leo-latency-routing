@@ -26,6 +26,9 @@ from open_leo_latency_routing.features.temporal import (
     build_wall_clock_decision_schedule,
     split_train_calibration_selection_test,
 )
+from open_leo_latency_routing.evaluation.service_success import (
+    build_scheduled_epoch_success,
+)
 from open_leo_latency_routing.graphs.snapshots import add_graph_snapshot_features
 from open_leo_latency_routing.optimization.policies import (
     ConsensusPolicyConfig,
@@ -1029,8 +1032,22 @@ def main() -> int:
 
     output_dir = _resolve(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    scheduled_test_epoch_count = int(
+        split_boundary_audit["partitions"]["test"][
+            "scheduled_decision_epoch_count"
+        ]
+    )
+    scheduled_success = build_scheduled_epoch_success(
+        decisions,
+        scheduled_epoch_count=scheduled_test_epoch_count,
+        latency_budget_ms=latency_budget_ms,
+    )
     summary.to_csv(output_dir / "policy_summary.csv", index=False)
     decisions.to_csv(output_dir / "policy_decisions.csv", index=False)
+    scheduled_success.to_csv(
+        output_dir / "scheduled_epoch_service_success.csv",
+        index=False,
+    )
     candidates.to_csv(output_dir / "candidate_predictions.csv", index=False)
     predictor_audit.to_csv(
         output_dir / "predictor_information_audit.csv",
@@ -1065,6 +1082,10 @@ def main() -> int:
         "calibration_row_count": int(len(calibration)),
         "policy_selection_row_count": int(len(selection)),
         "evaluation_row_count": int(len(test)),
+        "scheduled_test_epoch_count": scheduled_test_epoch_count,
+        "scheduled_epoch_service_success_file": (
+            "scheduled_epoch_service_success.csv"
+        ),
         "exact_horizon_audit": exact_horizon_audit,
         "gate_selection_reason": temporal_calibration.gate_selection_reason,
         "predictor_information_audit": predictor_audit_metadata,

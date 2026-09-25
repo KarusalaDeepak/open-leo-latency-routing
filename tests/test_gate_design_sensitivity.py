@@ -195,6 +195,8 @@ def test_generated_outputs_and_canonical_reference(tmp_path: Path) -> None:
         (tmp_path / METADATA_OUTPUT_NAME).read_text(encoding="utf-8")
     )
     assert disk_metadata["output_sha256"] == metadata["output_sha256"]
+    assert b"\r" not in (tmp_path / MAIN_OUTPUT_NAME).read_bytes()
+    assert b"\r" not in (tmp_path / CANONICAL_OUTPUT_NAME).read_bytes()
 
 
 def test_expected_reference_floor_values() -> None:
@@ -206,11 +208,10 @@ def test_expected_reference_floor_values() -> None:
         if row["n_min_opportunity_bearing_groups"] == 5
         and row["epsilon_aggregate"] == 0.02
     }
-    assert index[(60.0, 1.0)]["u1_tail_best_case_group_floor"] == 2704
-    assert index[(60.0, 10.0)]["u5_tail_best_case_group_floor"] == 4248
-    assert index[(200.0, 5.0)]["u1_tail_best_case_group_floor"] == 2974
-    assert index[(1000.0, 10.0)]["u5_tail_best_case_group_floor"] == 3530
+    assert index[(60.0, 1.0)]["u1_tail_best_case_group_floor"] == 2751
+    assert index[(60.0, 10.0)]["u5_tail_best_case_group_floor"] == 4313
+    assert index[(200.0, 5.0)]["u1_tail_best_case_group_floor"] == 3021
+    assert index[(1000.0, 10.0)]["u5_tail_best_case_group_floor"] == 3576
     canonical = build_canonical_reference_rows(config)
-    assert canonical[0]["u1_tail_best_case_group_floor"] == 3954
-    assert canonical[0]["u5_tail_best_case_group_floor"] == 4276
-
+    assert canonical[0]["u1_tail_best_case_group_floor"] == 3999
+    assert canonical[0]["u5_tail_best_case_group_floor"] == 4320

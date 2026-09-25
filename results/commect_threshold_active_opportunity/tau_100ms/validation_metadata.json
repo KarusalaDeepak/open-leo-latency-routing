@@ -1,0 +1,1056 @@
+{
+  "policy_level_evaluation": true,
+  "measured_concurrent_paths": true,
+  "independent_of_lens": true,
+  "dataset_doi": "10.5281/zenodo.14620779",
+  "concurrency_audit": {
+    "epoch_count": 603,
+    "concurrent_epoch_count": 603,
+    "max_concurrent_paths": 3,
+    "median_concurrent_paths": 3.0,
+    "concurrent_row_fraction": 1.0,
+    "has_temporally_concurrent_candidates": true,
+    "decision_alignment": "actual_timestamp",
+    "supports_candidate_outcome_shadow_replay": true,
+    "supports_shadow_policy_replay": true,
+    "supports_literal_single_controller_steering": true,
+    "supports_closed_loop_deployment_evidence": false,
+    "controller_topology_scope": "source-specific adapter declares one steering controller; offline shadow replay only"
+  },
+  "trace_metadata": {
+    "dataset_name": "commect_denmark_multiaccess_latency",
+    "dataset_doi": "10.5281/zenodo.14620779",
+    "dataset_url": "https://doi.org/10.5281/zenodo.14620779",
+    "archive_md5": "fa4a17432128c5ee23662e0f98dbc0c1",
+    "archive_sha256": "e2f0c70655c345963154909913c845fbfeba9c34878b0bf53e95d5723ce4d2ad",
+    "archive_source_verification": {
+      "operator_a_5g": {
+        "filename": "Operator_A_RTT.csv",
+        "extracted_sha256": "3a7b7913cf115c7c6c8a937f9da3b8b94ad667a9f031a510b6d7415f23281a78",
+        "extracted_bytes": 2447871,
+        "matching_archive_members": [
+          "Mutli-connectivity_KPIs_Latency/Operator_A_RTT.csv"
+        ],
+        "archive_member_match_count": 1,
+        "byte_identity_verified": true
+      },
+      "operator_b_5g": {
+        "filename": "Operator_B_RTT.csv",
+        "extracted_sha256": "5cce45bf84d3571a001f91d88c32997cd081d17291b46a4903bfaf5a916482df",
+        "extracted_bytes": 2426059,
+        "matching_archive_members": [
+          "Mutli-connectivity_KPIs_Latency/Operator_B_RTT.csv"
+        ],
+        "archive_member_match_count": 1,
+        "byte_identity_verified": true
+      },
+      "starlink": {
+        "filename": "Satellite_RTT.csv",
+        "extracted_sha256": "a744587215bea49444b9ea4ad7b72cff34e0e6bba1157f6f7f13c7107da9bf55",
+        "extracted_bytes": 2626175,
+        "matching_archive_members": [
+          "Mutli-connectivity_KPIs_Latency/Satellite_RTT.csv"
+        ],
+        "archive_member_match_count": 1,
+        "byte_identity_verified": true
+      }
+    },
+    "license": "CC BY-SA 4.0",
+    "provenance": "Aalborg University COMMECT measured rural-drive latency dataset",
+    "is_measured_dataset": true,
+    "is_independent_of_lens": true,
+    "concurrent_alternative_paths": true,
+    "path_interpretation": "one controller may select Operator A 5G, Operator B 5G, or Starlink at each aligned decision epoch",
+    "paths": [
+      "operator_a_5g",
+      "operator_b_5g",
+      "starlink"
+    ],
+    "source_rows": {
+      "operator_a_5g": 54291,
+      "operator_b_5g": 54291,
+      "starlink": 54291
+    },
+    "source_files": [
+      {
+        "path": "data/external/commect_latency/Mutli-connectivity_KPIs_Latency/Operator_A_RTT.csv",
+        "sha256": "3a7b7913cf115c7c6c8a937f9da3b8b94ad667a9f031a510b6d7415f23281a78",
+        "bytes": 2447871
+      },
+      {
+        "path": "data/external/commect_latency/Mutli-connectivity_KPIs_Latency/Operator_B_RTT.csv",
+        "sha256": "5cce45bf84d3571a001f91d88c32997cd081d17291b46a4903bfaf5a916482df",
+        "bytes": 2426059
+      },
+      {
+        "path": "data/external/commect_latency/Mutli-connectivity_KPIs_Latency/Satellite_RTT.csv",
+        "sha256": "a744587215bea49444b9ea4ad7b72cff34e0e6bba1157f6f7f13c7107da9bf55",
+        "bytes": 2626175
+      }
+    ],
+    "bin_seconds": 10,
+    "alignment": "source-local timestamps floored to equal-width bins; no interpolation, backfill, or future observations",
+    "source_timezone_note": "the public CSV timestamps are timezone-naive; they are used only for within-campaign ordering and concurrent alignment",
+    "concurrency_audit": {
+      "epoch_count": 603,
+      "concurrent_epoch_count": 603,
+      "max_concurrent_paths": 3,
+      "median_concurrent_paths": 3.0,
+      "concurrent_row_fraction": 1.0,
+      "has_temporally_concurrent_candidates": true,
+      "supports_candidate_outcome_shadow_replay": true,
+      "supports_shadow_policy_replay": true,
+      "supports_literal_single_controller_steering": true,
+      "supports_closed_loop_deployment_evidence": false,
+      "controller_topology_scope": "one acquisition controller with heterogeneous access interfaces; offline shadow replay only"
+    },
+    "timestamp_alignment_audit": {
+      "complete_concurrent_bins": 594,
+      "median_inter_path_median_skew_ms": 88.0,
+      "p95_inter_path_median_skew_ms": 2351.525043200002,
+      "maximum_inter_path_median_skew_ms": 5143.000064,
+      "median_within_path_observation_span_ms": 9871.0,
+      "p95_within_path_observation_span_ms": 9969.0,
+      "maximum_within_path_observation_span_ms": 9997.0
+    },
+    "valid_claim": "separate-source measured shadow replay on bin-aligned concurrent terrestrial and LEO access alternatives",
+    "invalid_claim": "an independent statistical replication, commercial multi-LEO service-replica routing, or satellite-to-satellite path selection"
+  },
+  "split_protocol": "train/calibration/policy-selection/test boundaries are frozen on the unfiltered raw min/max exact-cadence wall-clock grid before target availability or completeness filtering; exact-horizon targets crossing a frozen boundary are excluded",
+  "boundaries_declared_before_target_filtering": true,
+  "split_boundary_audit": {
+    "boundary_basis": "pre_target_wall_clock_schedule",
+    "boundaries_declared_before_target_filtering": true,
+    "target_availability_used_for_boundary_derivation": false,
+    "schedule": {
+      "boundary_schedule_source": "raw_min_max_exact_cadence_grid",
+      "target_availability_used_for_schedule": false,
+      "first_scheduled_bin_epoch": 1697029860.0,
+      "last_scheduled_bin_epoch": 1697036180.0,
+      "scheduled_decision_epoch_count": 633,
+      "decision_cadence_seconds": 10.0,
+      "observed_raw_decision_epoch_count": 603,
+      "missing_raw_decision_epoch_count": 30,
+      "off_phase_raw_decision_epoch_count": 0
+    },
+    "ratios": {
+      "train": 0.55,
+      "calibration": 0.15,
+      "selection": 0.15,
+      "test": 0.15
+    },
+    "partitions": {
+      "train": {
+        "first_schedule_index": 0,
+        "last_schedule_index": 347,
+        "first_bin_epoch": 1697029860.0,
+        "last_bin_epoch": 1697033330.0,
+        "scheduled_decision_epoch_count": 348,
+        "input_outcome_eligible_row_count": 933,
+        "input_outcome_eligible_decision_epoch_count": 313,
+        "one_step_missing_endpoint_row_count": 0,
+        "one_step_boundary_excluded_row_count": 3,
+        "retained_row_count": 930,
+        "retained_decision_epoch_count": 312
+      },
+      "calibration": {
+        "first_schedule_index": 348,
+        "last_schedule_index": 442,
+        "first_bin_epoch": 1697033340.0,
+        "last_bin_epoch": 1697034280.0,
+        "scheduled_decision_epoch_count": 95,
+        "input_outcome_eligible_row_count": 268,
+        "input_outcome_eligible_decision_epoch_count": 90,
+        "one_step_missing_endpoint_row_count": 0,
+        "one_step_boundary_excluded_row_count": 3,
+        "retained_row_count": 265,
+        "retained_decision_epoch_count": 89
+      },
+      "selection": {
+        "first_schedule_index": 443,
+        "last_schedule_index": 537,
+        "first_bin_epoch": 1697034290.0,
+        "last_bin_epoch": 1697035230.0,
+        "scheduled_decision_epoch_count": 95,
+        "input_outcome_eligible_row_count": 261,
+        "input_outcome_eligible_decision_epoch_count": 87,
+        "one_step_missing_endpoint_row_count": 0,
+        "one_step_boundary_excluded_row_count": 3,
+        "retained_row_count": 258,
+        "retained_decision_epoch_count": 86
+      },
+      "test": {
+        "first_schedule_index": 538,
+        "last_schedule_index": 632,
+        "first_bin_epoch": 1697035240.0,
+        "last_bin_epoch": 1697036180.0,
+        "scheduled_decision_epoch_count": 95,
+        "input_outcome_eligible_row_count": 264,
+        "input_outcome_eligible_decision_epoch_count": 88,
+        "one_step_missing_endpoint_row_count": 0,
+        "one_step_boundary_excluded_row_count": 0,
+        "retained_row_count": 264,
+        "retained_decision_epoch_count": 88
+      }
+    },
+    "input_frame_row_count": 1726,
+    "input_frame_decision_epoch_count": 578,
+    "one_step_missing_endpoint_row_count": 0,
+    "one_step_boundary_excluded_row_count": 9
+  },
+  "training_row_count": 930,
+  "calibration_row_count": 265,
+  "policy_selection_row_count": 258,
+  "evaluation_row_count": 264,
+  "scheduled_test_epoch_count": 95,
+  "scheduled_epoch_service_success_file": "scheduled_epoch_service_success.csv",
+  "exact_horizon_audit": {
+    "endpoint_semantics": "exact_target_bin_start_with_complete_intermediate_sequence",
+    "decision_cadence_seconds": 10.0,
+    "one_step_horizon_bins": 1,
+    "one_step_expected_horizon_seconds": 10.0,
+    "input_row_count": 1800,
+    "scheduled_history_semantics": "exact_wall_clock_slots",
+    "scheduled_history_lags": [
+      1,
+      2,
+      3,
+      6,
+      12
+    ],
+    "scheduled_grid_expected_row_count": 1899,
+    "scheduled_grid_observed_row_count": 1800,
+    "scheduled_grid_missing_row_count": 99,
+    "scheduled_grid_off_phase_row_count": 0,
+    "history_gap_row_count": 353,
+    "full_lag_history_row_count": 1447,
+    "positional_target_row_count": 1797,
+    "exact_target_row_count_before_decision_completeness": 1736,
+    "excluded_nonexact_gap_row_count": 61,
+    "require_complete_decision_epochs": true,
+    "excluded_incomplete_decision_epoch_count": 25,
+    "asymmetric_missing_candidate_epoch_count": 5,
+    "incomplete_required_candidate_row_count": 64,
+    "retained_exact_target_row_count": 1726,
+    "retained_full_lag_history_row_count": 1389,
+    "retained_decision_epoch_count": 578,
+    "multi_bin_horizons": {
+      "3": {
+        "horizon_bins": 3,
+        "expected_horizon_seconds": 30.0,
+        "positional_complete_row_count": 1791,
+        "retained_exact_row_count": 1628,
+        "excluded_nonexact_gap_row_count": 163
+      },
+      "5": {
+        "horizon_bins": 5,
+        "expected_horizon_seconds": 50.0,
+        "positional_complete_row_count": 1785,
+        "retained_exact_row_count": 1521,
+        "excluded_nonexact_gap_row_count": 264
+      }
+    }
+  },
+  "gate_selection_reason": "insufficient independent opportunity-bearing blocks",
+  "predictor_information_audit": {
+    "schema_version": 1,
+    "csv_file": "predictor_information_audit.csv",
+    "audit_scope": "information-view/data-quality balance plus fixed calibration diagnostics; not evaluation-performance evidence",
+    "interpretation": "This artifact audits matched information views, raw feature availability, and diagnostics fixed on calibration data. It does not establish held-out predictive or policy superiority.",
+    "evaluation_performance_metrics_included": false,
+    "evaluation_outcomes_used": false,
+    "row_identity_columns": [
+      "session_date",
+      "session_bin_index",
+      "relative_path",
+      "bin_epoch"
+    ],
+    "all_partitions_same_rows_across_views": true,
+    "all_partitions_same_row_order_across_views": true,
+    "views": {
+      "temporal": {
+        "feature_count": 44,
+        "feature_columns": [
+          "observed_replies",
+          "latency_mean_ms",
+          "latency_std_ms",
+          "latency_max_ms",
+          "path_state_flag",
+          "window_duration_hours",
+          "probe_interval_ms",
+          "session_day_of_month",
+          "latency_mean_ms_lag_1",
+          "latency_mean_ms_lag_1_available",
+          "latency_mean_ms_lag_2",
+          "latency_mean_ms_lag_2_available",
+          "latency_mean_ms_lag_3",
+          "latency_mean_ms_lag_3_available",
+          "latency_mean_ms_lag_6",
+          "latency_mean_ms_lag_6_available",
+          "latency_mean_ms_lag_12",
+          "latency_mean_ms_lag_12_available",
+          "latency_mean_ms_roll_mean_3",
+          "latency_mean_ms_roll_std_3",
+          "latency_mean_ms_roll_observed_count_3",
+          "latency_mean_ms_roll_coverage_3",
+          "latency_mean_ms_roll_complete_3",
+          "latency_mean_ms_roll_mean_5",
+          "latency_mean_ms_roll_std_5",
+          "latency_mean_ms_roll_observed_count_5",
+          "latency_mean_ms_roll_coverage_5",
+          "latency_mean_ms_roll_complete_5",
+          "observed_replies_lag_1",
+          "observed_replies_lag_1_available",
+          "observed_replies_roll_mean_3",
+          "observed_replies_roll_std_3",
+          "observed_replies_roll_observed_count_3",
+          "observed_replies_roll_coverage_3",
+          "observed_replies_roll_complete_3",
+          "history_lag_coverage_ratio",
+          "latency_delta_1",
+          "latency_delta_roll3",
+          "latency_jump_ratio",
+          "latency_volatility_ratio",
+          "reply_delta_1",
+          "reply_gap_roll3",
+          "reply_pressure_score",
+          "burst_indicator"
+        ]
+      },
+      "context": {
+        "feature_count": 24,
+        "feature_columns": [
+          "peer_latency_mean",
+          "peer_latency_std",
+          "peer_latency_observed_count",
+          "peer_latency_available",
+          "state_peer_latency_mean",
+          "state_peer_latency_std",
+          "state_peer_latency_observed_count",
+          "state_peer_latency_available",
+          "target_peer_latency_mean",
+          "target_peer_latency_std",
+          "target_peer_latency_observed_count",
+          "target_peer_latency_available",
+          "peer_reply_mean",
+          "peer_reply_std",
+          "peer_reply_observed_count",
+          "peer_reply_available",
+          "peer_burst_indicator_mean",
+          "peer_burst_indicator_std",
+          "peer_burst_indicator_observed_count",
+          "peer_burst_indicator_available",
+          "peer_latency_gap",
+          "location_degree",
+          "target_degree",
+          "snapshot_candidate_count"
+        ]
+      }
+    },
+    "partitions": {
+      "train": {
+        "row_count": 930,
+        "decision_epoch_count": 312,
+        "row_identity_unique": true,
+        "same_rows_across_views": true,
+        "same_row_order_across_views": true,
+        "views": {
+          "temporal": {
+            "raw_feature_value_count": 40920,
+            "raw_feature_missing_count": 0,
+            "raw_feature_missing_fraction": 0.0,
+            "raw_feature_missing_by_column": {
+              "observed_replies": 0,
+              "latency_mean_ms": 0,
+              "latency_std_ms": 0,
+              "latency_max_ms": 0,
+              "path_state_flag": 0,
+              "window_duration_hours": 0,
+              "probe_interval_ms": 0,
+              "session_day_of_month": 0,
+              "latency_mean_ms_lag_1": 0,
+              "latency_mean_ms_lag_1_available": 0,
+              "latency_mean_ms_lag_2": 0,
+              "latency_mean_ms_lag_2_available": 0,
+              "latency_mean_ms_lag_3": 0,
+              "latency_mean_ms_lag_3_available": 0,
+              "latency_mean_ms_lag_6": 0,
+              "latency_mean_ms_lag_6_available": 0,
+              "latency_mean_ms_lag_12": 0,
+              "latency_mean_ms_lag_12_available": 0,
+              "latency_mean_ms_roll_mean_3": 0,
+              "latency_mean_ms_roll_std_3": 0,
+              "latency_mean_ms_roll_observed_count_3": 0,
+              "latency_mean_ms_roll_coverage_3": 0,
+              "latency_mean_ms_roll_complete_3": 0,
+              "latency_mean_ms_roll_mean_5": 0,
+              "latency_mean_ms_roll_std_5": 0,
+              "latency_mean_ms_roll_observed_count_5": 0,
+              "latency_mean_ms_roll_coverage_5": 0,
+              "latency_mean_ms_roll_complete_5": 0,
+              "observed_replies_lag_1": 0,
+              "observed_replies_lag_1_available": 0,
+              "observed_replies_roll_mean_3": 0,
+              "observed_replies_roll_std_3": 0,
+              "observed_replies_roll_observed_count_3": 0,
+              "observed_replies_roll_coverage_3": 0,
+              "observed_replies_roll_complete_3": 0,
+              "history_lag_coverage_ratio": 0,
+              "latency_delta_1": 0,
+              "latency_delta_roll3": 0,
+              "latency_jump_ratio": 0,
+              "latency_volatility_ratio": 0,
+              "reply_delta_1": 0,
+              "reply_gap_roll3": 0,
+              "reply_pressure_score": 0,
+              "burst_indicator": 0
+            },
+            "rows_with_any_feature_missing_count": 0,
+            "rows_with_any_feature_missing_fraction": 0.0,
+            "wholly_missing_feature_columns": []
+          },
+          "context": {
+            "raw_feature_value_count": 22320,
+            "raw_feature_missing_count": 1860,
+            "raw_feature_missing_fraction": 0.08333333333333333,
+            "raw_feature_missing_by_column": {
+              "peer_latency_mean": 0,
+              "peer_latency_std": 0,
+              "peer_latency_observed_count": 0,
+              "peer_latency_available": 0,
+              "state_peer_latency_mean": 0,
+              "state_peer_latency_std": 0,
+              "state_peer_latency_observed_count": 0,
+              "state_peer_latency_available": 0,
+              "target_peer_latency_mean": 930,
+              "target_peer_latency_std": 930,
+              "target_peer_latency_observed_count": 0,
+              "target_peer_latency_available": 0,
+              "peer_reply_mean": 0,
+              "peer_reply_std": 0,
+              "peer_reply_observed_count": 0,
+              "peer_reply_available": 0,
+              "peer_burst_indicator_mean": 0,
+              "peer_burst_indicator_std": 0,
+              "peer_burst_indicator_observed_count": 0,
+              "peer_burst_indicator_available": 0,
+              "peer_latency_gap": 0,
+              "location_degree": 0,
+              "target_degree": 0,
+              "snapshot_candidate_count": 0
+            },
+            "rows_with_any_feature_missing_count": 930,
+            "rows_with_any_feature_missing_fraction": 1.0,
+            "wholly_missing_feature_columns": [
+              "target_peer_latency_mean",
+              "target_peer_latency_std"
+            ],
+            "peer_summary_availability": {
+              "fields": [
+                "peer_latency_available",
+                "state_peer_latency_available",
+                "target_peer_latency_available",
+                "peer_reply_available",
+                "peer_burst_indicator_available"
+              ],
+              "by_field": {
+                "peer_latency_available": {
+                  "available_count": 930,
+                  "row_count": 930,
+                  "available_fraction": 1.0
+                },
+                "state_peer_latency_available": {
+                  "available_count": 930,
+                  "row_count": 930,
+                  "available_fraction": 1.0
+                },
+                "target_peer_latency_available": {
+                  "available_count": 0,
+                  "row_count": 930,
+                  "available_fraction": 0.0
+                },
+                "peer_reply_available": {
+                  "available_count": 930,
+                  "row_count": 930,
+                  "available_fraction": 1.0
+                },
+                "peer_burst_indicator_available": {
+                  "available_count": 930,
+                  "row_count": 930,
+                  "available_fraction": 1.0
+                }
+              },
+              "availability_value_count": 4650,
+              "available_value_count": 3720,
+              "available_fraction": 0.8,
+              "rows_with_any_available_count": 930,
+              "rows_with_any_available_fraction": 1.0,
+              "rows_with_all_available_count": 0,
+              "rows_with_all_available_fraction": 0.0
+            },
+            "target_peer_semantics": {
+              "target_hint_path_identity_match_count": 930,
+              "target_hint_path_identity_comparable_count": 930,
+              "target_hint_path_identity_match_fraction": 1.0,
+              "target_hint_is_path_identity": true,
+              "target_peer_signal_available_row_count": 0,
+              "target_peer_signal_available_fraction": 0.0,
+              "target_peer_moment_columns": [
+                "target_peer_latency_mean",
+                "target_peer_latency_std"
+              ],
+              "target_peer_moment_value_count": 1860,
+              "target_peer_moment_missing_count": 1860,
+              "target_peer_moment_missing_fraction": 1.0,
+              "target_peer_semantic_status": "structurally_unavailable: target_hint equals the relative-path identity, so leave-one-out target peers do not exist"
+            }
+          }
+        }
+      },
+      "calibration": {
+        "row_count": 265,
+        "decision_epoch_count": 89,
+        "row_identity_unique": true,
+        "same_rows_across_views": true,
+        "same_row_order_across_views": true,
+        "views": {
+          "temporal": {
+            "raw_feature_value_count": 11660,
+            "raw_feature_missing_count": 0,
+            "raw_feature_missing_fraction": 0.0,
+            "raw_feature_missing_by_column": {
+              "observed_replies": 0,
+              "latency_mean_ms": 0,
+              "latency_std_ms": 0,
+              "latency_max_ms": 0,
+              "path_state_flag": 0,
+              "window_duration_hours": 0,
+              "probe_interval_ms": 0,
+              "session_day_of_month": 0,
+              "latency_mean_ms_lag_1": 0,
+              "latency_mean_ms_lag_1_available": 0,
+              "latency_mean_ms_lag_2": 0,
+              "latency_mean_ms_lag_2_available": 0,
+              "latency_mean_ms_lag_3": 0,
+              "latency_mean_ms_lag_3_available": 0,
+              "latency_mean_ms_lag_6": 0,
+              "latency_mean_ms_lag_6_available": 0,
+              "latency_mean_ms_lag_12": 0,
+              "latency_mean_ms_lag_12_available": 0,
+              "latency_mean_ms_roll_mean_3": 0,
+              "latency_mean_ms_roll_std_3": 0,
+              "latency_mean_ms_roll_observed_count_3": 0,
+              "latency_mean_ms_roll_coverage_3": 0,
+              "latency_mean_ms_roll_complete_3": 0,
+              "latency_mean_ms_roll_mean_5": 0,
+              "latency_mean_ms_roll_std_5": 0,
+              "latency_mean_ms_roll_observed_count_5": 0,
+              "latency_mean_ms_roll_coverage_5": 0,
+              "latency_mean_ms_roll_complete_5": 0,
+              "observed_replies_lag_1": 0,
+              "observed_replies_lag_1_available": 0,
+              "observed_replies_roll_mean_3": 0,
+              "observed_replies_roll_std_3": 0,
+              "observed_replies_roll_observed_count_3": 0,
+              "observed_replies_roll_coverage_3": 0,
+              "observed_replies_roll_complete_3": 0,
+              "history_lag_coverage_ratio": 0,
+              "latency_delta_1": 0,
+              "latency_delta_roll3": 0,
+              "latency_jump_ratio": 0,
+              "latency_volatility_ratio": 0,
+              "reply_delta_1": 0,
+              "reply_gap_roll3": 0,
+              "reply_pressure_score": 0,
+              "burst_indicator": 0
+            },
+            "rows_with_any_feature_missing_count": 0,
+            "rows_with_any_feature_missing_fraction": 0.0,
+            "wholly_missing_feature_columns": []
+          },
+          "context": {
+            "raw_feature_value_count": 6360,
+            "raw_feature_missing_count": 530,
+            "raw_feature_missing_fraction": 0.08333333333333333,
+            "raw_feature_missing_by_column": {
+              "peer_latency_mean": 0,
+              "peer_latency_std": 0,
+              "peer_latency_observed_count": 0,
+              "peer_latency_available": 0,
+              "state_peer_latency_mean": 0,
+              "state_peer_latency_std": 0,
+              "state_peer_latency_observed_count": 0,
+              "state_peer_latency_available": 0,
+              "target_peer_latency_mean": 265,
+              "target_peer_latency_std": 265,
+              "target_peer_latency_observed_count": 0,
+              "target_peer_latency_available": 0,
+              "peer_reply_mean": 0,
+              "peer_reply_std": 0,
+              "peer_reply_observed_count": 0,
+              "peer_reply_available": 0,
+              "peer_burst_indicator_mean": 0,
+              "peer_burst_indicator_std": 0,
+              "peer_burst_indicator_observed_count": 0,
+              "peer_burst_indicator_available": 0,
+              "peer_latency_gap": 0,
+              "location_degree": 0,
+              "target_degree": 0,
+              "snapshot_candidate_count": 0
+            },
+            "rows_with_any_feature_missing_count": 265,
+            "rows_with_any_feature_missing_fraction": 1.0,
+            "wholly_missing_feature_columns": [
+              "target_peer_latency_mean",
+              "target_peer_latency_std"
+            ],
+            "peer_summary_availability": {
+              "fields": [
+                "peer_latency_available",
+                "state_peer_latency_available",
+                "target_peer_latency_available",
+                "peer_reply_available",
+                "peer_burst_indicator_available"
+              ],
+              "by_field": {
+                "peer_latency_available": {
+                  "available_count": 265,
+                  "row_count": 265,
+                  "available_fraction": 1.0
+                },
+                "state_peer_latency_available": {
+                  "available_count": 265,
+                  "row_count": 265,
+                  "available_fraction": 1.0
+                },
+                "target_peer_latency_available": {
+                  "available_count": 0,
+                  "row_count": 265,
+                  "available_fraction": 0.0
+                },
+                "peer_reply_available": {
+                  "available_count": 265,
+                  "row_count": 265,
+                  "available_fraction": 1.0
+                },
+                "peer_burst_indicator_available": {
+                  "available_count": 265,
+                  "row_count": 265,
+                  "available_fraction": 1.0
+                }
+              },
+              "availability_value_count": 1325,
+              "available_value_count": 1060,
+              "available_fraction": 0.8,
+              "rows_with_any_available_count": 265,
+              "rows_with_any_available_fraction": 1.0,
+              "rows_with_all_available_count": 0,
+              "rows_with_all_available_fraction": 0.0
+            },
+            "target_peer_semantics": {
+              "target_hint_path_identity_match_count": 265,
+              "target_hint_path_identity_comparable_count": 265,
+              "target_hint_path_identity_match_fraction": 1.0,
+              "target_hint_is_path_identity": true,
+              "target_peer_signal_available_row_count": 0,
+              "target_peer_signal_available_fraction": 0.0,
+              "target_peer_moment_columns": [
+                "target_peer_latency_mean",
+                "target_peer_latency_std"
+              ],
+              "target_peer_moment_value_count": 530,
+              "target_peer_moment_missing_count": 530,
+              "target_peer_moment_missing_fraction": 1.0,
+              "target_peer_semantic_status": "structurally_unavailable: target_hint equals the relative-path identity, so leave-one-out target peers do not exist"
+            }
+          }
+        }
+      },
+      "selection": {
+        "row_count": 258,
+        "decision_epoch_count": 86,
+        "row_identity_unique": true,
+        "same_rows_across_views": true,
+        "same_row_order_across_views": true,
+        "views": {
+          "temporal": {
+            "raw_feature_value_count": 11352,
+            "raw_feature_missing_count": 0,
+            "raw_feature_missing_fraction": 0.0,
+            "raw_feature_missing_by_column": {
+              "observed_replies": 0,
+              "latency_mean_ms": 0,
+              "latency_std_ms": 0,
+              "latency_max_ms": 0,
+              "path_state_flag": 0,
+              "window_duration_hours": 0,
+              "probe_interval_ms": 0,
+              "session_day_of_month": 0,
+              "latency_mean_ms_lag_1": 0,
+              "latency_mean_ms_lag_1_available": 0,
+              "latency_mean_ms_lag_2": 0,
+              "latency_mean_ms_lag_2_available": 0,
+              "latency_mean_ms_lag_3": 0,
+              "latency_mean_ms_lag_3_available": 0,
+              "latency_mean_ms_lag_6": 0,
+              "latency_mean_ms_lag_6_available": 0,
+              "latency_mean_ms_lag_12": 0,
+              "latency_mean_ms_lag_12_available": 0,
+              "latency_mean_ms_roll_mean_3": 0,
+              "latency_mean_ms_roll_std_3": 0,
+              "latency_mean_ms_roll_observed_count_3": 0,
+              "latency_mean_ms_roll_coverage_3": 0,
+              "latency_mean_ms_roll_complete_3": 0,
+              "latency_mean_ms_roll_mean_5": 0,
+              "latency_mean_ms_roll_std_5": 0,
+              "latency_mean_ms_roll_observed_count_5": 0,
+              "latency_mean_ms_roll_coverage_5": 0,
+              "latency_mean_ms_roll_complete_5": 0,
+              "observed_replies_lag_1": 0,
+              "observed_replies_lag_1_available": 0,
+              "observed_replies_roll_mean_3": 0,
+              "observed_replies_roll_std_3": 0,
+              "observed_replies_roll_observed_count_3": 0,
+              "observed_replies_roll_coverage_3": 0,
+              "observed_replies_roll_complete_3": 0,
+              "history_lag_coverage_ratio": 0,
+              "latency_delta_1": 0,
+              "latency_delta_roll3": 0,
+              "latency_jump_ratio": 0,
+              "latency_volatility_ratio": 0,
+              "reply_delta_1": 0,
+              "reply_gap_roll3": 0,
+              "reply_pressure_score": 0,
+              "burst_indicator": 0
+            },
+            "rows_with_any_feature_missing_count": 0,
+            "rows_with_any_feature_missing_fraction": 0.0,
+            "wholly_missing_feature_columns": []
+          },
+          "context": {
+            "raw_feature_value_count": 6192,
+            "raw_feature_missing_count": 516,
+            "raw_feature_missing_fraction": 0.08333333333333333,
+            "raw_feature_missing_by_column": {
+              "peer_latency_mean": 0,
+              "peer_latency_std": 0,
+              "peer_latency_observed_count": 0,
+              "peer_latency_available": 0,
+              "state_peer_latency_mean": 0,
+              "state_peer_latency_std": 0,
+              "state_peer_latency_observed_count": 0,
+              "state_peer_latency_available": 0,
+              "target_peer_latency_mean": 258,
+              "target_peer_latency_std": 258,
+              "target_peer_latency_observed_count": 0,
+              "target_peer_latency_available": 0,
+              "peer_reply_mean": 0,
+              "peer_reply_std": 0,
+              "peer_reply_observed_count": 0,
+              "peer_reply_available": 0,
+              "peer_burst_indicator_mean": 0,
+              "peer_burst_indicator_std": 0,
+              "peer_burst_indicator_observed_count": 0,
+              "peer_burst_indicator_available": 0,
+              "peer_latency_gap": 0,
+              "location_degree": 0,
+              "target_degree": 0,
+              "snapshot_candidate_count": 0
+            },
+            "rows_with_any_feature_missing_count": 258,
+            "rows_with_any_feature_missing_fraction": 1.0,
+            "wholly_missing_feature_columns": [
+              "target_peer_latency_mean",
+              "target_peer_latency_std"
+            ],
+            "peer_summary_availability": {
+              "fields": [
+                "peer_latency_available",
+                "state_peer_latency_available",
+                "target_peer_latency_available",
+                "peer_reply_available",
+                "peer_burst_indicator_available"
+              ],
+              "by_field": {
+                "peer_latency_available": {
+                  "available_count": 258,
+                  "row_count": 258,
+                  "available_fraction": 1.0
+                },
+                "state_peer_latency_available": {
+                  "available_count": 258,
+                  "row_count": 258,
+                  "available_fraction": 1.0
+                },
+                "target_peer_latency_available": {
+                  "available_count": 0,
+                  "row_count": 258,
+                  "available_fraction": 0.0
+                },
+                "peer_reply_available": {
+                  "available_count": 258,
+                  "row_count": 258,
+                  "available_fraction": 1.0
+                },
+                "peer_burst_indicator_available": {
+                  "available_count": 258,
+                  "row_count": 258,
+                  "available_fraction": 1.0
+                }
+              },
+              "availability_value_count": 1290,
+              "available_value_count": 1032,
+              "available_fraction": 0.8,
+              "rows_with_any_available_count": 258,
+              "rows_with_any_available_fraction": 1.0,
+              "rows_with_all_available_count": 0,
+              "rows_with_all_available_fraction": 0.0
+            },
+            "target_peer_semantics": {
+              "target_hint_path_identity_match_count": 258,
+              "target_hint_path_identity_comparable_count": 258,
+              "target_hint_path_identity_match_fraction": 1.0,
+              "target_hint_is_path_identity": true,
+              "target_peer_signal_available_row_count": 0,
+              "target_peer_signal_available_fraction": 0.0,
+              "target_peer_moment_columns": [
+                "target_peer_latency_mean",
+                "target_peer_latency_std"
+              ],
+              "target_peer_moment_value_count": 516,
+              "target_peer_moment_missing_count": 516,
+              "target_peer_moment_missing_fraction": 1.0,
+              "target_peer_semantic_status": "structurally_unavailable: target_hint equals the relative-path identity, so leave-one-out target peers do not exist"
+            }
+          }
+        }
+      },
+      "test": {
+        "row_count": 264,
+        "decision_epoch_count": 88,
+        "row_identity_unique": true,
+        "same_rows_across_views": true,
+        "same_row_order_across_views": true,
+        "views": {
+          "temporal": {
+            "raw_feature_value_count": 11616,
+            "raw_feature_missing_count": 0,
+            "raw_feature_missing_fraction": 0.0,
+            "raw_feature_missing_by_column": {
+              "observed_replies": 0,
+              "latency_mean_ms": 0,
+              "latency_std_ms": 0,
+              "latency_max_ms": 0,
+              "path_state_flag": 0,
+              "window_duration_hours": 0,
+              "probe_interval_ms": 0,
+              "session_day_of_month": 0,
+              "latency_mean_ms_lag_1": 0,
+              "latency_mean_ms_lag_1_available": 0,
+              "latency_mean_ms_lag_2": 0,
+              "latency_mean_ms_lag_2_available": 0,
+              "latency_mean_ms_lag_3": 0,
+              "latency_mean_ms_lag_3_available": 0,
+              "latency_mean_ms_lag_6": 0,
+              "latency_mean_ms_lag_6_available": 0,
+              "latency_mean_ms_lag_12": 0,
+              "latency_mean_ms_lag_12_available": 0,
+              "latency_mean_ms_roll_mean_3": 0,
+              "latency_mean_ms_roll_std_3": 0,
+              "latency_mean_ms_roll_observed_count_3": 0,
+              "latency_mean_ms_roll_coverage_3": 0,
+              "latency_mean_ms_roll_complete_3": 0,
+              "latency_mean_ms_roll_mean_5": 0,
+              "latency_mean_ms_roll_std_5": 0,
+              "latency_mean_ms_roll_observed_count_5": 0,
+              "latency_mean_ms_roll_coverage_5": 0,
+              "latency_mean_ms_roll_complete_5": 0,
+              "observed_replies_lag_1": 0,
+              "observed_replies_lag_1_available": 0,
+              "observed_replies_roll_mean_3": 0,
+              "observed_replies_roll_std_3": 0,
+              "observed_replies_roll_observed_count_3": 0,
+              "observed_replies_roll_coverage_3": 0,
+              "observed_replies_roll_complete_3": 0,
+              "history_lag_coverage_ratio": 0,
+              "latency_delta_1": 0,
+              "latency_delta_roll3": 0,
+              "latency_jump_ratio": 0,
+              "latency_volatility_ratio": 0,
+              "reply_delta_1": 0,
+              "reply_gap_roll3": 0,
+              "reply_pressure_score": 0,
+              "burst_indicator": 0
+            },
+            "rows_with_any_feature_missing_count": 0,
+            "rows_with_any_feature_missing_fraction": 0.0,
+            "wholly_missing_feature_columns": []
+          },
+          "context": {
+            "raw_feature_value_count": 6336,
+            "raw_feature_missing_count": 528,
+            "raw_feature_missing_fraction": 0.08333333333333333,
+            "raw_feature_missing_by_column": {
+              "peer_latency_mean": 0,
+              "peer_latency_std": 0,
+              "peer_latency_observed_count": 0,
+              "peer_latency_available": 0,
+              "state_peer_latency_mean": 0,
+              "state_peer_latency_std": 0,
+              "state_peer_latency_observed_count": 0,
+              "state_peer_latency_available": 0,
+              "target_peer_latency_mean": 264,
+              "target_peer_latency_std": 264,
+              "target_peer_latency_observed_count": 0,
+              "target_peer_latency_available": 0,
+              "peer_reply_mean": 0,
+              "peer_reply_std": 0,
+              "peer_reply_observed_count": 0,
+              "peer_reply_available": 0,
+              "peer_burst_indicator_mean": 0,
+              "peer_burst_indicator_std": 0,
+              "peer_burst_indicator_observed_count": 0,
+              "peer_burst_indicator_available": 0,
+              "peer_latency_gap": 0,
+              "location_degree": 0,
+              "target_degree": 0,
+              "snapshot_candidate_count": 0
+            },
+            "rows_with_any_feature_missing_count": 264,
+            "rows_with_any_feature_missing_fraction": 1.0,
+            "wholly_missing_feature_columns": [
+              "target_peer_latency_mean",
+              "target_peer_latency_std"
+            ],
+            "peer_summary_availability": {
+              "fields": [
+                "peer_latency_available",
+                "state_peer_latency_available",
+                "target_peer_latency_available",
+                "peer_reply_available",
+                "peer_burst_indicator_available"
+              ],
+              "by_field": {
+                "peer_latency_available": {
+                  "available_count": 264,
+                  "row_count": 264,
+                  "available_fraction": 1.0
+                },
+                "state_peer_latency_available": {
+                  "available_count": 264,
+                  "row_count": 264,
+                  "available_fraction": 1.0
+                },
+                "target_peer_latency_available": {
+                  "available_count": 0,
+                  "row_count": 264,
+                  "available_fraction": 0.0
+                },
+                "peer_reply_available": {
+                  "available_count": 264,
+                  "row_count": 264,
+                  "available_fraction": 1.0
+                },
+                "peer_burst_indicator_available": {
+                  "available_count": 264,
+                  "row_count": 264,
+                  "available_fraction": 1.0
+                }
+              },
+              "availability_value_count": 1320,
+              "available_value_count": 1056,
+              "available_fraction": 0.8,
+              "rows_with_any_available_count": 264,
+              "rows_with_any_available_fraction": 1.0,
+              "rows_with_all_available_count": 0,
+              "rows_with_all_available_fraction": 0.0
+            },
+            "target_peer_semantics": {
+              "target_hint_path_identity_match_count": 264,
+              "target_hint_path_identity_comparable_count": 264,
+              "target_hint_path_identity_match_fraction": 1.0,
+              "target_hint_is_path_identity": true,
+              "target_peer_signal_available_row_count": 0,
+              "target_peer_signal_available_fraction": 0.0,
+              "target_peer_moment_columns": [
+                "target_peer_latency_mean",
+                "target_peer_latency_std"
+              ],
+              "target_peer_moment_value_count": 528,
+              "target_peer_moment_missing_count": 528,
+              "target_peer_moment_missing_fraction": 1.0,
+              "target_peer_semantic_status": "structurally_unavailable: target_hint equals the relative-path identity, so leave-one-out target peers do not exist"
+            }
+          }
+        }
+      }
+    },
+    "calibration": {
+      "partition": "calibration",
+      "row_count": 265,
+      "decision_epoch_count": 89,
+      "same_rows_across_views": true,
+      "residual_definition": "target_next minus raw prediction",
+      "diagnostics": {
+        "temporal": {
+          "sample_count": 265,
+          "residual_bias_ms": 1.4720696551541224,
+          "residual_scale_ms": 149.27353010078923,
+          "mae_ms": 149.27353010078923,
+          "residual_variance_ms2": 146243.98613729412,
+          "paired_residual_covariance_ms2": 157742.10824309723
+        },
+        "context": {
+          "sample_count": 265,
+          "residual_bias_ms": -121.61807177310168,
+          "residual_scale_ms": 267.36338903829215,
+          "mae_ms": 267.36338903829215,
+          "residual_variance_ms2": 312484.8718188452,
+          "paired_residual_covariance_ms2": 157742.10824309723
+        }
+      }
+    },
+    "executed_fusion": {
+      "source": "executed candidate rows; weights are fixed by calibration",
+      "row_count": 264,
+      "temporal_weight_min": 1.0,
+      "temporal_weight_max": 1.0,
+      "context_weight_min": 0.0,
+      "context_weight_max": 0.0,
+      "weight_sum_min": 1.0,
+      "weight_sum_max": 1.0,
+      "constant_across_rows": true
+    },
+    "residual_risk_fit": {
+      "fit_partition": "calibration",
+      "nonnegative_linear_fit": true,
+      "activity_threshold_absolute_coefficient": 1e-12,
+      "intercept_ms": 10.717695756354232,
+      "terms": {
+        "disagreement": {
+          "coefficient": 283.30482613511913,
+          "active": true
+        },
+        "ensemble_spread": {
+          "coefficient": 0.0,
+          "active": false
+        },
+        "service_risk": {
+          "coefficient": 0.0,
+          "active": false
+        }
+      },
+      "active_terms": [
+        "disagreement"
+      ],
+      "gate_ms": 384.2960453119807,
+      "shared_between_views": true
+    },
+    "semantic_availability_note": "target_peer_latency availability is reported separately from generic missingness because COMMECT target_hint may encode the relative-path identity, leaving no distinct target peer after leave-one-out construction"
+  },
+  "maximum_inter_path_skew_ms": null,
+  "latency_budget_ms": 100.0,
+  "zero_shot_transfer": false,
+  "valid_claim": "external-source measured shadow evaluation on concurrent 5G and Starlink access alternatives",
+  "invalid_claim": "zero-shot deployment transfer; models are trained on the early portion of this independent campaign"
+}

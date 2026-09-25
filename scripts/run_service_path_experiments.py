@@ -873,6 +873,7 @@ class GateSelectionSamples:
 
     realized_latency: dict[str, list[float]]
     opportunity_mask: list[bool]
+    policy_active_opportunity_masks: dict[str, list[bool]]
     independence_group_ids: list[object] | None
     total_epoch_count: int
     excluded_emergency_epoch_count: int
@@ -918,6 +919,9 @@ def _build_actionable_gate_selection_samples(
 
     realized_latency = {name: [] for name in policy_scores}
     opportunity_mask: list[bool] = []
+    policy_active_opportunity_masks = {
+        name: [] for name in policy_scores if name != "reactive"
+    }
     independence_group_ids: list[object] | None = (
         [] if risk_control_group_column is not None else None
     )
@@ -935,7 +939,8 @@ def _build_actionable_gate_selection_samples(
             continue
 
         outcomes = feasible["target_next"].astype(float).le(latency_budget_ms)
-        opportunity_mask.append(bool(outcomes.any() and not outcomes.all()))
+        opportunity = bool(outcomes.any() and not outcomes.all())
+        opportunity_mask.append(opportunity)
 
         if independence_group_ids is not None:
             epoch_groups = base_selection.loc[
@@ -950,13 +955,21 @@ def _build_actionable_gate_selection_samples(
                 )
             independence_group_ids.append(epoch_groups[0])
 
+        chosen_paths: dict[str, object] = {}
         for policy, score in policy_scores.items():
             chosen = feasible.loc[feasible[score].astype(float).idxmin()]
             realized_latency[policy].append(float(chosen["target_next"]))
+            chosen_paths[policy] = chosen["relative_path"]
+        reactive_path = chosen_paths["reactive"]
+        for policy in policy_active_opportunity_masks:
+            policy_active_opportunity_masks[policy].append(
+                bool(opportunity and chosen_paths[policy] != reactive_path)
+            )
 
     return GateSelectionSamples(
         realized_latency=realized_latency,
         opportunity_mask=opportunity_mask,
+        policy_active_opportunity_masks=policy_active_opportunity_masks,
         independence_group_ids=independence_group_ids,
         total_epoch_count=int(selection_candidates["session_bin_index"].nunique()),
         excluded_emergency_epoch_count=excluded_emergency_epoch_count,
@@ -1323,6 +1336,9 @@ def _fit_models(
         latency_budget_ms,
         config=risk_control_config,
         independence_group_ids=gate_samples.independence_group_ids,
+        policy_active_opportunity_masks=(
+            gate_samples.policy_active_opportunity_masks
+        ),
     )
     validation_gated_fallback_policy = gate_result.selected_policy
     gate_evidence = gate_result.evidence_frame()

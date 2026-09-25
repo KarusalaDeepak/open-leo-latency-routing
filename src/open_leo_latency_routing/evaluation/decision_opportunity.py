@@ -126,8 +126,17 @@ def build_candidate_opportunity_audit(
 def build_opportunity_conditioned_results(
     decisions: pd.DataFrame,
     opportunity_labels: pd.DataFrame,
+    baseline_policy: str = "reactive_greedy",
 ) -> pd.DataFrame:
-    """Report policy success specifically on mixed-outcome decision epochs."""
+    """Report success on generic and policy-active decision opportunities.
+
+    Generic opportunities describe dataset identifiability: at least two
+    runtime candidates have different future QoS outcomes.  A policy-active
+    opportunity is stricter and additionally requires the evaluated policy to
+    choose a different path from ``baseline_policy``.  The latter prevents
+    epochs where a safeguard forces identical actions from being counted as
+    evidence about a learned ranking.
+    """
 
     required = {
         "session_bin_index",
@@ -140,6 +149,17 @@ def build_opportunity_conditioned_results(
         raise KeyError(f"conditioned results are missing columns: {sorted(missing)}")
 
     rows: list[dict[str, object]] = []
+    baseline_choices: pd.Series | None = None
+    if "chosen_relative_path" in decisions:
+        baseline = decisions[
+            decisions["policy_name"].eq(baseline_policy)
+        ][["session_bin_index", "chosen_relative_path"]]
+        if not baseline.empty:
+            if baseline["session_bin_index"].duplicated().any():
+                raise ValueError("baseline decisions must be unique by epoch")
+            baseline_choices = baseline.set_index("session_bin_index")[
+                "chosen_relative_path"
+            ]
     for threshold, labels in opportunity_labels.groupby("threshold_ms", sort=True):
         opportunities = labels[labels["decision_opportunity"].astype(bool)]
         opportunity_ids = set(opportunities["session_bin_index"])
@@ -149,6 +169,14 @@ def build_opportunity_conditioned_results(
         for policy, frame in decisions.groupby("policy_name", sort=False):
             selected = frame[frame["session_bin_index"].isin(opportunity_ids)]
             success = selected["realized_next_latency_ms"].le(float(threshold))
+            active = selected.iloc[0:0]
+            if baseline_choices is not None and "chosen_relative_path" in selected:
+                aligned_baseline = selected["session_bin_index"].map(baseline_choices)
+                active = selected[
+                    aligned_baseline.notna()
+                    & selected["chosen_relative_path"].ne(aligned_baseline)
+                ]
+            active_success = active["realized_next_latency_ms"].le(float(threshold))
             rows.append(
                 {
                     "threshold_ms": float(threshold),
@@ -161,9 +189,24 @@ def build_opportunity_conditioned_results(
                     "opportunity_count": int(len(selected)),
                     "opportunity_capture_rate": float(success.mean()) if len(selected) else np.nan,
                     "missed_opportunity_count": int((~success).sum()) if len(selected) else 0,
+                    "policy_active_opportunity_count": int(len(active)),
+                    "policy_active_opportunity_rate": (
+                        float(len(active) / len(selected)) if len(selected) else np.nan
+                    ),
+                    "policy_active_opportunity_capture_rate": (
+                        float(active_success.mean()) if len(active) else np.nan
+                    ),
+                    "policy_active_missed_opportunity_count": (
+                        int((~active_success).sum()) if len(active) else 0
+                    ),
                     "mean_gap_on_opportunities_ms": (
                         float(selected["decision_gap_ms"].mean())
                         if len(selected)
+                        else np.nan
+                    ),
+                    "mean_gap_on_policy_active_opportunities_ms": (
+                        float(active["decision_gap_ms"].mean())
+                        if len(active)
                         else np.nan
                     ),
                 }

@@ -7,13 +7,15 @@ This is an assumption that an experiment must justify from acquisition
 provenance (for example with independently collected sessions); it is never
 inferred by cutting one time series into consecutive blocks.
 
-Success uses two exact harmful-block binomial lower bounds: one over the full
-actionable population and one conditioned on post-hoc decision opportunities
-inside opportunity-bearing groups. Tail latency uses simultaneous Hoeffding
-bounds for the Rockafellar--Uryasev representation of CVaR on a pre-declared
-bounded latency scale. Bonferroni allocation covers every learned candidate,
-both success endpoints, both CVaR policy intervals, the CVaR threshold grid,
-and every planned invocation of the gate. Consequently, an all-zero paired
+Success uses three exact harmful-block binomial lower bounds: one over the full
+actionable population, one conditioned on post-hoc decision opportunities,
+and one conditioned on candidate-specific opportunities where the learned and
+reactive policies actually choose different paths. Tail latency uses
+simultaneous Hoeffding bounds for the Rockafellar--Uryasev representation of
+CVaR on a pre-declared bounded latency scale. Bonferroni allocation covers
+every learned candidate, all three success endpoints, both CVaR policy
+intervals, the CVaR threshold grid, and every planned invocation of the gate.
+Consequently, an all-zero paired
 sample retains a strict uncertainty penalty instead of producing a spurious
 zero-width bound. The aggregate success and CVaR endpoints draw an independent
 group uniformly and then an actionable epoch uniformly within that group. The
@@ -316,12 +318,12 @@ def _no_actionable_epoch_selection(
     alpha_per_candidate_per_use = (
         cfg.alpha / cfg.planned_gate_uses / learned_count
     )
-    # Four simultaneously protected endpoint families per candidate/use:
-    # aggregate success, opportunity-conditioned success, reactive CVaR, and
-    # candidate CVaR. The two CVaR intervals jointly form the gain comparison.
-    endpoint_alpha = alpha_per_candidate_per_use / 4.0
+    # Five endpoint families: aggregate success, generic and policy-active
+    # opportunity success, plus reactive and candidate CVaR intervals.
+    endpoint_alpha = alpha_per_candidate_per_use / 5.0
     aggregate_success_alpha = endpoint_alpha
     opportunity_success_alpha = endpoint_alpha
+    active_opportunity_success_alpha = endpoint_alpha
     cvar_policy_alpha = endpoint_alpha
     cvar_comparison_alpha = 2.0 * cvar_policy_alpha
     common_evidence: dict[str, object] = {
@@ -369,6 +371,11 @@ def _no_actionable_epoch_selection(
         "opportunity_conditioning": (
             "post_hoc_mixed_feasible_candidate_QoS_outcomes"
         ),
+        "policy_active_opportunity_conditioning": (
+            "post_hoc_decision_opportunity_and_candidate_choice_differs_from_"
+            "reactive"
+        ),
+        "policy_active_mask_source": "no_actionable_epochs",
         "opportunity_conditioned_inference_group_count": 0,
         "opportunity_conditioned_endpoint_defined": False,
         "opportunity_conditioned_group_weight": math.nan,
@@ -389,8 +396,8 @@ def _no_actionable_epoch_selection(
             "epoch-pooled estimates"
         ),
         "noninferior_alias_semantics": (
-            "conjunction_of_aggregate_and_opportunity_conditioned_success_"
-            "noninferiority"
+            "conjunction_of_aggregate_generic_opportunity_and_policy_active_"
+            "opportunity_success_noninferiority"
         ),
         "epoch_pooled_point_estimates_used_for_gate": False,
         "group_weight": math.nan,
@@ -401,21 +408,23 @@ def _no_actionable_epoch_selection(
         "cvar_computational_complexity": "not_computed_no_actionable_epochs",
         "joint_coverage_level": 1.0 - cfg.alpha,
         "joint_coverage_family": (
-            "all learned candidates x aggregate-success/opportunity-success/"
-            "reactive-CVaR/candidate-CVaR endpoints x planned gate uses"
+            "all learned candidates x aggregate-success/generic-opportunity-"
+            "success/policy-active-opportunity-success/reactive-CVaR/"
+            "candidate-CVaR endpoints x planned gate uses"
         ),
         "joint_coverage_theorem": (
             "under the declared independent-group, bounded-latency, and fixed-"
             "configuration assumptions, Bonferroni allocation gives joint "
-            "coverage at least 1-alpha across every learned candidate, both "
-            "success endpoints, both CVaR policy intervals, and all planned "
-            "gate uses"
+            "coverage at least 1-alpha across every learned candidate, all "
+            "three success endpoints, both CVaR policy intervals, and all "
+            "planned gate uses"
         ),
-        "success_gate_requires_both_endpoints": True,
-        "alpha_endpoint_family_count_per_candidate_use": 4,
+        "success_gate_requires_both_endpoints": False,
+        "success_gate_requires_all_three_endpoints": True,
+        "alpha_endpoint_family_count_per_candidate_use": 5,
         "learned_candidate_count": len(learned),
         "alpha_allocation_formula": (
-            "familywise_alpha/(planned_gate_uses*max(1,learned_candidate_count)*4)"
+            "familywise_alpha/(planned_gate_uses*max(1,learned_candidate_count)*5)"
         ),
         "gate_use_index": cfg.gate_use_index,
         "planned_gate_uses": cfg.planned_gate_uses,
@@ -472,6 +481,24 @@ def _no_actionable_epoch_selection(
                     0.0 if is_reactive else -1.0
                 ),
                 "opportunity_conditioned_success_noninferior": is_reactive,
+                "policy_active_opportunity_count": 0,
+                "policy_active_opportunity_block_count": 0,
+                "policy_active_opportunity_sufficient": False,
+                "policy_active_opportunity_conditioned_success_rate": math.nan,
+                "policy_active_opportunity_conditioned_success_delta_vs_reactive": (
+                    0.0 if is_reactive else math.nan
+                ),
+                "policy_active_opportunity_conditioned_block_success_delta": (
+                    0.0 if is_reactive else math.nan
+                ),
+                "policy_active_opportunity_harmful_group_count": 0,
+                "policy_active_opportunity_harmful_group_probability_ucb": (
+                    0.0 if is_reactive else 1.0
+                ),
+                "policy_active_opportunity_success_delta_lcb": (
+                    0.0 if is_reactive else -1.0
+                ),
+                "policy_active_opportunity_success_noninferior": is_reactive,
                 "success_endpoints_noninferior": is_reactive,
                 "mean_latency_ms": math.nan,
                 "group_uniform_mean_latency_ms": math.nan,
@@ -512,6 +539,9 @@ def _no_actionable_epoch_selection(
                 "alpha_success_bound": aggregate_success_alpha,
                 "alpha_aggregate_success_bound": aggregate_success_alpha,
                 "alpha_opportunity_success_bound": opportunity_success_alpha,
+                "alpha_policy_active_opportunity_success_bound": (
+                    active_opportunity_success_alpha
+                ),
                 "alpha_cvar_comparison": cvar_comparison_alpha,
                 "alpha_cvar_policy_interval": cvar_policy_alpha,
                 "alpha_cvar_reactive_interval": cvar_policy_alpha,
@@ -556,6 +586,9 @@ def select_opportunity_aware_risk_controlled_policy(
     config: RiskControlConfig | None = None,
     reactive_policy: str = "reactive",
     independence_group_ids: list[object] | np.ndarray | None = None,
+    policy_active_opportunity_masks: (
+        dict[str, list[bool] | np.ndarray] | None
+    ) = None,
 ) -> RiskControlSelection:
     """Admit learning only with simultaneous bounded group evidence.
 
@@ -663,6 +696,40 @@ def select_opportunity_aware_risk_controlled_policy(
     ):
         raise ValueError("opportunity mask must contain only Boolean or 0/1 values")
     opportunities = numeric_opportunities.astype(bool)
+    learned = sorted(set(arrays).difference({reactive_policy}))
+    active_masks: dict[str, np.ndarray] = {}
+    for name in learned:
+        if policy_active_opportunity_masks is None:
+            # Compatibility path for archived synthetic/unit callers. The
+            # production measurement pipeline always supplies exact selected-
+            # path differences from the reactive baseline.
+            active_masks[name] = opportunities.copy()
+            continue
+        if name not in policy_active_opportunity_masks:
+            raise KeyError(f"missing policy-active opportunity mask for {name}")
+        raw_active = np.asarray(policy_active_opportunity_masks[name])
+        if raw_active.ndim != 1 or len(raw_active) != n:
+            raise ValueError(
+                "policy-active opportunity masks must align with outcomes"
+            )
+        if raw_active.dtype.kind not in "biuf":
+            raise ValueError(
+                "policy-active opportunity masks must contain Boolean or 0/1 values"
+            )
+        numeric_active = raw_active.astype(float)
+        if (
+            not np.isfinite(numeric_active).all()
+            or not np.isin(numeric_active, (0.0, 1.0)).all()
+        ):
+            raise ValueError(
+                "policy-active opportunity masks must contain Boolean or 0/1 values"
+            )
+        active = numeric_active.astype(bool)
+        if np.any(active & ~opportunities):
+            raise ValueError(
+                "a policy-active opportunity must also be a generic decision opportunity"
+            )
+        active_masks[name] = active
     if independence_group_ids is not None and len(independence_group_ids) != n:
         raise ValueError("independence groups must align with policy outcomes")
     if n == 0:
@@ -697,18 +764,18 @@ def select_opportunity_aware_risk_controlled_policy(
         effective_opportunities >= cfg.minimum_effective_opportunities
     )
 
-    learned = sorted(set(arrays).difference({reactive_policy}))
     learned_count = max(1, len(learned))
     alpha_per_candidate_per_use = (
         cfg.alpha / cfg.planned_gate_uses / learned_count
     )
-    # Bonferroni allocation protects four endpoint families for every learned
-    # candidate and planned use: aggregate actionable success,
-    # opportunity-conditioned success, the reactive CVaR interval, and the
-    # candidate CVaR interval. The two CVaR intervals jointly certify gain.
-    endpoint_alpha = alpha_per_candidate_per_use / 4.0
+    # Bonferroni allocation protects five endpoint families for every learned
+    # candidate and planned use: aggregate actionable success, generic
+    # opportunity success, policy-active opportunity success, and the reactive
+    # and candidate CVaR intervals. The two CVaR intervals jointly certify gain.
+    endpoint_alpha = alpha_per_candidate_per_use / 5.0
     aggregate_success_alpha = endpoint_alpha
     opportunity_success_alpha = endpoint_alpha
+    active_opportunity_success_alpha = endpoint_alpha
     cvar_policy_alpha = endpoint_alpha
     cvar_comparison_alpha = 2.0 * cvar_policy_alpha
 
@@ -790,6 +857,15 @@ def select_opportunity_aware_risk_controlled_policy(
         "opportunity_conditioning": (
             "post_hoc_mixed_feasible_candidate_QoS_outcomes"
         ),
+        "policy_active_opportunity_conditioning": (
+            "post_hoc_decision_opportunity_and_candidate_choice_differs_from_"
+            "reactive"
+        ),
+        "policy_active_mask_source": (
+            "selected_path_difference_from_reactive"
+            if policy_active_opportunity_masks is not None
+            else "legacy_generic_opportunity_fallback"
+        ),
         "opportunity_conditioned_inference_group_count": (
             opportunity_block_count
         ),
@@ -824,8 +900,8 @@ def select_opportunity_aware_risk_controlled_policy(
             "epoch-pooled estimates"
         ),
         "noninferior_alias_semantics": (
-            "conjunction_of_aggregate_and_opportunity_conditioned_success_"
-            "noninferiority"
+            "conjunction_of_aggregate_generic_opportunity_and_policy_active_"
+            "opportunity_success_noninferiority"
         ),
         "epoch_pooled_point_estimates_used_for_gate": False,
         "group_weight": float(block_weights[0]),
@@ -838,21 +914,23 @@ def select_opportunity_aware_risk_controlled_policy(
         ),
         "joint_coverage_level": 1.0 - cfg.alpha,
         "joint_coverage_family": (
-            "all learned candidates x aggregate-success/opportunity-success/"
-            "reactive-CVaR/candidate-CVaR endpoints x planned gate uses"
+            "all learned candidates x aggregate-success/generic-opportunity-"
+            "success/policy-active-opportunity-success/reactive-CVaR/"
+            "candidate-CVaR endpoints x planned gate uses"
         ),
         "joint_coverage_theorem": (
             "under the declared independent-group, bounded-latency, and fixed-"
             "configuration assumptions, Bonferroni allocation gives joint "
-            "coverage at least 1-alpha across every learned candidate, both "
-            "success endpoints, both CVaR policy intervals, and all planned "
-            "gate uses"
+            "coverage at least 1-alpha across every learned candidate, all "
+            "three success endpoints, both CVaR policy intervals, and all "
+            "planned gate uses"
         ),
-        "success_gate_requires_both_endpoints": True,
-        "alpha_endpoint_family_count_per_candidate_use": 4,
+        "success_gate_requires_both_endpoints": False,
+        "success_gate_requires_all_three_endpoints": True,
+        "alpha_endpoint_family_count_per_candidate_use": 5,
         "learned_candidate_count": len(learned),
         "alpha_allocation_formula": (
-            "familywise_alpha/(planned_gate_uses*max(1,learned_candidate_count)*4)"
+            "familywise_alpha/(planned_gate_uses*max(1,learned_candidate_count)*5)"
         ),
         "bounded_latency_cap_ms": cfg.latency_cap_ms,
         "cvar_quantile": cfg.cvar_quantile,
@@ -896,6 +974,16 @@ def select_opportunity_aware_risk_controlled_policy(
             "opportunity_conditioned_harmful_group_probability_ucb": 0.0,
             "opportunity_conditioned_success_delta_lcb": 0.0,
             "opportunity_conditioned_success_noninferior": True,
+            "policy_active_opportunity_count": 0,
+            "policy_active_opportunity_block_count": 0,
+            "policy_active_opportunity_sufficient": False,
+            "policy_active_opportunity_conditioned_success_rate": math.nan,
+            "policy_active_opportunity_conditioned_success_delta_vs_reactive": 0.0,
+            "policy_active_opportunity_conditioned_block_success_delta": 0.0,
+            "policy_active_opportunity_harmful_group_count": 0,
+            "policy_active_opportunity_harmful_group_probability_ucb": 0.0,
+            "policy_active_opportunity_success_delta_lcb": 0.0,
+            "policy_active_opportunity_success_noninferior": True,
             "success_endpoints_noninferior": True,
             "mean_latency_ms": float(np.dot(observation_weights, reactive)),
             "group_uniform_mean_latency_ms": float(
@@ -961,6 +1049,40 @@ def select_opportunity_aware_risk_controlled_policy(
             opportunity_harmful_group_count = 0
             opportunity_harmful_probability_ucb = 1.0
             opportunity_success_lcb = -1.0
+        active_opportunity_blocks = _opportunity_conditioned_blocks(
+            blocks,
+            active_masks[name],
+        )
+        active_opportunity_count = int(active_masks[name].sum())
+        active_opportunity_block_count = len(active_opportunity_blocks)
+        active_opportunity_sufficient = bool(
+            active_opportunity_block_count
+            >= cfg.minimum_effective_opportunities
+        )
+        active_opportunity_success_rate = _group_uniform_mean(
+            success,
+            active_opportunity_blocks,
+        )
+        reactive_active_opportunity_success_rate = _group_uniform_mean(
+            reactive_success,
+            active_opportunity_blocks,
+        )
+        if active_opportunity_blocks:
+            (
+                active_opportunity_block_delta,
+                active_opportunity_harmful_group_count,
+                active_opportunity_harmful_probability_ucb,
+                active_opportunity_success_lcb,
+            ) = _exact_harmful_block_lcb(
+                differences,
+                active_opportunity_success_alpha,
+                active_opportunity_blocks,
+            )
+        else:
+            active_opportunity_block_delta = math.nan
+            active_opportunity_harmful_group_count = 0
+            active_opportunity_harmful_probability_ucb = 1.0
+            active_opportunity_success_lcb = -1.0
         raw_cvar = _cvar(
             values,
             cfg.cvar_quantile,
@@ -989,15 +1111,22 @@ def select_opportunity_aware_risk_controlled_policy(
             and opportunity_success_lcb
             >= -cfg.opportunity_noninferiority_margin
         )
+        active_opportunity_success_noninferior = bool(
+            active_opportunity_blocks
+            and active_opportunity_success_lcb
+            >= -cfg.opportunity_noninferiority_margin
+        )
         success_endpoints_noninferior = bool(
             aggregate_success_noninferior
             and opportunity_success_noninferior
+            and active_opportunity_success_noninferior
         )
         practically_better = bool(
             cvar_gain_lcb >= cfg.practical_cvar_gain_ms
         )
         eligible = bool(
             opportunity_sufficient
+            and active_opportunity_sufficient
             and success_endpoints_noninferior
             and practically_better
         )
@@ -1071,6 +1200,37 @@ def select_opportunity_aware_risk_controlled_policy(
                 "opportunity_conditioned_success_noninferior": (
                     opportunity_success_noninferior
                 ),
+                "policy_active_opportunity_count": active_opportunity_count,
+                "policy_active_opportunity_block_count": (
+                    active_opportunity_block_count
+                ),
+                "policy_active_opportunity_sufficient": (
+                    active_opportunity_sufficient
+                ),
+                "policy_active_opportunity_conditioned_success_rate": (
+                    active_opportunity_success_rate
+                ),
+                "reactive_policy_active_opportunity_conditioned_success_rate": (
+                    reactive_active_opportunity_success_rate
+                ),
+                "policy_active_opportunity_conditioned_success_delta_vs_reactive": (
+                    active_opportunity_block_delta
+                ),
+                "policy_active_opportunity_conditioned_block_success_delta": (
+                    active_opportunity_block_delta
+                ),
+                "policy_active_opportunity_harmful_group_count": (
+                    active_opportunity_harmful_group_count
+                ),
+                "policy_active_opportunity_harmful_group_probability_ucb": (
+                    active_opportunity_harmful_probability_ucb
+                ),
+                "policy_active_opportunity_success_delta_lcb": (
+                    active_opportunity_success_lcb
+                ),
+                "policy_active_opportunity_success_noninferior": (
+                    active_opportunity_success_noninferior
+                ),
                 "success_endpoints_noninferior": (
                     success_endpoints_noninferior
                 ),
@@ -1094,7 +1254,7 @@ def select_opportunity_aware_risk_controlled_policy(
                 "group_uniform_cvar_gain_lcb_ms": cvar_gain_lcb,
                 "latency_clipped_count": clipped_count,
                 # Compatibility alias: after the strengthened gate this means
-                # that both pre-declared success endpoints are non-inferior.
+                # that all three pre-declared success endpoints are non-inferior.
                 "noninferior": success_endpoints_noninferior,
                 "practically_better": practically_better,
                 "eligible": eligible,
@@ -1106,8 +1266,9 @@ def select_opportunity_aware_risk_controlled_policy(
     if eligible_learned:
         selected = min(eligible_learned)[2]
         reason = (
-            "learned policy passed minimum opportunity-bearing groups, both "
-            "simultaneous success bounds, and the bounded-CVaR gain gate"
+            "learned policy passed generic and policy-active opportunity-group "
+            "requirements, all three simultaneous success bounds, and the "
+            "bounded-CVaR gain gate"
         )
     elif not opportunity_sufficient:
         selected = reactive_policy
@@ -1115,8 +1276,8 @@ def select_opportunity_aware_risk_controlled_policy(
     else:
         selected = reactive_policy
         reason = (
-            "no learned policy passed both simultaneous success bounds and "
-            "the bounded-CVaR confidence gate"
+            "no learned policy passed policy-active support, all three "
+            "simultaneous success bounds, and the bounded-CVaR confidence gate"
         )
 
     for row in evidence:
@@ -1132,6 +1293,9 @@ def select_opportunity_aware_risk_controlled_policy(
         row["alpha_success_bound"] = aggregate_success_alpha
         row["alpha_aggregate_success_bound"] = aggregate_success_alpha
         row["alpha_opportunity_success_bound"] = opportunity_success_alpha
+        row["alpha_policy_active_opportunity_success_bound"] = (
+            active_opportunity_success_alpha
+        )
         row["alpha_cvar_comparison"] = cvar_comparison_alpha
         row["alpha_cvar_policy_interval"] = cvar_policy_alpha
         row["alpha_cvar_reactive_interval"] = cvar_policy_alpha

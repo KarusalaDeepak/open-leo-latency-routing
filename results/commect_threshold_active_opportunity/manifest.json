@@ -1,0 +1,13 @@
+{
+  "thresholds_ms": [
+    40.0,
+    60.0,
+    100.0,
+    200.0
+  ],
+  "protocol": "Each threshold independently reruns training, residual calibration, opportunity auditing, confidence-gated policy selection, and final test; gate alpha is allocated across all thresholds.",
+  "gate_family_size": 4,
+  "objective_specific_retraining": true,
+  "used_for_threshold_selection": false,
+  "distinct_from_frozen_score_diagnostic": "This full rerun is the source for objective-specific claims. The canonical frozen-score threshold-matched diagnostic changes only the deterministic shield cutoff and does not refit predictors, calibration quantities, or fallback selection."
+}

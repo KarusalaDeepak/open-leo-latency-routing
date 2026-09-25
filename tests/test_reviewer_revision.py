@@ -41,6 +41,9 @@ from open_leo_latency_routing.evaluation.risk_metrics import (
     empirical_upper_cvar,
     empirical_weighted_upper_cvar,
 )
+from open_leo_latency_routing.evaluation.service_success import (
+    build_scheduled_epoch_success,
+)
 from open_leo_latency_routing.optimization.policies import (
     add_qos_filter_then_rank_scores,
     add_qos_shielded_scores,
@@ -401,9 +404,9 @@ class ReviewerRevisionTests(unittest.TestCase):
         self.assertEqual(float(graph["success_delta_vs_reactive"]), 0.0)
         self.assertLess(float(graph["success_delta_lcb"]), 0.0)
         self.assertGreater(float(graph["success_bound_radius"]), 0.0)
-        # One candidate/use has four protected endpoint families, so the
-        # aggregate-success Clopper--Pearson endpoint receives alpha=.0125.
-        expected_lcb = -(1.0 - 0.0125 ** (1.0 / 80.0))
+        # One candidate/use has five protected endpoint families, so the
+        # aggregate-success Clopper--Pearson endpoint receives alpha=.01.
+        expected_lcb = -(1.0 - 0.01 ** (1.0 / 80.0))
         self.assertAlmostEqual(float(graph["success_delta_lcb"]), expected_lcb)
         self.assertAlmostEqual(
             float(graph["opportunity_conditioned_success_delta_lcb"]),
@@ -540,35 +543,92 @@ class ReviewerRevisionTests(unittest.TestCase):
         )
         evidence = result.evidence_frame().iloc[0]
         self.assertAlmostEqual(float(evidence["alpha_per_learned_policy"]), 0.005)
-        self.assertAlmostEqual(float(evidence["alpha_success_bound"]), 0.00125)
+        self.assertAlmostEqual(float(evidence["alpha_success_bound"]), 0.001)
         self.assertAlmostEqual(
             float(evidence["alpha_aggregate_success_bound"]),
-            0.00125,
+            0.001,
         )
         self.assertAlmostEqual(
             float(evidence["alpha_opportunity_success_bound"]),
-            0.00125,
+            0.001,
         )
-        self.assertAlmostEqual(float(evidence["alpha_cvar_comparison"]), 0.0025)
+        self.assertAlmostEqual(
+            float(evidence["alpha_policy_active_opportunity_success_bound"]),
+            0.001,
+        )
+        self.assertAlmostEqual(float(evidence["alpha_cvar_comparison"]), 0.002)
         self.assertAlmostEqual(
             float(evidence["alpha_cvar_reactive_interval"]),
-            0.00125,
+            0.001,
         )
         self.assertAlmostEqual(
             float(evidence["alpha_cvar_candidate_interval"]),
-            0.00125,
+            0.001,
         )
         self.assertAlmostEqual(
-            2.0 * float(evidence["alpha_success_bound"])
+            3.0 * float(evidence["alpha_success_bound"])
             + float(evidence["alpha_cvar_comparison"]),
             float(evidence["alpha_per_learned_policy"]),
         )
         self.assertEqual(
             int(evidence["alpha_endpoint_family_count_per_candidate_use"]),
-            4,
+            5,
         )
         self.assertEqual(int(evidence["gate_use_index"]), 3)
 
+    def test_policy_active_opportunities_cannot_be_replaced_by_forced_equal_actions(
+        self,
+    ) -> None:
+        result = select_opportunity_aware_risk_controlled_policy(
+            {
+                "reactive": [90.0] * 20,
+                "graph": [10.0] * 20,
+            },
+            opportunity_mask=[True] * 20,
+            policy_active_opportunity_masks={"graph": [False] * 20},
+            latency_budget_ms=60.0,
+            config=RiskControlConfig(
+                minimum_effective_opportunities=1.0,
+                latency_cap_ms=100.0,
+                cvar_quantile=0.5,
+                cvar_grid_points=11,
+            ),
+            independence_group_ids=np.arange(20),
+        )
+        graph = result.evidence_frame().query("policy == 'graph'").iloc[0]
+        self.assertTrue(bool(graph["opportunity_sufficient"]))
+        self.assertFalse(bool(graph["policy_active_opportunity_sufficient"]))
+        self.assertFalse(bool(graph["eligible"]))
+        self.assertEqual(result.selected_policy, "reactive")
+
+    def test_scheduled_epoch_success_counts_unknown_epochs_explicitly(self) -> None:
+        decisions = pd.DataFrame(
+            {
+                "policy_name": ["reactive"] * 3 + ["candidate"] * 3,
+                "realized_next_latency_ms": [40.0, 80.0, 50.0, 30.0, 55.0, 90.0],
+            }
+        )
+        result = build_scheduled_epoch_success(
+            decisions,
+            scheduled_epoch_count=5,
+            latency_budget_ms=60.0,
+        ).set_index("policy_name")
+        self.assertEqual(int(result.loc["reactive", "success_count"]), 2)
+        self.assertEqual(
+            int(result.loc["reactive", "unknown_or_no_action_count"]), 2
+        )
+        self.assertAlmostEqual(
+            float(result.loc["reactive", "conditional_success_rate"]),
+            2.0 / 3.0,
+        )
+        self.assertAlmostEqual(
+            float(result.loc["reactive", "scheduled_epoch_success_lower"]),
+            2.0 / 5.0,
+        )
+        self.assertAlmostEqual(
+            float(result.loc["reactive", "scheduled_epoch_success_upper"]),
+            4.0 / 5.0,
+        )
     def test_explicit_session_groups_prevent_bin_level_pseudoreplication(self) -> None:
         result = select_opportunity_aware_risk_controlled_policy(
             {"reactive": [90.0] * 40, "graph": [10.0] * 40},
@@ -1134,6 +1194,14 @@ class ReviewerRevisionTests(unittest.TestCase):
         self.assertEqual(samples.realized_latency["reactive"], [80.0, 40.0])
         self.assertEqual(samples.realized_latency["graph"], [20.0, 40.0])
         self.assertEqual(samples.realized_latency["ensemble"], [80.0, 40.0])
+        self.assertEqual(
+            samples.policy_active_opportunity_masks["graph"],
+            [True, False],
+        )
+        self.assertEqual(
+            samples.policy_active_opportunity_masks["ensemble"],
+            [False, False],
+        )
 
         result = select_opportunity_aware_risk_controlled_policy(
             samples.realized_latency,
@@ -1146,6 +1214,9 @@ class ReviewerRevisionTests(unittest.TestCase):
                 cvar_grid_points=11,
             ),
             independence_group_ids=samples.independence_group_ids,
+            policy_active_opportunity_masks=(
+                samples.policy_active_opportunity_masks
+            ),
         )
         evidence = result.evidence_frame().iloc[0]
         self.assertEqual(int(evidence["decision_count"]), 2)
@@ -1179,6 +1250,12 @@ class ReviewerRevisionTests(unittest.TestCase):
         self.assertEqual(samples.excluded_emergency_epoch_count, 2)
         self.assertEqual(samples.actionable_epoch_count, 0)
         self.assertEqual(samples.opportunity_mask, [])
+        self.assertTrue(
+            all(
+                not values
+                for values in samples.policy_active_opportunity_masks.values()
+            )
+        )
         self.assertEqual(samples.independence_group_ids, [])
         self.assertTrue(all(not values for values in samples.realized_latency.values()))
 

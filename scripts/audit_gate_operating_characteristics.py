@@ -147,6 +147,13 @@ def run_audit(repetitions: int, seed: int) -> tuple[pd.DataFrame, RiskControlCon
                     config=config,
                     reactive_policy=REACTIVE_POLICY,
                     independence_group_ids=group_ids,
+                    # Every synthetic candidate action is declared distinct
+                    # from the reactive action. This makes the policy-active
+                    # endpoint equal to the generic opportunity endpoint by
+                    # construction while still exercising the production API.
+                    policy_active_opportunity_masks={
+                        CANDIDATE_POLICY: np.ones(group_count, dtype=bool)
+                    },
                 )
                 evidence = selection.evidence_frame().set_index("policy")
                 candidate_evidence = evidence.loc[CANDIDATE_POLICY]
@@ -158,6 +165,11 @@ def run_audit(repetitions: int, seed: int) -> tuple[pd.DataFrame, RiskControlCon
                 opportunity_noninferiority_pass = bool(
                     candidate_evidence[
                         "opportunity_conditioned_success_noninferior"
+                    ]
+                )
+                active_opportunity_noninferiority_pass = bool(
+                    candidate_evidence[
+                        "policy_active_opportunity_success_noninferior"
                     ]
                 )
                 noninferiority_pass = bool(
@@ -196,6 +208,11 @@ def run_audit(repetitions: int, seed: int) -> tuple[pd.DataFrame, RiskControlCon
                                 "opportunity_conditioned_success_delta_lcb"
                             ]
                         ),
+                        "policy_active_opportunity_success_difference_lcb": float(
+                            candidate_evidence[
+                                "policy_active_opportunity_success_delta_lcb"
+                            ]
+                        ),
                         "cvar_gain_lcb_ms": float(
                             candidate_evidence["cvar_gain_lcb_ms"]
                         ),
@@ -205,6 +222,9 @@ def run_audit(repetitions: int, seed: int) -> tuple[pd.DataFrame, RiskControlCon
                         ),
                         "opportunity_noninferiority_pass": (
                             opportunity_noninferiority_pass
+                        ),
+                        "active_opportunity_noninferiority_pass": (
+                            active_opportunity_noninferiority_pass
                         ),
                         "cvar_pass": cvar_pass,
                         "opportunity_pass": bool(
@@ -239,11 +259,19 @@ def summarize(detail: pd.DataFrame) -> pd.DataFrame:
                 "opportunity_noninferiority_pass",
                 "mean",
             ),
+            active_opportunity_noninferiority_pass_rate=(
+                "active_opportunity_noninferiority_pass",
+                "mean",
+            ),
             cvar_pass_rate=("cvar_pass", "mean"),
             opportunity_pass_rate=("opportunity_pass", "mean"),
             median_success_delta_lcb=("success_delta_lcb", "median"),
             median_opportunity_conditioned_success_delta_lcb=(
                 "opportunity_conditioned_success_delta_lcb",
+                "median",
+            ),
+            median_policy_active_opportunity_success_delta_lcb=(
+                "policy_active_opportunity_success_difference_lcb",
                 "median",
             ),
             median_cvar_gain_lcb_ms=("cvar_gain_lcb_ms", "median"),

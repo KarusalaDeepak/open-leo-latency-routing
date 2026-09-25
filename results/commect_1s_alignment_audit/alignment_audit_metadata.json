@@ -1,0 +1,12 @@
+{
+  "dataset": "COMMECT",
+  "cadence_seconds": 1,
+  "strict_maximum_inter_path_skew_ms": 100.0,
+  "alignment_cases_predeclared_for_this_audit": [
+    "full",
+    "strict"
+  ],
+  "used_for_candidate_or_gate_selection": false,
+  "inference_boundary": "paired moving-block intervals are descriptive within one drive; the evidence gate still sees one independent collection",
+  "unconditional_endpoint": "scheduled-epoch lower bound counts every unevaluable or no-action test slot as failure"
+}

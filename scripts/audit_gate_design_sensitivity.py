@@ -89,8 +89,10 @@ def load_config(path: Path = DEFAULT_CONFIG) -> dict[str, Any]:
         raise ValueError("familywise alpha must be in (0, 1)")
     if not 0.0 < quantile < 1.0:
         raise ValueError("CVaR quantile must be in (0, 1)")
-    if learned_count < 1 or endpoint_families != 4:
-        raise ValueError("the production contract requires candidates >=1 and four families")
+    if learned_count < 1 or endpoint_families != 5:
+        raise ValueError(
+            "the production contract requires candidates >=1 and five families"
+        )
     if spacing <= 0.0 or planned_uses != (1, 5):
         raise ValueError("the declared artifact requires 0.05-ms spacing and U=(1,5)")
 
@@ -440,7 +442,11 @@ def _write_csv(path: Path, rows: list[dict[str, object]]) -> None:
     if not rows:
         raise ValueError("cannot write an empty design table")
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(rows[0]),
+            lineterminator="\n",
+        )
         writer.writeheader()
         for row in rows:
             writer.writerow({key: _csv_value(value) for key, value in row.items()})
@@ -474,7 +480,7 @@ def build_metadata(
         "measured_reference": config["measured_reference"],
         "statistical_contract": contract,
         "formulas": {
-            "endpoint_alpha": "alpha/(4*K*U)",
+            "endpoint_alpha": "alpha/(5*K*U)",
             "zero_harm_success_group_floor": (
                 "ceil(log(alpha_endpoint)/log(1-epsilon)), adjusted to the "
                 "smallest integer satisfying 1-alpha_endpoint^(1/G)<=epsilon"

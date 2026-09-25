@@ -34,12 +34,14 @@ non-compliant paths, the shield chooses the lowest-current-latency compliant
 path. Outside that branch, a disjoint pre-test selection interval may admit one
 frozen predictive fallback only if it passes the declared opportunity floor,
 separate exact harmful-group QoS non-inferiority bounds for the aggregate
-actionable population and for post-hoc decision opportunities within
-opportunity-bearing groups, and a bounded CVaR-improvement test with
-simultaneous multiplicity control. Familywise alpha covers both success
-endpoints, the reactive and candidate CVaR intervals, all learned candidates,
-and all planned gate uses. Otherwise the rule uses reactive fallback, which is
-explicit abstention from prediction. Independent inference groups must be
+actionable population, generic post-hoc decision opportunities, and the
+candidate-specific subset on which the candidate actually differs from the
+reactive action. The last endpoint prevents forced-equal QoS-filter decisions
+from being counted as candidate evidence. A bounded CVaR-improvement test adds
+the tail criterion. Familywise alpha covers all three success endpoints, the
+reactive and candidate CVaR intervals, all learned candidates, and all planned
+gate uses. Otherwise the rule uses reactive fallback, which is explicit
+abstention from prediction. Independent inference groups must be
 supplied by the collection protocol; if none are declared, the entire
 selection interval is conservatively treated as one group. The predictive-only
 context/ensemble shield remains an ablation. No evaluation outcome or injected
@@ -78,6 +80,9 @@ Key decision metrics reported by the repo include:
   separately from network RTT,
 - exact branch-conditioned next-epoch outcomes and explanation fidelity,
 - finite-sample pairwise success-gap bounds based on decision opportunity,
+- candidate-active opportunity support and capture rates,
+- scheduled-epoch success lower/upper bounds that retain outage, no-action,
+  and unevaluable epochs without assuming missing at random,
 - delayed-state trace replay over zero to three execution-delay bins.
 
 Stateful selectors reset their previous-path state, hysteresis penalty, and
@@ -209,6 +214,9 @@ pip install -e .
 ./scripts/download_commect_multiaccess_data.sh
 python scripts/run_commect_multiaccess_validation.py
 python scripts/run_commect_rolling_origin_validation.py
+python scripts/run_commect_1s_alignment_audit.py
+python scripts/run_commect_threshold_gate_sensitivity.py
+python scripts/audit_gate_design_sensitivity.py
 python scripts/build_commercial_multileo_trace.py --help
 python scripts/run_commercial_multileo_validation.py --help
 python scripts/inspect_dataset.py --data-root data/raw/lens_2025_03
