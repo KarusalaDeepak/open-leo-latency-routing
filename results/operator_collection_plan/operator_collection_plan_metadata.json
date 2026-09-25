@@ -1,0 +1,7 @@
+{
+  "profile": "practical profile from manuscript Table III",
+  "settings_frozen_before_collection": true,
+  "five_protected_endpoint_families_per_candidate_use": true,
+  "independence_warning": "same-drive windows must not be relabeled as independent campaigns",
+  "power_warning": "the exported floor is necessary for a non-vacuous best-case bound, not sufficient power for an unknown field effect"
+}

@@ -26,6 +26,10 @@ results/*
 !results/figures/*.png
 results/**/.DS_Store
 
+# Rebuildable row-level 1-s diagnostics (about 90 MB); compact evidence remains tracked.
+results/commect_rolling_1s_active_opportunity/rolling_candidate_predictions.csv
+results/commect_rolling_1s_active_opportunity/rolling_policy_decisions.csv
+
 *.log
 *.tmp
 *.swp

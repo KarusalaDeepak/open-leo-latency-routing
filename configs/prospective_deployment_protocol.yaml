@@ -1,0 +1,84 @@
+protocol_version: 1
+status: prospective_not_field_validated
+
+protection_profile:
+  # Select from the service contract before collecting gate or test outcomes.
+  latency_target_ms: 60.0
+  latency_target_basis: application_end_to_end_slo
+  permitted_absolute_success_deficit: 0.02
+  permitted_deficit_basis: maximum_tolerable_percentage_point_loss_vs_reactive
+  cvar_quantile: 0.90
+  latency_cap_ms: 250.0
+  latency_cap_basis: predeclared_application_timeout
+  required_cvar_improvement_ms: 5.0
+  required_gain_basis: minimum_tail_gain_worth_operational_switching_cost
+  familywise_alpha: 0.05
+  candidate_count: 1
+  planned_gate_uses: 1
+  minimum_independent_opportunity_groups: 5
+
+independence_unit:
+  definition: independently_initiated_terminal_site_day_campaign
+  same_drive_windows_are_independent: false
+  required_design_fields:
+    - campaign_id
+    - terminal_id
+    - site_id
+    - collection_date
+    - randomized_start_id
+
+instrumentation:
+  required_timestamps:
+    - telemetry_sample_time
+    - collection_complete_time
+    - feature_ready_time
+    - inference_complete_time
+    - dissemination_complete_time
+    - installation_ack_time
+    - first_packet_after_install_time
+  required_outcomes:
+    - intended_path
+    - installed_path
+    - selected_and_unselected_path_probe_outcomes
+    - outage_or_no_action_reason
+    - packet_rtt_loss_and_jitter
+    - interface_and_queue_backlog
+    - energy_or_probe_cost
+
+stages:
+  - name: instrumentation_pilot
+    live_steering: false
+    purpose: verify_clock_alignment_authority_and_complete_denominators
+  - name: frozen_shadow_campaign
+    live_steering: false
+    purpose: collect_independent_opportunity_bearing_groups_and_freeze_candidate
+  - name: evidence_gate
+    live_steering: false
+    purpose: admit_candidate_or_retain_reactive_before_locked_outcomes
+  - name: limited_canary
+    live_steering: true
+    traffic_fraction: 0.05
+    purpose: verify_installed_actions_full_loop_delay_queues_and_outages
+  - name: staged_expansion
+    live_steering: true
+    traffic_fractions: [0.10, 0.25, 0.50, 1.00]
+    purpose: expand_only_after_predeclared_review_boundaries_pass
+
+rollback:
+  immediate_conditions:
+    - installed_path_does_not_match_authorized_action
+    - collection_to_installation_deadline_exceeded
+    - outcome_or_denominator_observability_lost
+    - emergency_or_operator_stop
+  statistical_condition:
+    rule: predeclared_alpha_spending_noninferiority_monitor
+    fallback: reactive
+    optional_stopping_without_valid_monitor: prohibited
+
+revalidation:
+  triggers:
+    - topology_or_provider_change
+    - material_workload_shift
+    - telemetry_schema_change
+    - latency_target_or_timeout_change
+    - scheduled_review_boundary

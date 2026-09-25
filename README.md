@@ -85,6 +85,20 @@ Key decision metrics reported by the repo include:
   and unevaluable epochs without assuming missing at random,
 - delayed-state trace replay over zero to three execution-delay bins.
 
+The conservative mixed-snapshot shield and the less restrictive
+filter-then-rank policy are both exported. The reviewer-facing audit reports
+where they choose differently, which policy alone succeeds at the next epoch,
+and how the comparison changes between matched five-fold 1-s and 10-s runs.
+Scheduled test slots are also decomposed into raw telemetry gaps, incomplete
+exact-target/concurrent-candidate outcomes, and alignment exclusions.
+The six follow-up analyses are mapped to code, tests, and compact outputs in
+`docs/reviewer_followup_evidence_map.md`.
+
+`configs/prospective_deployment_protocol.yaml` records a concrete shadow,
+canary, rollback, and revalidation contract. The settings are examples that
+must be fixed from the application SLO and operational cost model before gate
+evidence is inspected; they are not values to tune on locked outcomes.
+
 Stateful selectors reset their previous-path state, hysteresis penalty, and
 switch counter at telemetry gaps or session/campaign boundaries. Exported
 decision rows record the continuity segment and reset reason; switch rates use
@@ -214,9 +228,12 @@ pip install -e .
 ./scripts/download_commect_multiaccess_data.sh
 python scripts/run_commect_multiaccess_validation.py
 python scripts/run_commect_rolling_origin_validation.py
+python scripts/run_commect_rolling_origin_validation.py --trace data/processed/commect_multiaccess_1s.csv --output-dir results/commect_rolling_1s_active_opportunity
 python scripts/run_commect_1s_alignment_audit.py
 python scripts/run_commect_threshold_gate_sensitivity.py
 python scripts/audit_gate_design_sensitivity.py
+python scripts/audit_cadence_qos_and_availability.py
+python scripts/build_operator_collection_plan.py
 python scripts/build_commercial_multileo_trace.py --help
 python scripts/run_commercial_multileo_validation.py --help
 python scripts/inspect_dataset.py --data-root data/raw/lens_2025_03

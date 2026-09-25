@@ -1,0 +1,7 @@
+{
+  "frozen_post_test_diagnostic": true,
+  "candidate_or_gate_reselection_allowed": false,
+  "cadence_claim_boundary": "the matched rolling comparison changes aggregation interval, physical one-bin horizon, and sample count together",
+  "qos_ablation": "conservative reactive-in-mixed shielding versus predictive ranking restricted to currently compliant paths",
+  "availability_semantics": "scheduled slots excluded before replay remain in the conservative service denominator"
+}
