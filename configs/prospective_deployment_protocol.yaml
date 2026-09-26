@@ -1,5 +1,7 @@
 protocol_version: 1
 status: prospective_not_field_validated
+profile_id: commect_measured_60ms
+profile_registry: configs/evidence_profiles.yaml
 
 protection_profile:
   # Select from the service contract before collecting gate or test outcomes.
@@ -19,13 +21,34 @@ protection_profile:
 
 independence_unit:
   definition: independently_initiated_terminal_site_day_campaign
+  independence_is_design_assumption_not_proven_by_label: true
   same_drive_windows_are_independent: false
+  shared_shock_controls:
+    - stratify_or_cluster_by_gateway_region_and_provider
+    - separate_campaign_start_times_using_randomized_start_id
+    - retain_weather_and_outage_context_for_sensitivity_analysis
+    - promote_to_a_higher_level_cluster_if_shared_failures_are_detected
   required_design_fields:
     - campaign_id
     - terminal_id
     - site_id
     - collection_date
     - randomized_start_id
+
+power_planning:
+  analytical_floor_artifact: results/operator_collection_plan/operator_collection_plan.csv
+  simulation_artifact: results/campaign_admission_power_60ms/campaign_power_summary.csv
+  pilot_required_before_field_admission: true
+  pilot_parameters_to_replace:
+    - opportunity_group_prevalence
+    - missingness_rate
+    - harmful_group_probability
+    - campaign_level_latency_distribution
+    - expected_tail_benefit
+    - between_group_variance
+  warning: >-
+    Analytical floors and synthetic admission probabilities are planning aids,
+    not sufficient evidence for policy admission.
 
 instrumentation:
   required_timestamps:

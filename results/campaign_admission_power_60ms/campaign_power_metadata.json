@@ -1,0 +1,56 @@
+{
+  "artifact_kind": "scenario_based_campaign_admission_power",
+  "profile_id": "commect_measured_60ms",
+  "measured_or_pilot_evidence": false,
+  "field_power_guarantee": false,
+  "repetitions_per_cell": 30,
+  "seed": 20260926,
+  "group_counts": [
+    721,
+    962,
+    2500,
+    5000,
+    7500,
+    10000
+  ],
+  "independence_model": "Each generated value is one independently initiated campaign-level unit. Field use additionally requires manifest validation and must account for shared site, weather, gateway, and provider shocks.",
+  "simulation_assumptions": {
+    "reactive_campaign_latency_ms": "clip(N(120,45^2),0,250)",
+    "candidate_latency_ms": "clip(reactive + scenario_shift,0,250)",
+    "generic_opportunity": "reactive and candidate 60-ms success differ",
+    "candidate_active_opportunity": "equal to generic opportunity"
+  },
+  "scenarios": [
+    {
+      "name": "safe_modest_20ms",
+      "candidate_shift_ms": -20.0,
+      "interpretation": "Candidate is never slower and has a 20-ms campaign-level benefit."
+    },
+    {
+      "name": "safe_strong_80ms",
+      "candidate_shift_ms": -80.0,
+      "interpretation": "Candidate is never slower and has an 80-ms campaign-level benefit."
+    },
+    {
+      "name": "unsafe_20ms",
+      "candidate_shift_ms": 20.0,
+      "interpretation": "Candidate is 20 ms slower and can convert QoS successes into misses."
+    }
+  ],
+  "risk_control_config": {
+    "alpha": 0.05,
+    "noninferiority_margin": 0.02,
+    "opportunity_noninferiority_margin": 0.02,
+    "minimum_effective_opportunities": 5.0,
+    "practical_cvar_gain_ms": 5.0,
+    "cvar_quantile": 0.9,
+    "block_length": null,
+    "latency_cap_ms": 250.0,
+    "cvar_grid_points": 5001,
+    "planned_gate_uses": 1,
+    "gate_use_index": 1,
+    "bootstrap_samples": 4000,
+    "random_seed": 20260926
+  },
+  "interpretation": "Admission probability is conditional on the stated synthetic data-generating process. The 721-group analytical floor is necessary for best-case non-vacuity but is not sufficient for useful power. A disjoint field pilot must replace these assumptions before deployment."
+}

@@ -116,7 +116,8 @@ def main() -> int:
     plan = build_collection_plan()
     plan.to_csv(output / "operator_collection_plan.csv", index=False)
     metadata = {
-        "profile": "practical profile from manuscript Table III",
+        "profile_id": "commect_measured_60ms",
+        "profile_registry": "configs/evidence_profiles.yaml",
         "settings_frozen_before_collection": True,
         "five_protected_endpoint_families_per_candidate_use": True,
         "independence_warning": (
@@ -125,6 +126,14 @@ def main() -> int:
         "power_warning": (
             "the exported floor is necessary for a non-vacuous best-case bound, "
             "not sufficient power for an unknown field effect"
+        ),
+        "simulation_power_artifact": (
+            "results/campaign_admission_power_60ms/campaign_power_summary.csv"
+        ),
+        "independence_scope": (
+            "terminal-site-day labels support a prospective design audit but do "
+            "not prove independence; shared gateway, provider, weather, and "
+            "regional shocks require stratification or higher-level clustering"
         ),
     }
     (output / "operator_collection_plan_metadata.json").write_text(

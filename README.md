@@ -47,14 +47,14 @@ selection interval is conservatively treated as one group. The predictive-only
 context/ensemble shield remains an ablation. No evaluation outcome or injected
 test label tunes either rule.
 
-The clipped-CVaR endpoint uses a predeclared 60-second cap and a 1,200,001-point
-grid (0.05-ms spacing), whose worst between-grid correction is 0.475 ms at
-q=0.95. Canonical copies of the synthetic operating-characteristic audit are
-provided under `results/transactions_evidence/`. They confirm that the implementation
-can admit an overwhelming positive control, while also showing that the
-distribution-free cap has very low power for a 20-ms effect even with 5,000
-independent groups. This is a calibration/non-vacuity audit, not measured
-efficacy.
+The canonical clipped-CVaR audit uses a predeclared 60-second cap and a
+1,200,001-point grid (0.05-ms spacing), whose worst between-grid correction is
+0.475 ms at q=0.95. Two practical profiles are separately registered in
+`configs/evidence_profiles.yaml`: `commect_measured_60ms` governs measured
+COMMECT/Victoria replay and prospective collection, while
+`synthetic_operator_150ms` governs only the controlled synthetic admission
+demonstration. Evidence and admission decisions cannot be pooled between them.
+Canonical audit copies remain under `results/transactions_evidence/`.
 
 The ensemble uncertainty selector is an additional uncertainty-aware comparator.
 It trains small bootstrapped temporal models, then scores each path using the
@@ -234,6 +234,8 @@ python scripts/run_commect_threshold_gate_sensitivity.py
 python scripts/audit_gate_design_sensitivity.py
 python scripts/audit_cadence_qos_and_availability.py
 python scripts/build_operator_collection_plan.py
+python scripts/simulate_campaign_admission_power.py
+python scripts/run_synthetic_operator_power.py
 python scripts/build_commercial_multileo_trace.py --help
 python scripts/run_commercial_multileo_validation.py --help
 python scripts/inspect_dataset.py --data-root data/raw/lens_2025_03
@@ -286,6 +288,24 @@ shield obtains 0.671 (194/289).
 The campaign contains only one independent collection unit, so the evidence
 gate abstains in every fold. This negative
 result is the intended fail-closed behavior, not post-hoc test selection.
+
+The acquisition floors under `results/operator_collection_plan/` are
+non-vacuity floors, not evidence of adequate power. The frozen 60-ms
+scenario-based audit under `results/campaign_admission_power_60ms/` shows why:
+a safe 20-ms benefit is not admitted at 10,000 generated campaign units, while
+a safe 80-ms benefit is admitted in all 30 repetitions at 7,500 and 10,000
+units; a success-unsafe candidate is never admitted. These probabilities are
+conditional on the documented synthetic generator. A disjoint field pilot
+must estimate opportunity prevalence, missingness, effect size, tail variance,
+and cross-campaign dependence before a deployment-specific power simulation is
+used to freeze the campaign count.
+
+`campaign_independence.audit_campaign_manifest` verifies unique campaign and
+randomized-start identifiers and complete terminal/site/date provenance. This
+is an acquisition-design audit, not proof of statistical independence. Shared
+provider, gateway, regional weather, and network-wide shocks require
+stratification, promotion to a higher clustering unit, or a predeclared
+dependence-aware analysis.
 
 The Hypatia adapter is optional and non-canonical. Its provisional dependency
 set is not exercised by the canonical rebuild, which consumes a hashed prepared

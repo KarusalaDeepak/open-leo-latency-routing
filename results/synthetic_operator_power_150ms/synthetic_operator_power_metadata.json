@@ -1,0 +1,33 @@
+{
+  "artifact_kind": "controlled_synthetic_gate_admission_demonstration",
+  "profile_id": "synthetic_operator_150ms",
+  "measured_deployment_evidence": false,
+  "cross_profile_pooling": false,
+  "seed": 20260926,
+  "repetitions_per_group_count": 30,
+  "development_episodes": 5000,
+  "locked_test_episodes_per_repetition": 5000,
+  "group_counts": [
+    500,
+    2500,
+    5000,
+    10000
+  ],
+  "generator": "current=clip(N(75,9^2),45,110); indicator=U(0,1); next=clip(30+0.25*current+190*indicator+path_bias+N(0,1.5^2),0,250)",
+  "candidate": "standardized ridge(alpha=1) using current RTT, observable indicator, and one-hot path identity; fitted once on disjoint development data",
+  "risk_control_config": {
+    "alpha": 0.05,
+    "noninferiority_margin": 0.02,
+    "opportunity_noninferiority_margin": 0.02,
+    "minimum_effective_opportunities": 5.0,
+    "practical_cvar_gain_ms": 5.0,
+    "cvar_quantile": 0.9,
+    "block_length": null,
+    "latency_cap_ms": 250.0,
+    "cvar_grid_points": 5001,
+    "planned_gate_uses": 1,
+    "gate_use_index": 1,
+    "bootstrap_samples": 4000,
+    "random_seed": 20260926
+  }
+}

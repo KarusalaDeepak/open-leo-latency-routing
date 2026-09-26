@@ -1,0 +1,32 @@
+schema_version: 1
+cross_profile_pooling: prohibited
+
+profiles:
+  commect_measured_60ms:
+    evidence_role: measured_heterogeneous_access_shadow_replay
+    latency_target_ms: 60.0
+    permitted_absolute_success_deficit: 0.02
+    cvar_quantile: 0.90
+    latency_cap_ms: 250.0
+    required_cvar_improvement_ms: 5.0
+    datasets:
+      - COMMECT
+      - LENS_Victoria_concurrency_check
+    interpretation: >-
+      The primary measured service profile and the prospective deployment
+      contract. Results are descriptive shadow evidence unless independent
+      terminal-site-day campaign groups are available.
+
+  synthetic_operator_150ms:
+    evidence_role: controlled_code_path_and_admission_power_demonstration
+    latency_target_ms: 150.0
+    permitted_absolute_success_deficit: 0.02
+    cvar_quantile: 0.90
+    latency_cap_ms: 250.0
+    required_cvar_improvement_ms: 5.0
+    datasets:
+      - generated_three_path_episodes
+    interpretation: >-
+      A deliberately easier synthetic profile used only to verify that the
+      frozen production gate can admit a useful candidate when independent
+      evidence is sufficient. It is not a COMMECT result or field evidence.

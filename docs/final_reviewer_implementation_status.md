@@ -66,3 +66,18 @@ acceptance.
   result artifacts before freezing checksums.
 - The paper reports the remaining lack of commercial concurrent multi-LEO
   closed-loop evidence rather than substituting simulated data for it.
+# Follow-up completion: campaign power and service-profile separation
+
+The follow-up review's two remaining code-addressable requests are implemented.
+The frozen 60-ms measured-service profile now has a reproducible scenario-based
+campaign admission-power audit, and the previously reported 721/962 acquisition
+counts are labeled only as non-vacuity floors. A manifest-level independence
+audit rejects duplicate campaigns, reused randomized starts, and incomplete
+terminal/site/date provenance while explicitly warning that shared operational
+shocks require higher-level clustering or dependence-aware inference.
+
+The 60-ms measured-service profile and the 150-ms controlled synthetic profile
+are registered separately in `configs/evidence_profiles.yaml`. The latter now
+has an executable generator and result table under
+`results/synthetic_operator_power_150ms/`; code, configuration, documentation,
+and manuscript all prohibit cross-profile evidence pooling.
