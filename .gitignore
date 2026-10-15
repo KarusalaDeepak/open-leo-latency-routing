@@ -33,3 +33,7 @@ results/commect_rolling_1s_active_opportunity/rolling_policy_decisions.csv
 *.log
 *.tmp
 *.swp
+
+# Manuscript submission packages are maintained outside this code repository.
+/releases/paper-submission-*
+/releases/verify_tagged_submission.sh

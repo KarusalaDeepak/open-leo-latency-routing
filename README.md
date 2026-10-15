@@ -76,8 +76,8 @@ Key decision metrics reported by the repo include:
 - success rate under the configured latency budget,
 - P95 and CVaR95 realized latency,
 - switch rate and equal-information hysteresis controls,
-- model-scoring and total controller runtime in microseconds, reported
-  separately from network RTT,
+- archived replay-computation proxies in microseconds, reported separately
+  from network RTT; these do not measure full online decision or controller time,
 - exact branch-conditioned next-epoch outcomes and explanation fidelity,
 - finite-sample pairwise success-gap bounds based on decision opportunity,
 - candidate-active opportunity support and capture rates,
