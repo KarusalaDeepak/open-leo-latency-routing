@@ -1,0 +1,11 @@
+# Canonical Transactions direct/test dependency pins (CPython 3.11.5).
+# Install with: python3 -m pip install -r requirements-lock.txt
+numpy==1.24.3
+pandas==2.0.3
+PyYAML==6.0
+scikit-learn==1.3.0
+scipy==1.11.1
+matplotlib==3.7.2
+Pillow==9.4.0
+xgboost==3.1.2
+pytest==8.2.2

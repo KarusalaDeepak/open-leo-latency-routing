@@ -1,0 +1,107 @@
+protocol_version: 1
+status: prospective_not_field_validated
+profile_id: commect_measured_60ms
+profile_registry: configs/evidence_profiles.yaml
+
+protection_profile:
+  # Select from the service contract before collecting gate or test outcomes.
+  latency_target_ms: 60.0
+  latency_target_basis: application_end_to_end_slo
+  permitted_absolute_success_deficit: 0.02
+  permitted_deficit_basis: maximum_tolerable_percentage_point_loss_vs_reactive
+  cvar_quantile: 0.90
+  latency_cap_ms: 250.0
+  latency_cap_basis: predeclared_application_timeout
+  required_cvar_improvement_ms: 5.0
+  required_gain_basis: minimum_tail_gain_worth_operational_switching_cost
+  familywise_alpha: 0.05
+  candidate_count: 1
+  planned_gate_uses: 1
+  minimum_independent_opportunity_groups: 5
+
+independence_unit:
+  definition: independently_initiated_terminal_site_day_campaign
+  independence_is_design_assumption_not_proven_by_label: true
+  same_drive_windows_are_independent: false
+  shared_shock_controls:
+    - stratify_or_cluster_by_gateway_region_and_provider
+    - separate_campaign_start_times_using_randomized_start_id
+    - retain_weather_and_outage_context_for_sensitivity_analysis
+    - promote_to_a_higher_level_cluster_if_shared_failures_are_detected
+  required_design_fields:
+    - campaign_id
+    - terminal_id
+    - site_id
+    - collection_date
+    - randomized_start_id
+
+power_planning:
+  analytical_floor_artifact: results/operator_collection_plan/operator_collection_plan.csv
+  simulation_artifact: results/campaign_admission_power_60ms/campaign_power_summary.csv
+  pilot_required_before_field_admission: true
+  pilot_parameters_to_replace:
+    - opportunity_group_prevalence
+    - missingness_rate
+    - harmful_group_probability
+    - campaign_level_latency_distribution
+    - expected_tail_benefit
+    - between_group_variance
+  warning: >-
+    Analytical floors and synthetic admission probabilities are planning aids,
+    not sufficient evidence for policy admission.
+
+instrumentation:
+  required_timestamps:
+    - telemetry_sample_time
+    - collection_complete_time
+    - feature_ready_time
+    - inference_complete_time
+    - dissemination_complete_time
+    - installation_ack_time
+    - first_packet_after_install_time
+  required_outcomes:
+    - intended_path
+    - installed_path
+    - selected_and_unselected_path_probe_outcomes
+    - outage_or_no_action_reason
+    - packet_rtt_loss_and_jitter
+    - interface_and_queue_backlog
+    - energy_or_probe_cost
+
+stages:
+  - name: instrumentation_pilot
+    live_steering: false
+    purpose: verify_clock_alignment_authority_and_complete_denominators
+  - name: frozen_shadow_campaign
+    live_steering: false
+    purpose: collect_independent_opportunity_bearing_groups_and_freeze_candidate
+  - name: evidence_gate
+    live_steering: false
+    purpose: admit_candidate_or_retain_reactive_before_locked_outcomes
+  - name: limited_canary
+    live_steering: true
+    traffic_fraction: 0.05
+    purpose: verify_installed_actions_full_loop_delay_queues_and_outages
+  - name: staged_expansion
+    live_steering: true
+    traffic_fractions: [0.10, 0.25, 0.50, 1.00]
+    purpose: expand_only_after_predeclared_review_boundaries_pass
+
+rollback:
+  immediate_conditions:
+    - installed_path_does_not_match_authorized_action
+    - collection_to_installation_deadline_exceeded
+    - outcome_or_denominator_observability_lost
+    - emergency_or_operator_stop
+  statistical_condition:
+    rule: predeclared_alpha_spending_noninferiority_monitor
+    fallback: reactive
+    optional_stopping_without_valid_monitor: prohibited
+
+revalidation:
+  triggers:
+    - topology_or_provider_change
+    - material_workload_shift
+    - telemetry_schema_change
+    - latency_target_or_timeout_change
+    - scheduled_review_boundary

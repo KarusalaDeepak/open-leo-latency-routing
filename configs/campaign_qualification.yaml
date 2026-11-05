@@ -1,0 +1,173 @@
+schema_version: 1
+counting_rule: >-
+  A gate campaign must contain synchronized, actionable multi-access candidate
+  observations with paired next-interval outcomes and acquisition-provenance
+  identifiers. Fully qualified campaigns record the destination server.
+  Conditionally qualified campaigns may be counted only under an explicit,
+  predeclared missing-provenance assumption. Days, folds, or time blocks from
+  one acquisition remain one campaign unless the source records a separately
+  restarted field collection. Campaign count, qualification status, and
+  acquisition-family count are reported separately.
+
+sources:
+  - source: COMMECT
+    campaign_id: commect_denmark_drive
+    acquisition_family: COMMECT
+    concurrent_candidate_paths: true
+    concurrent_5g_leo: true
+    paired_next_interval_outcomes: true
+    actionable_opportunity_audit: true
+    gate_qualified: true
+    qualification_status: fully_qualified
+    role: proof_of_method_and_gate_input
+    limitation: One acquisition campaign; repeated folds do not add campaigns.
+
+  - source: CoNEXT23_Satellite_vs_Cellular
+    campaign_id: conext23_20230424
+    acquisition_family: CoNEXT23_Satellite_vs_Cellular
+    concurrent_candidate_paths: true
+    concurrent_5g_leo: false_mixed_cellular_technology_labels
+    paired_next_interval_outcomes: true
+    actionable_opportunity_audit: true
+    gate_qualified: true
+    qualification_status: conditionally_qualified
+    qualification_assumption: &conext_assumption >-
+      The side-by-side UDP-Ping paths share a common destination, and daily
+      collections are independent and exchangeable under the declared model.
+    role: frozen_external_gate_evidence
+    limitation: &conext_limitation >-
+      Separately restarted daily road-test collection from one acquisition
+      family. The release documents a common UDP-Ping application but does not
+      export the server identifier or per-sample LTE-versus-5G label.
+
+  - source: CoNEXT23_Satellite_vs_Cellular
+    campaign_id: conext23_20230425
+    acquisition_family: CoNEXT23_Satellite_vs_Cellular
+    concurrent_candidate_paths: true
+    concurrent_5g_leo: false_mixed_cellular_technology_labels
+    paired_next_interval_outcomes: true
+    actionable_opportunity_audit: true
+    gate_qualified: true
+    qualification_status: conditionally_qualified
+    qualification_assumption: *conext_assumption
+    role: frozen_external_gate_evidence
+    limitation: *conext_limitation
+
+  - source: CoNEXT23_Satellite_vs_Cellular
+    campaign_id: conext23_20230426
+    acquisition_family: CoNEXT23_Satellite_vs_Cellular
+    concurrent_candidate_paths: true
+    concurrent_5g_leo: false_mixed_cellular_technology_labels
+    paired_next_interval_outcomes: true
+    actionable_opportunity_audit: true
+    gate_qualified: true
+    qualification_status: conditionally_qualified
+    qualification_assumption: *conext_assumption
+    role: frozen_external_gate_evidence
+    limitation: *conext_limitation
+
+  - source: CoNEXT23_Satellite_vs_Cellular
+    campaign_id: conext23_20230427
+    acquisition_family: CoNEXT23_Satellite_vs_Cellular
+    concurrent_candidate_paths: true
+    concurrent_5g_leo: false_mixed_cellular_technology_labels
+    paired_next_interval_outcomes: true
+    actionable_opportunity_audit: true
+    gate_qualified: true
+    qualification_status: conditionally_qualified
+    qualification_assumption: *conext_assumption
+    role: frozen_external_gate_evidence
+    limitation: *conext_limitation
+
+  - source: CoNEXT23_Satellite_vs_Cellular
+    campaign_id: conext23_20230428
+    acquisition_family: CoNEXT23_Satellite_vs_Cellular
+    concurrent_candidate_paths: true
+    concurrent_5g_leo: false_mixed_cellular_technology_labels
+    paired_next_interval_outcomes: true
+    actionable_opportunity_audit: true
+    gate_qualified: true
+    qualification_status: conditionally_qualified
+    qualification_assumption: *conext_assumption
+    role: frozen_external_gate_evidence
+    limitation: *conext_limitation
+
+  - source: NUWiNS
+    campaign_id: nuwins_alaska_202406
+    acquisition_family: NUWiNS
+    concurrent_candidate_paths: reported
+    concurrent_5g_leo: reported
+    paired_next_interval_outcomes: pending_exact_timestamp_and_server_audit
+    actionable_opportunity_audit: false
+    gate_qualified: false
+    role: external_capacity_qos_and_shift_diagnostic
+    limitation: Current Alaska-to-Hawaii artifact is a fixed-payload capacity proxy, not a frozen path-policy replay.
+
+  - source: NUWiNS
+    campaign_id: nuwins_hawaii_202408
+    acquisition_family: NUWiNS
+    concurrent_candidate_paths: reported
+    concurrent_5g_leo: reported
+    paired_next_interval_outcomes: pending_exact_timestamp_and_server_audit
+    actionable_opportunity_audit: false
+    gate_qualified: false
+    role: external_capacity_qos_and_shift_diagnostic
+    limitation: Must pass exact pairing and decision-opportunity reconstruction before gate counting.
+
+  - source: NUWiNS
+    campaign_id: nuwins_mainland_202411
+    acquisition_family: NUWiNS
+    concurrent_candidate_paths: partially_available
+    concurrent_5g_leo: partially_available
+    paired_next_interval_outcomes: not_established
+    actionable_opportunity_audit: false
+    gate_qualified: false
+    role: external_qos_and_shift_diagnostic
+    limitation: Per-operator records are not yet established as exact synchronized alternatives.
+
+  - source: LENS
+    campaign_id: null
+    acquisition_family: LENS
+    concurrent_candidate_paths: false
+    concurrent_5g_leo: false
+    paired_next_interval_outcomes: false
+    actionable_opportunity_audit: false
+    gate_qualified: false
+    role: calibration_shift_and_single_path_qos
+    limitation: No synchronized terrestrial alternative path in the current artifact.
+
+  - source: WetLinks
+    campaign_id: null
+    acquisition_family: WetLinks
+    concurrent_candidate_paths: false
+    concurrent_5g_leo: false
+    paired_next_interval_outcomes: false
+    actionable_opportunity_audit: false
+    gate_qualified: false
+    role: calibration_shift_and_cross_site_qos
+    limitation: Sites are not selectable gateway alternatives in one installed policy experiment.
+
+  - source: FjordLink
+    campaign_id: fjordlink_kiel_fjord_2024_2025
+    acquisition_family: FjordLink
+    concurrent_candidate_paths: false_in_released_session_timestamps
+    concurrent_5g_leo: false_in_released_session_timestamps
+    paired_next_interval_outcomes: false
+    actionable_opportunity_audit: false
+    gate_qualified: false
+    role: independent_qos_and_distribution_shift_diagnostic
+    local_audit:
+      status: completed
+      source_commit: 3b82a3d1938cd7d181a11006634f5319664bd2b5
+      license: CC-BY-4.0
+      starlink_sessions: 51
+      terrestrial_sessions: 15
+      minimum_required_overlap_s: 1.0
+      qualifying_overlaps: 0
+      nearest_interval_gap_s: 149.379
+      clock_interpretation: source_logger_clock_timezone_unspecified
+    limitation: >-
+      The acquired release contains useful Starlink and cellular QoS sessions,
+      but no released Starlink session overlaps a terrestrial session by the
+      frozen one-second source-clock rule. It therefore cannot provide paired
+      counterfactual path outcomes or enter the multi-access gate count.

@@ -1,0 +1,130 @@
+dataset:
+  name: lens_2025_03
+  raw_root: data/raw/lens_2025_03
+  processed_root: data/processed
+  time_bins_path: data/processed/ping_time_bins.csv
+
+forecasting:
+  target_column: latency_mean_ms
+  horizon_seconds: 60
+  lag_steps: [1, 2, 3, 6, 12]
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  policy_evaluation_ratios:
+    train: 0.55
+    calibration: 0.15
+    selection: 0.15
+    test: 0.15
+  temporal_model: ridge_regression
+  graph_context_model: ridge_regression
+
+graph:
+  snapshot_seconds: 60
+  edge_rule: co_observation
+  min_shared_events: 2
+
+optimization:
+  objective: min_predicted_latency
+  latency_budget_ms: 60.0
+  risk_control:
+    familywise_alpha: 0.05
+    noninferiority_margin: 0.02
+    # Separate non-inferiority tolerance for the success difference after
+    # conditioning on post-hoc decision opportunities within each
+    # opportunity-bearing independent group.
+    opportunity_noninferiority_margin: 0.02
+    minimum_effective_opportunities: 5.0
+    practical_cvar_gain_ms: 1.0
+    cvar_quantile: 0.95
+    # Retained for archived configuration compatibility. A non-null value is
+    # rejected: inferential groups must come from acquisition provenance via
+    # explicit collection/session identifiers.
+    block_length: null
+    # Pre-declared administrative latency bound for the clipped-CVaR endpoint.
+    latency_cap_ms: 60000.0
+    # 0.05-ms spacing; at q=.95 the half-cell Lipschitz correction is
+    # 0.475 ms, below the 1-ms practical-gain margin.
+    cvar_grid_points: 1200001
+    planned_gate_uses: 1
+    gate_use_index: 1
+    bootstrap_samples: 4000
+    random_seed: 2026
+  timestamp_age:
+    maximum_skew_seconds: [0.5, 1.0, 2.0, 5.0]
+    unrestricted_label: full
+  consensus:
+    # Archived R1 diagnostic defaults.  The revised pipeline selects this
+    # diagnostic baseline on the calibration/development block and records the
+    # selected values; locked test outcomes never select them.
+    temporal_weight: 0.65
+    graph_weight: 0.35
+    disagreement_penalty: 0.30
+  disagreement_aware:
+    uncertainty_multiplier: 0.75
+    gate_validation_quantile: 0.90
+    calibration_coverage: 0.90
+    residual_risk_features:
+      - normalized_disagreement
+      - temporal_ensemble_spread
+      - reply_pressure_and_volatility
+    residual_risk_fit: nonnegative_linear_regression
+  ensemble_uncertainty:
+    # Archived R1 values retained for result provenance.  lambda_ens is now
+    # selected from the predeclared grid below before locked testing.
+    lambda_ens: 0.75
+    ensemble_members: 9
+    row_fraction: 0.82
+    feature_fraction: 0.78
+  service_risk:
+    # Archived R1 diagnostic values.  The operational pipeline now fits
+    # non-negative reply-pressure and normalized-volatility coefficients on
+    # calibration residuals and exports them with the fit artifact.
+    reply_pressure_penalty: 2.5
+    volatility_penalty: 1.5
+  hyperparameter_selection:
+    ridge_alpha_grid: [0.01, 0.1, 1.0, 10.0, 100.0]
+    ridge_development_fraction: 0.20
+    ensemble_multiplier_grid: [0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+    consensus_temporal_weight_grid: [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80]
+    consensus_disagreement_penalty_grid: [0.0, 0.10, 0.20, 0.25, 0.30]
+    residual_risk_gate_quantile_sensitivity: [0.75, 0.80, 0.85, 0.90, 0.95]
+    conformal_coverage_sensitivity: [0.80, 0.85, 0.90, 0.95]
+    ensemble_row_fraction_sensitivity: [0.60, 0.70, 0.82, 0.90, 1.00]
+    ensemble_feature_fraction_sensitivity: [0.50, 0.65, 0.78, 0.90, 1.00]
+    selection_rule: >-
+      ridge minimizes development RMSE; ensemble multiplier maximizes
+      development QoS success then minimizes mean RTT; consensus minimizes
+      mean gap to the better single expert. Ties use the smaller numeric value.
+    locked_test_used_for_selection: false
+  switching_penalties_ms: [5.0, 10.0, 20.0]
+  online_switch_penalty_ms: 10.0
+  stochastic_switching:
+    base_penalty_ms: 10.0
+    spike_penalty_ms: 75.0
+    spike_probability: 0.10
+    n_trials: 256
+  multi_bin_horizons: [3, 5]
+  control_loop_latency_ms: [0.0, 10.0, 50.0, 100.0, 500.0, 1000.0]
+  temporal_resolutions_seconds: [5, 10, 30, 60]
+  policies:
+    - random
+    - reactive_greedy
+    - predictive_greedy
+    - predictive_graph_greedy
+    - predictive_consensus_greedy
+    - ensemble_uncertainty_selector
+    - conformal_uncertainty_selector
+    - disagreement_aware_selector
+
+stress:
+  burst_fraction: 0.12
+  burst_latency_spike_ms: 18.0
+  burst_reply_drop_fraction: 0.12
+  outage_session_fraction: 0.25
+  outage_latency_spike_ms: 35.0
+  outage_reply_drop_fraction: 0.35
+  structural_location_fraction: 0.35
+  structural_window_count: 2
+  structural_latency_spike_ms: 28.0
+  structural_reply_drop_fraction: 0.20

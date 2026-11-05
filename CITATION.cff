@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, cite this repository and identify the commit used."
+type: software
+title: "Campaign-Aware Evidence Gating for Cellular–LEO Path Selection: Scientific Code"
+version: 0.1.0
+authors:
+  - family-names: Chowdary
+    given-names: "K Deepak"
+  - family-names: Hazra
+    given-names: Suvadip
+  - family-names: Hegadi
+    given-names: Rajendra
+repository-code: "https://github.com/KarusalaDeepak/open-leo-latency-routing"
+abstract: >-
+  Scientific source code, configurations, adapters and tests for a conservative
+  campaign-aware evidence gate for RTT-QoS multi-access selection in
+  cellular and LEO networks. Data and generated results are acquired or
+  produced separately.

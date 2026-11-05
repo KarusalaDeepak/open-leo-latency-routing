@@ -1,0 +1,11 @@
+# OPTIONAL, NON-CANONICAL, AND NOT END-TO-END VERIFIED.
+# These provisional pins support separate Hypatia satgenpy adapter regeneration;
+# the canonical Transactions rebuild neither installs nor validates this set.
+networkx==3.1
+astropy==8.0.1
+ephem==4.2.1
+sgp4==2.27
+geopy==2.5.0
+statsmodels==0.14.6
+cartopy==0.25.0
+exputil==1.6

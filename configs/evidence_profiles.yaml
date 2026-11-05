@@ -1,0 +1,76 @@
+schema_version: 1
+cross_profile_pooling: prohibited
+
+evidence_tiers:
+  proof_of_method:
+    minimum_independent_campaigns: 1
+    permits: [mechanism_check, descriptive_shadow_replay]
+    does_not_permit: [external_generalization, deployment_release]
+  frozen_external_validation:
+    minimum_independent_campaigns: 2
+    requires:
+      - development choices frozen before the external campaign
+      - paired decision opportunities
+      - campaign-block uncertainty interval with adequate precision
+      - calibration and distribution-shift checks
+      - explicit switching and execution-cost accounting
+    permits: [bounded_external_validation_claim]
+    does_not_permit: [universal_generalization]
+  conservative_broader_generalization:
+    minimum_independent_campaigns: 5
+    requires:
+      - leave-one-campaign-out assessment
+      - multiple acquisition families where available
+      - every frozen_external_validation requirement
+    interpretation: >-
+      This is an optional conservative study profile, not an IEEE rule. Five
+      campaigns alone do not establish independence, power, calibration,
+      precision, shift robustness, or deployment safety.
+
+profiles:
+  commect_measured_60ms:
+    evidence_role: measured_heterogeneous_access_shadow_replay
+    latency_target_ms: 60.0
+    permitted_absolute_success_deficit: 0.02
+    cvar_quantile: 0.90
+    latency_cap_ms: 250.0
+    required_cvar_improvement_ms: 5.0
+    datasets:
+      - COMMECT
+      - LENS_Victoria_concurrency_check
+    interpretation: >-
+      The primary measured service profile and the prospective deployment
+      contract. Results are descriptive shadow evidence unless independent
+      terminal-site-day campaign groups are available.
+
+  conext23_external_60ms:
+    evidence_role: frozen_external_cellular_leo_gate_audit
+    latency_target_ms: 60.0
+    permitted_absolute_success_deficit: 0.02
+    cvar_quantile: 0.90
+    latency_cap_ms: 250.0
+    required_cvar_improvement_ms: 5.0
+    datasets:
+      - CoNEXT23_Satellite_vs_Cellular_UDP_Ping
+    interpretation: >-
+      The 2023-04-23 collection is development-only. The five separately
+      restarted daily collections from 2023-04-24 through 2023-04-28 enter the
+      gate once each. They are five campaigns from one acquisition family,
+      not five independent datasets. The release does not export the server
+      identifier or per-sample LTE-versus-5G labels, so the result is a
+      conditional cellular--LEO applicability audit rather than 5G-only or
+      deployment validation.
+
+  synthetic_operator_150ms:
+    evidence_role: controlled_code_path_and_admission_power_demonstration
+    latency_target_ms: 150.0
+    permitted_absolute_success_deficit: 0.02
+    cvar_quantile: 0.90
+    latency_cap_ms: 250.0
+    required_cvar_improvement_ms: 5.0
+    datasets:
+      - generated_three_path_episodes
+    interpretation: >-
+      A deliberately easier synthetic profile used only to verify that the
+      frozen production gate can admit a useful candidate when independent
+      evidence is sufficient. It is not a COMMECT result or field evidence.

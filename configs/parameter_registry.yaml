@@ -1,0 +1,267 @@
+schema_version: 1
+interpretation: >-
+  Values are not universal LEO constants. Each item is classified as fitted,
+  development-selected, application-declared, statistically derived,
+  numerical, or an archived engineering setting. Locked test outcomes may
+  evaluate a value but may not choose it.
+
+parameters:
+  - name: latency_budget_ms
+    value: 60.0
+    unit: ms
+    category: application_declared
+    selection_partition: none
+    rationale: Illustrative measured-service profile, not an IEEE or operator limit.
+    alternatives: [40.0, 60.0, 100.0, 200.0]
+    claim_boundary: A new target requires a newly frozen gate family.
+
+  - name: ridge_alpha
+    value: development_selected
+    unit: dimensionless
+    category: model_hyperparameter
+    selection_partition: training_internal_development
+    rationale: Minimize chronological development RMSE and refit on outer training only.
+    alternatives: [0.01, 0.1, 1.0, 10.0, 100.0]
+    claim_boundary: Historical R1 used alpha=1; current primary tables use the recorded development-selected value.
+
+  - name: ridge_development_fraction
+    value: 0.20
+    unit: fraction_of_training_epochs
+    category: data_split_operating_point
+    selection_partition: none
+    rationale: Reserves the latest fifth of outer training for chronological hyperparameter selection while leaving most rows for fitting.
+    alternatives: [0.15, 0.20, 0.25]
+    claim_boundary: A frozen split convention, not an optimized or universal fraction.
+
+  - name: ensemble_uncertainty_multiplier
+    value: development_selected
+    unit: dimensionless
+    category: policy_hyperparameter
+    selection_partition: calibration_development
+    rationale: Maximize development QoS success, then minimize mean RTT, with deterministic ties.
+    alternatives: [0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+    claim_boundary: Not a Gaussian confidence multiplier or universal safety coefficient.
+
+  - name: service_reply_pressure_weight
+    value: calibration_fitted_nonnegative
+    unit: ms
+    category: fitted_coefficient
+    selection_partition: calibration
+    rationale: Non-negative regression of absolute fusion error on reply pressure.
+    alternatives: [0.0, fitted]
+    claim_boundary: Association with forecast error, not packet-loss causation.
+
+  - name: service_volatility_weight
+    value: calibration_fitted_nonnegative
+    unit: ms
+    category: fitted_coefficient
+    selection_partition: calibration
+    rationale: Non-negative regression of absolute fusion error on normalized RTT variation.
+    alternatives: [0.0, fitted]
+    claim_boundary: Ranking coefficient, not additional measured network delay.
+
+  - name: consensus_weights
+    value: calibration_selected
+    unit: dimensionless
+    category: diagnostic_hyperparameter
+    selection_partition: calibration_development
+    rationale: Minimize mean gap to the better single expert across development scenarios.
+    alternatives: [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80]
+    claim_boundary: Diagnostic baseline only; the calibrated fusion uses residual covariance.
+
+  - name: calibrated_fusion_weights
+    value: covariance_derived
+    unit: dimensionless
+    category: statistically_derived
+    selection_partition: calibration
+    rationale: Closed-form minimum estimated error variance under non-negative sum-to-one weights.
+    alternatives: [equal_weight, temporal_only, context_only]
+    claim_boundary: Variance minimization does not guarantee threshold success.
+
+  - name: residual_risk_weights
+    value: calibration_fitted_nonnegative
+    unit: ms
+    category: fitted_coefficient
+    selection_partition: calibration
+    rationale: Positive linear regression of absolute fusion residuals on four auditable signals.
+    alternatives: [component_ablations]
+    claim_boundary: No causal interpretation.
+
+  - name: residual_risk_gate_quantile
+    value: 0.90
+    unit: probability
+    category: application_declared_operating_point
+    selection_partition: none
+    rationale: Declared diagnostic fallback rate; it is not the deployment evidence gate.
+    alternatives: [0.75, 0.80, 0.85, 0.90, 0.95]
+    claim_boundary: Must be sensitivity-tested and frozen before test.
+
+  - name: disagreement_only_multiplier
+    value: 0.75
+    unit: dimensionless
+    category: archived_diagnostic_baseline_setting
+    selection_partition: none
+    rationale: Retains the R1 disagreement-only comparator on a fixed scale so revised fitting does not move the baseline after seeing test outcomes.
+    alternatives: [0.0, 0.5, 0.75, 1.0, 1.5]
+    claim_boundary: Diagnostic comparator only; not a confidence level and not used by the evidence gate.
+
+  - name: gaussian_cvar_proxy_multiplier
+    value: 2.0627
+    unit: standard_deviations
+    category: analytically_derived_baseline_setting
+    selection_partition: none
+    rationale: Standard-normal upper-tail conditional-mean multiplier at q=0.95, used only to define a transparent Gaussian proxy baseline.
+    alternatives: [recompute_from_frozen_tail_quantile]
+    claim_boundary: Valid only as a named Gaussian proxy; ensemble spread is not claimed to be a calibrated Gaussian standard deviation.
+
+  - name: age_residual_quantile
+    value: 0.90
+    unit: probability
+    category: application_declared_coverage
+    selection_partition: none
+    rationale: Adds a conservative calibration residual radius to the fitted non-negative observation-age drift.
+    alternatives: [0.80, 0.90, 0.95]
+    claim_boundary: Applies only when source-sample age is observed and does not establish conditional coverage.
+
+  - name: conformal_coverage
+    value: 0.90
+    unit: probability
+    category: application_declared_coverage
+    selection_partition: none
+    rationale: Declared marginal split-conformal target.
+    alternatives: [0.80, 0.85, 0.90, 0.95]
+    claim_boundary: Marginal exchangeability claim only; not conditional coverage.
+
+  - name: ensemble_members
+    value: 9
+    unit: models
+    category: computational_budget
+    selection_partition: none
+    rationale: Frozen compute/variance trade-off for the archived profile.
+    alternatives: [3, 5, 9, 15]
+    claim_boundary: Not claimed optimal; report member-count sensitivity.
+
+  - name: ensemble_row_fraction
+    value: 0.82
+    unit: fraction
+    category: engineering_resampling_setting
+    selection_partition: none
+    rationale: Archived diversity setting retained for reproducibility.
+    alternatives: [0.6, 0.7, 0.82, 0.9, 1.0]
+    claim_boundary: Must be bounded-sensitivity tested; not uniquely justified.
+
+  - name: ensemble_feature_fraction
+    value: 0.78
+    unit: fraction
+    category: engineering_resampling_setting
+    selection_partition: none
+    rationale: Archived feature-subsampling setting retained for reproducibility.
+    alternatives: [0.5, 0.65, 0.78, 0.9, 1.0]
+    claim_boundary: Must be bounded-sensitivity tested; not uniquely justified.
+
+  - name: familywise_alpha
+    value: 0.05
+    unit: probability
+    category: statistical_error_budget
+    selection_partition: none
+    rationale: Predeclared familywise error budget shared across candidates, endpoints, and planned uses.
+    alternatives: [0.01, 0.05, 0.10]
+    claim_boundary: Does not establish power or practical importance.
+
+  - name: noninferiority_margin
+    value: 0.02
+    unit: absolute_success_probability
+    category: application_risk_budget
+    selection_partition: none
+    rationale: Declared maximum tolerated success deficit for the studied profile.
+    alternatives: [0.00, 0.01, 0.02, 0.05]
+    claim_boundary: Stakeholder choice, not a literature universal.
+
+  - name: minimum_opportunity_bearing_groups
+    value: evidence_tier_dependent
+    unit: independent_campaign_groups
+    category: evidence_eligibility_floor
+    selection_partition: none
+    rationale: One campaign is proof-of-method; two can support frozen external validation; five is an optional conservative broader-generalization profile.
+    alternatives: [1, 2, 5]
+    claim_boundary: Count alone never establishes precision, independence, calibration, shift robustness, or deployment readiness.
+
+  - name: cvar_quantile
+    value: 0.95
+    unit: probability
+    category: application_tail_definition
+    selection_partition: none
+    rationale: Defines the canonical slowest-five-percent endpoint.
+    alternatives: [0.90, 0.95, 0.99]
+    claim_boundary: Synthetic and prospective profiles may use a separately frozen value.
+
+  - name: practical_cvar_gain_ms
+    value: 1.0
+    unit: ms
+    category: application_risk_budget
+    selection_partition: none
+    rationale: Requires the candidate's simultaneous CVaR upper bound to improve on reactive by at least one millisecond before tail-risk evidence can authorize it.
+    alternatives: [0.0, 1.0, 2.0, 5.0]
+    claim_boundary: A predeclared materiality threshold, not a statistically estimated network constant.
+
+  - name: latency_cap_ms
+    value: 60000.0
+    unit: ms
+    category: administrative_bound
+    selection_partition: none
+    rationale: Predeclared finite cap required by the concentration bound.
+    alternatives: [250.0, 1000.0, 60000.0]
+    claim_boundary: Applies only to gate inference; stored and descriptive RTT remains uncapped.
+
+  - name: cvar_grid_points
+    value: 1200001
+    unit: points
+    category: numerical_accuracy
+    selection_partition: none
+    rationale: 0.05-ms spacing bounds the q=.95 half-cell correction below the 1-ms practical margin.
+    alternatives: [derived_from_cap_quantile_and_error_budget]
+    claim_boundary: Numerical discretization, not a learned network parameter.
+
+  - name: switching_penalty_profiles_ms
+    value: [5.0, 10.0, 20.0]
+    unit: ms_per_switch
+    category: application_declared_sensitivity_profile
+    selection_partition: none
+    rationale: Brackets low, nominal, and high control-plane execution overhead without selecting a favorable value from test results.
+    alternatives: [profile_specific_measurement]
+    claim_boundary: Sensitivity scenarios only; they are not measured handover delays for a named operator.
+
+  - name: stochastic_switching_profile
+    value:
+      base_penalty_ms: 10.0
+      spike_penalty_ms: 75.0
+      spike_probability: 0.10
+      trials: 256
+    unit: mixed
+    category: declared_stress_profile
+    selection_partition: none
+    rationale: Tests whether conclusions survive occasional large switching delays under a reproducible Monte Carlo budget.
+    alternatives: [operator_measured_switch_delay_distribution]
+    claim_boundary: Synthetic robustness stress, not an empirical handover-delay distribution.
+
+  - name: exact_lag_steps
+    value: [1, 2, 3, 6, 12]
+    unit: decision_bins
+    category: feature_horizon_profile
+    selection_partition: none
+    rationale: Covers immediate and longer recent history while requiring exact scheduled offsets and never filling gaps with future or nearby samples.
+    alternatives: [profile_specific_predeclared_lags]
+    claim_boundary: The physical duration changes with cadence; the list is not an orbital-period model.
+
+  - name: outer_policy_split
+    value:
+      train: 0.55
+      calibration: 0.15
+      selection: 0.15
+      test: 0.15
+    unit: fraction
+    category: evaluation_protocol
+    selection_partition: none
+    rationale: Separates model fitting, calibration, policy selection, and locked evaluation in chronological or acquisition-group order.
+    alternatives: [predeclared_rolling_origin_protocol]
+    claim_boundary: Split availability does not make blocks independent campaigns.
