@@ -28,20 +28,35 @@ evidence_tiers:
       precision, shift robustness, or deployment safety.
 
 profiles:
-  commect_measured_60ms:
-    evidence_role: measured_heterogeneous_access_shadow_replay
+  commect_archived_canonical_60ms:
+    evidence_role: canonical_archived_heterogeneous_access_shadow_replay
+    latency_target_ms: 60.0
+    permitted_absolute_success_deficit: 0.02
+    cvar_quantile: 0.95
+    latency_cap_ms: 60000.0
+    required_cvar_improvement_ms: 1.0
+    datasets:
+      - COMMECT
+    interpretation: >-
+      The canonical profile used by the archived COMMECT gate audit. The
+      60000-ms value bounds the statistical endpoint; it does not replace
+      missing observations or represent a physical network-delay claim.
+      COMMECT contributes one acquisition campaign, so the measured audit
+      has insufficient independent support for candidate authorization.
+
+  commect_prospective_60ms:
+    evidence_role: prospective_deployment_contract
     latency_target_ms: 60.0
     permitted_absolute_success_deficit: 0.02
     cvar_quantile: 0.90
     latency_cap_ms: 250.0
     required_cvar_improvement_ms: 5.0
     datasets:
-      - COMMECT
-      - LENS_Victoria_concurrency_check
+      - future_independent_cellular_leo_campaigns
     interpretation: >-
-      The primary measured service profile and the prospective deployment
-      contract. Results are descriptive shadow evidence unless independent
-      terminal-site-day campaign groups are available.
+      A prospective operator profile for future independently initiated
+      campaigns. It is not retroactively substituted for the canonical
+      COMMECT audit and has no reported field-admission result in this paper.
 
   conext23_external_60ms:
     evidence_role: frozen_external_cellular_leo_gate_audit

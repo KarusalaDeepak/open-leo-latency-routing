@@ -33,7 +33,11 @@ complete-case RTT endpoint. These limitations must accompany reported results.
   group. Eligibility count is a necessary condition, not a power guarantee.
 
 `configs/campaign_qualification.yaml` and `configs/evidence_profiles.yaml`
-provide the executable source roles and profiles. Additional optional adapters
+declare source roles and profile provenance. Entrypoint configurations and
+generated run manifests record the settings actually executed. Tests compare
+the archived COMMECT profile with `configs/experiment.yaml` and the external
+profile with the CoNEXT runner. The prospective 250-ms COMMECT contract is
+separate from the archived 60,000-ms audit. Additional optional adapters
 remain available for explicitly authorized datasets; their presence is not
 evidence that those datasets have passed acquisition or gate requirements.
 

@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 from pathlib import Path
+import inspect
 
 import pandas as pd
 import pytest
 import yaml
+
+from open_leo_latency_routing.evaluation.conext23_external_gate import fit_frozen_models
+from scripts import run_conext23_external_gate as conext_runner
 
 from open_leo_latency_routing.evaluation.campaign_independence import (
     audit_campaign_manifest,
@@ -36,11 +40,68 @@ def test_profiles_are_explicit_and_not_pooled() -> None:
         (REPO_ROOT / "configs/evidence_profiles.yaml").read_text(encoding="utf-8")
     )
     assert profiles["cross_profile_pooling"] == "prohibited"
-    measured = profiles["profiles"]["commect_measured_60ms"]
+    measured = profiles["profiles"]["commect_archived_canonical_60ms"]
     synthetic = profiles["profiles"]["synthetic_operator_150ms"]
     assert measured["latency_target_ms"] == 60.0
     assert synthetic["latency_target_ms"] == 150.0
     assert measured["evidence_role"] != synthetic["evidence_role"]
+
+
+def test_archived_commect_profile_matches_executable_gate_settings() -> None:
+    profiles = yaml.safe_load((REPO_ROOT / "configs/evidence_profiles.yaml").read_text())
+    execution = yaml.safe_load((REPO_ROOT / "configs/experiment.yaml").read_text())
+    archived = profiles["profiles"]["commect_archived_canonical_60ms"]
+    prospective = profiles["profiles"]["commect_prospective_60ms"]
+    risk = execution["optimization"]["risk_control"]
+    assert archived["latency_target_ms"] == execution["optimization"]["latency_budget_ms"]
+    assert archived["permitted_absolute_success_deficit"] == risk["opportunity_noninferiority_margin"]
+    assert archived["cvar_quantile"] == risk["cvar_quantile"]
+    assert archived["latency_cap_ms"] == risk["latency_cap_ms"]
+    assert archived["required_cvar_improvement_ms"] == risk["practical_cvar_gain_ms"]
+    assert archived["datasets"] == ["COMMECT"]
+    assert prospective["evidence_role"] == "prospective_deployment_contract"
+    assert prospective["latency_cap_ms"] != archived["latency_cap_ms"]
+
+
+def test_conext_profile_matches_the_executed_gate_contract(monkeypatch) -> None:
+    profiles = yaml.safe_load((REPO_ROOT / "configs/evidence_profiles.yaml").read_text())
+    profile = profiles["profiles"]["conext23_external_60ms"]
+    captured = {}
+
+    def capture_gate(*args, **kwargs):
+        captured.update(kwargs)
+        return "captured"
+
+    monkeypatch.setattr(conext_runner, "select_opportunity_aware_risk_controlled_policy", capture_gate)
+    decisions = pd.DataFrame({
+        "campaign_id": [f"day-{day}" for day in range(5)],
+        "reactive_latency_ms": [40.0] * 5,
+        "candidate_latency_ms": [35.0] * 5,
+        "generic_opportunity": [True] * 5,
+        "policy_active_opportunity": [True] * 5,
+    })
+    assert conext_runner._gate_from_decisions(decisions) == "captured"
+    config = captured["config"]
+    assert captured["latency_budget_ms"] == profile["latency_target_ms"]
+    assert config.opportunity_noninferiority_margin == profile["permitted_absolute_success_deficit"]
+    assert config.cvar_quantile == profile["cvar_quantile"]
+    assert config.latency_cap_ms == profile["latency_cap_ms"]
+    assert config.practical_cvar_gain_ms == profile["required_cvar_improvement_ms"]
+
+
+def test_registry_scopes_fixed_conext_penalty_and_calibrated_fusion() -> None:
+    registry = yaml.safe_load((REPO_ROOT / "configs/parameter_registry.yaml").read_text())
+    rows = {row["name"]: row for row in registry["parameters"]}
+    defaults = inspect.signature(fit_frozen_models).parameters
+    assert rows["conext23_ridge_alpha"]["value"] == conext_runner.PRIMARY_RIDGE_ALPHA
+    assert rows["conext23_ridge_alpha"]["value"] == defaults["ridge_alpha"].default
+    split = rows["conext23_development_split"]
+    assert split["value"]["fitting"] == defaults["train_fraction"].default
+    assert sum(split["value"].values()) == 1.0
+    assert split["selection_partition"] == "April_23_development_only"
+    assert "fusion" in split["rationale"]
+    assert "COMMECT only" in rows["ridge_alpha"]["claim_boundary"]
+    assert rows["calibrated_fusion_weights"]["selection_partition"] == "calibration"
 
 
 def test_campaign_manifest_rejects_reused_start() -> None:

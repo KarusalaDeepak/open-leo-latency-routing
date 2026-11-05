@@ -4,6 +4,13 @@ interpretation: >-
   development-selected, application-declared, statistically derived,
   numerical, or an archived engineering setting. Locked test outcomes may
   evaluate a value but may not choose it.
+profile_scope: >-
+  Unless an item names another profile, model-selection settings describe the
+  COMMECT study and statistical tail settings describe
+  commect_archived_canonical_60ms. They must not be applied to CoNEXT'23 by
+  default. configs/evidence_profiles.yaml defines the named gate profiles.
+  Source-specific runs generate model and validation manifests locally;
+  the historical evidence manifests remain in the separate submission package.
 
 parameters:
   - name: latency_budget_ms
@@ -20,9 +27,29 @@ parameters:
     unit: dimensionless
     category: model_hyperparameter
     selection_partition: training_internal_development
-    rationale: Minimize chronological development RMSE and refit on outer training only.
+    rationale: For the COMMECT temporal/context models, minimize chronological development RMSE and refit on outer training only.
     alternatives: [0.01, 0.1, 1.0, 10.0, 100.0]
-    claim_boundary: Historical R1 used alpha=1; current primary tables use the recorded development-selected value.
+    claim_boundary: Applies to COMMECT only. Historical COMMECT R1 used alpha=1; the separate CoNEXT'23 audit fixes alpha=1.0 rather than selecting it from evidence outcomes.
+
+  - name: conext23_ridge_alpha
+    value: 1.0
+    unit: dimensionless
+    category: fixed_model_hyperparameter
+    selection_partition: none
+    rationale: Frozen engineering value for both temporal and peer-context ridge models in the primary external audit; avoids selecting a penalty using the April 24--28 gate evidence.
+    alternatives: [0.01, 0.1, 1.0, 10.0, 100.0]
+    claim_boundary: The full grid is a post-specified robustness audit, not a selection procedure; every grid value retains the reactive baseline and no row replaces the primary alpha=1.0 result.
+
+  - name: conext23_development_split
+    value:
+      fitting: 0.70
+      calibration: 0.30
+    unit: fraction_of_complete_April_23_rows
+    category: evaluation_protocol
+    selection_partition: April_23_development_only
+    rationale: Chronological separation within April 23 provides 1348 model-fitting rows and 579 calibration rows for bias correction and bounded minimum-variance temporal/context fusion.
+    alternatives: [separately_frozen_chronological_development_split]
+    claim_boundary: April 24--28 are gate-evidence campaigns; they do not fit model coefficients, biases, or fusion weights, and there is no separate post-gate final-test campaign in this audit.
 
   - name: ridge_development_fraction
     value: 0.20
@@ -31,7 +58,7 @@ parameters:
     selection_partition: none
     rationale: Reserves the latest fifth of outer training for chronological hyperparameter selection while leaving most rows for fitting.
     alternatives: [0.15, 0.20, 0.25]
-    claim_boundary: A frozen split convention, not an optimized or universal fraction.
+    claim_boundary: COMMECT convention only, not an optimized or universal fraction; CoNEXT'23 uses the separately recorded 70/30 April 23 split.
 
   - name: ensemble_uncertainty_multiplier
     value: development_selected
@@ -184,34 +211,34 @@ parameters:
     selection_partition: none
     rationale: One campaign is proof-of-method; two can support frozen external validation; five is an optional conservative broader-generalization profile.
     alternatives: [1, 2, 5]
-    claim_boundary: Count alone never establishes precision, independence, calibration, shift robustness, or deployment readiness.
+    claim_boundary: Count alone never establishes precision, independence, calibration, shift robustness, or deployment readiness. Under the CoNEXT profile, even zero negative campaigns require at least 203 eligible campaigns to pass the success bound alone.
 
   - name: cvar_quantile
     value: 0.95
     unit: probability
     category: application_tail_definition
     selection_partition: none
-    rationale: Defines the canonical slowest-five-percent endpoint.
+    rationale: Defines the archived COMMECT canonical slowest-five-percent endpoint.
     alternatives: [0.90, 0.95, 0.99]
-    claim_boundary: Synthetic and prospective profiles may use a separately frozen value.
+    claim_boundary: CoNEXT'23, synthetic_operator_150ms, and commect_prospective_60ms separately use q=0.90; profile values are not pooled or substituted after evaluation.
 
   - name: practical_cvar_gain_ms
     value: 1.0
     unit: ms
     category: application_risk_budget
     selection_partition: none
-    rationale: Requires the candidate's simultaneous CVaR upper bound to improve on reactive by at least one millisecond before tail-risk evidence can authorize it.
+    rationale: The archived COMMECT canonical profile requires a simultaneous CVaR improvement of at least one millisecond.
     alternatives: [0.0, 1.0, 2.0, 5.0]
-    claim_boundary: A predeclared materiality threshold, not a statistically estimated network constant.
+    claim_boundary: CoNEXT'23, synthetic_operator_150ms, and commect_prospective_60ms separately require 5 ms. These are declared materiality thresholds, not statistically estimated network constants.
 
   - name: latency_cap_ms
     value: 60000.0
     unit: ms
     category: administrative_bound
     selection_partition: none
-    rationale: Predeclared finite cap required by the concentration bound.
+    rationale: Finite cap for the concentration bound in the archived COMMECT canonical profile.
     alternatives: [250.0, 1000.0, 60000.0]
-    claim_boundary: Applies only to gate inference; stored and descriptive RTT remains uncapped.
+    claim_boundary: CoNEXT'23, synthetic_operator_150ms, and commect_prospective_60ms separately use a 250-ms cap. Caps apply only to gate inference; stored and descriptive RTT remains uncapped.
 
   - name: cvar_grid_points
     value: 1200001

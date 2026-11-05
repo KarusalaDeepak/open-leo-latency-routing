@@ -71,6 +71,14 @@ application-defined and reference quantities. `configs/experiment.yaml`
 contains executable model settings. Freeze development choices before using
 gate evidence; do not tune on final evaluation outcomes.
 
+The archived COMMECT profile uses a 60-ms target, a 60,000-ms statistical cap,
+the slowest 5% tail and a 1-ms required gain. The prospective profile and the
+CoNEXT audit separately use a 250-ms cap, the slowest 10% tail and a 5-ms gain.
+The cap does not impute missing observations. CoNEXT fixes the ridge penalty at
+one and fits its temporal/context fusion weights using only the April 23
+calibration partition. These source-specific settings must not be substituted
+or pooled. Regression tests compare the declared profiles with execution.
+
 The canonical evidence rebuild and integrity utilities remain in `scripts/`.
 They require separately acquired inputs and generate local outputs; they do
 not contain or build the manuscript. Plotting and table utilities produce
