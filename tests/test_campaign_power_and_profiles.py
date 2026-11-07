@@ -196,6 +196,10 @@ def test_structured_power_is_deterministic_and_rejects_unsafe_candidate() -> Non
     assert first_summary["sign_gate_admissions"].item() == 0
     assert first_summary["sign_gate_admission_ci95_low"].item() == 0.0
     assert 0.0 < first_summary["sign_gate_admission_ci95_high"].item() < 1.0
+    assert "tail_gain_point_ms" in first_detail.columns
+    assert "median_tail_gain_point_ms" in first_summary.columns
+    assert first_detail["tail_gain_point_ms"].notna().all()
+    assert first_summary["median_tail_gain_point_ms"].notna().all()
 
 
 def test_wilson_interval_reports_uncertainty_at_extreme_admission_counts() -> None:

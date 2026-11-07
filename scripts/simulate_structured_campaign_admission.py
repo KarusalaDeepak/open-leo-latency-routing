@@ -414,6 +414,7 @@ def evaluate_sample(
         "magnitude_lcb": magnitude_lcb,
         "sign_success_pass": bool(evidence["primary_success_noninferior"]),
         "magnitude_success_pass": magnitude_success_pass,
+        "tail_gain_point_ms": float(evidence["cvar_gain_vs_reactive_ms"]),
         "tail_gain_lcb_ms": float(evidence["cvar_gain_lcb_ms"]),
         "tail_pass": tail_pass,
         "support_pass": support_pass,
@@ -535,6 +536,9 @@ def run_structured_power(
                     cell["primary_sign_lcb"].median()
                 ),
                 "median_magnitude_lcb": float(cell["magnitude_lcb"].median()),
+                "median_tail_gain_point_ms": float(
+                    cell["tail_gain_point_ms"].median()
+                ),
                 "median_tail_gain_lcb_ms": float(
                     cell["tail_gain_lcb_ms"].median()
                 ),
