@@ -195,6 +195,18 @@ parameters:
     alternatives: [0.01, 0.05, 0.10]
     claim_boundary: Does not establish power or practical importance.
 
+  - name: gate_passing_candidate_order
+    value:
+      - minimum_group_uniform_capped_cvar_ucb_ms
+      - minimum_group_uniform_mean_rtt_ms
+      - lexicographic_policy_identifier
+    unit: ordered_selection_keys
+    category: predeclared_selection_rule
+    selection_partition: none
+    rationale: Select deterministically among candidates that already pass every support, success, and tail requirement; this ordering does not determine eligibility.
+    alternatives: [new_gate_invocation_with_predeclared_order]
+    claim_boundary: The implementation has used this ordering since the first published code revision. The measured audits have no multiple-candidate authorization, and each reported simulation has one learned candidate, so the reported decisions do not depend on this tie-break.
+
   - name: noninferiority_margin
     value: 0.02
     unit: absolute_success_probability

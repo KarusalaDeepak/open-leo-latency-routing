@@ -394,6 +394,79 @@ class ReviewerRevisionTests(unittest.TestCase):
         self.assertTrue(bool(selected["practically_better"]))
         self.assertGreater(float(selected["cvar_gain_lcb_ms"]), 1.0)
 
+    def test_gate_orders_passing_candidates_by_cvar_then_mean(self) -> None:
+        n = 600
+        result = select_opportunity_aware_risk_controlled_policy(
+            {
+                "reactive": np.full(n, 90.0),
+                "a_low_mean": np.tile([0.0, 10.0], n // 2),
+                "b_high_mean": np.tile([5.0, 10.0], n // 2),
+                "c_worse_tail": np.full(n, 20.0),
+            },
+            opportunity_mask=np.ones(n, dtype=bool),
+            latency_budget_ms=60.0,
+            config=RiskControlConfig(
+                minimum_effective_opportunities=2.0,
+                practical_cvar_gain_ms=1.0,
+                cvar_quantile=0.5,
+                latency_cap_ms=100.0,
+                cvar_grid_points=21,
+            ),
+            independence_group_ids=np.arange(n),
+        )
+
+        evidence = result.evidence_frame().set_index("policy")
+        self.assertTrue(
+            evidence.loc[
+                ["a_low_mean", "b_high_mean", "c_worse_tail"],
+                "eligible",
+            ].all()
+        )
+        self.assertAlmostEqual(
+            float(evidence.loc["a_low_mean", "cvar_ucb_ms"]),
+            float(evidence.loc["b_high_mean", "cvar_ucb_ms"]),
+        )
+        self.assertLess(
+            float(evidence.loc["a_low_mean", "group_uniform_mean_latency_ms"]),
+            float(evidence.loc["b_high_mean", "group_uniform_mean_latency_ms"]),
+        )
+        self.assertLess(
+            float(evidence.loc["a_low_mean", "cvar_ucb_ms"]),
+            float(evidence.loc["c_worse_tail", "cvar_ucb_ms"]),
+        )
+        self.assertEqual(result.selected_policy, "a_low_mean")
+
+    def test_gate_uses_identifier_for_exact_passing_candidate_tie(self) -> None:
+        n = 600
+        result = select_opportunity_aware_risk_controlled_policy(
+            {
+                "reactive": np.full(n, 90.0),
+                "beta": np.full(n, 10.0),
+                "alpha": np.full(n, 10.0),
+            },
+            opportunity_mask=np.ones(n, dtype=bool),
+            latency_budget_ms=60.0,
+            config=RiskControlConfig(
+                minimum_effective_opportunities=2.0,
+                practical_cvar_gain_ms=1.0,
+                cvar_quantile=0.5,
+                latency_cap_ms=100.0,
+                cvar_grid_points=21,
+            ),
+            independence_group_ids=np.arange(n),
+        )
+
+        evidence = result.evidence_frame().set_index("policy")
+        self.assertAlmostEqual(
+            float(evidence.loc["alpha", "cvar_ucb_ms"]),
+            float(evidence.loc["beta", "cvar_ucb_ms"]),
+        )
+        self.assertAlmostEqual(
+            float(evidence.loc["alpha", "group_uniform_mean_latency_ms"]),
+            float(evidence.loc["beta", "group_uniform_mean_latency_ms"]),
+        )
+        self.assertEqual(result.selected_policy, "alpha")
+
     def test_risk_control_all_zero_success_differences_keep_uncertainty(self) -> None:
         result = select_opportunity_aware_risk_controlled_policy(
             {
